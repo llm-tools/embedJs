@@ -1,0 +1,24 @@
+{
+  "name": "llmembed",
+  "version": "0.0.1",
+  "description": "A framework to easily create LLM Embeddings over a dataset",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adhityan/llmembed.git"
+  },
+  "keywords": [
+    "llm",
+    "embedding",
+    "openai"
+  ],
+  "author": "K V Adhityan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adhityan/llmembed/issues"
+  },
+  "homepage": "https://github.com/adhityan/llmembed#readme"
+}
