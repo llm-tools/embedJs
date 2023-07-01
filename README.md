@@ -418,7 +418,7 @@ export OPENAI_API_KEY=<Your Azure OpenAI API key>
 
 EmbedJS is built on top of the fantastic work being done on OpenAI and the open source community behind it. Internally it uses -
 
--   [Langchain](https://github.com/hwchase17/langchain) as an LLM library to load and chunk data
+-   [Langchain](https://github.com/hwchase17/langchain) a fantastic LLM library
 -   [OpenAI Ada embedding](https://platform.openai.com/docs/guides/embeddings) to create embeddings
 -   [OpenAI ChatGPT API](https://platform.openai.com/docs/guides/gpt/chat-completions-api) as the LLM to get answers to prompts.
 
