@@ -2,11 +2,11 @@
 
 <p>
 <a href="https://www.npmjs.com/package/@llmembed/embedjs"  target="_blank">
-<img alt="npm (scoped)" src="https://img.shields.io/npm/v/%40llmembed/embedjs">
+<img alt="NPM Version" src="https://img.shields.io/npm/v/%40llmembed/embedjs">
 </a>
 
 <a href="https://www.npmjs.com/package/@llmembed/embedjs"  target="_blank">
-<img alt="NPM" src="https://img.shields.io/npm/l/%40llmembed%2Fembedjs">
+<img alt="License" src="https://img.shields.io/npm/l/%40llmembed%2Fembedjs">
 </a>
 </p>
 
