@@ -31,6 +31,32 @@ You have the choice of vector database to store the results. The library comes w
 
 The library also supports caches which provide caching for embeddings, loaders and optionally queries. Chunks that are already seen are not re-processed. Similarly, entire loaders are cached and not processed if they have been already encountered. Read below for more information on this.
 
+# Contents
+
+-   [Getting started](#getting-started)
+    -   [Installation](#installation)
+    -   [Usage](#usage)
+-   [Loaders supported](#loaders-supported)
+    -   [Youtube](#youtube-video)
+    -   [PDF](#pdf-file)
+    -   [Web page](#web-page)
+    -   [Text](#text)
+    -   [Custom loader](#add-a-custom-loader)
+    -   [How to request more loaders](#more-loaders-coming-soon)
+-   [Vector databases supported](#vector-databases-supported)
+    -   [Pinecone](#pinecone)
+    -   [LanceDB](#lancedb)
+    -   [Own Database](#bring-your-own-database)
+    -   [How to request new vector databases](#more-databases-coming-soon)
+-   [Caches](#caches)
+    -   [LMDB](#lmdb)
+    -   [In memory cache](#inmemory)
+    -   [Custom cache implementation](#bring-your-own-cache)
+    -   [How to request new cache providers](#more-caches-coming-soon)
+-   [Usage with Azure OpenAI](#azure-openai)
+-   [Dependencies](#core-dependencies)
+-   [Author](#author)
+
 # Getting started
 
 ## Installation
@@ -46,6 +72,10 @@ npm install embedjs
 -   We use OpenAI's embedding model to create embeddings for chunks and ChatGPT API as LLM to get answer given the relevant docs. Make sure that you have an OpenAI account and an API key. If you have dont have an API key, you can create one by visiting [this link](https://platform.openai.com/account/api-keys).
 
 -   Once you have the API key, set it in an environment variable called `OPENAI_API_KEY`. There is also built in support for **Azure OpenAI**. Check the section on this at the end.
+
+```bash
+OPENAI_API_KEY="sk-<REST_OF_YOUR_KEY>"
+```
 
 -   Next import and use the `LLMApplicationBuilder` to construct an `LLMApplication`. The builder has all the options to configure the application in full.
 
@@ -84,11 +114,11 @@ llmApplication.addLoader(
 );
 ```
 
-## Loaders supported
+# Loaders supported
 
 Currently, the library supports the following formats -
 
-### Youtube video
+## Youtube video
 
 To add any youtube video to your app, use `YoutubeLoader`.
 
@@ -96,7 +126,7 @@ To add any youtube video to your app, use `YoutubeLoader`.
 .addLoader(new YoutubeLoader({ videoIdOrUrl: 'w2KbwC-s7pY' }))
 ```
 
-### PDF file
+## PDF file
 
 To add a pdf file, use `PdfLoader`.
 
@@ -106,7 +136,7 @@ To add a pdf file, use `PdfLoader`.
 
 **Note:** Currently there is no support for PDF forms and password protected documents
 
-### Web page
+## Web page
 
 To add a web page, use `WebLoader`.
 
@@ -114,7 +144,7 @@ To add a web page, use `WebLoader`.
 .addLoader(new WebLoader({ url: 'https://en.wikipedia.org/wiki/Formula_One' }))
 ```
 
-### Text
+## Text
 
 To supply your own text, use `TextLoader`.
 
@@ -124,7 +154,7 @@ To supply your own text, use `TextLoader`.
 
 **Note:** Feel free to add your custom text without worrying about duplication. The library will chuck, cache and update the vector databases.
 
-### Add a custom loader
+## Add a custom loader
 
 You can pass along a custom loader to the `addLoader` method by extending and implementing the abstract class `BaseLoader`. Here's how that would look like -
 
@@ -142,19 +172,25 @@ class CustomLoader extends BaseLoader<{ customChunkMetadata: string }> {
 
 We really encourage you send in a PR to this library if you are implementing a common loader pattern, so the community can benefit from it.
 
-### More loaders coming soon
+## More loaders coming soon
 
 If you want to add any other format, please create an [issue](https://github.com/llmembed/embedjs/issues) and we will add it to the list of supported formats. All PRs are welcome.
 
-## Vector databases supported
+# Vector databases supported
 
 The library allows you to save your processed and unique embeddings with the vector databases of your choice. Here are the supported databases right now -
 
-### Pinecone
+## Pinecone
 
 You can enable Pinecone storage by following these steps -
 
--   Create an account with [Pinecone](https://www.pinecone.io/) if you don't have one already. There is a good free tier.
+-   Create an account with [Pinecone](https://www.pinecone.io/) if you don't have one already. There is a _good free tier_.
+
+-   Install pinecone package in your project
+
+```bash
+npm install @pinecone-database/pinecone
+```
 
 -   Set the pinecone environment variables `PINECONE_API_KEY` and `PINECONE_ENVIRONMENT`. These can be obtained from the **API Keys** section on the Pinecone dashboard.
 
@@ -171,9 +207,15 @@ PINECONE_ENVIRONMENT="us-west1-gcp-free"
 
 **Note:** The `projectName` will be used to create the Pinecone index name for this application.
 
-### LanceDB
+## LanceDB
 
 [LanceDB](https://lancedb.com/) is a local vector database with great performance. Follow these steps to use LanceDB as your vector database -
+
+-   Install LanceDb package in your project
+
+```bash
+npm install vectordb
+```
 
 -   Set LanceDB database as your choice of `vectorDb`
 
@@ -189,7 +231,7 @@ PINECONE_ENVIRONMENT="us-west1-gcp-free"
 
 In this case, the `path` property is used as a prefix to create the temporary directory in the OS temp directory folder.
 
-### Bring your own database
+## Bring your own database
 
 You can pass along your vector database to the `setVectorDb` method by implementing the interface `BaseDb`. Here's how that would look like -
 
@@ -211,19 +253,25 @@ class MyOwnDb implements BaseDb {
 
 We really encourage you send in a PR to this library if you are implementing a famous or common database, so the community can benefit from it.
 
-### More databases coming soon
+## More databases coming soon
 
 If you want to add support for any other vector database, please create an [issue](https://github.com/llmembed/embedjs/issues) and we will add it to the list of supported databases. All PRs are welcome.
 
-## Caches
+# Caches
 
 Caches serve to reduce re-processing embeddings, loaders and queries. There is no need to load, chunk and store a large PDF File or web page on every run. Caching smartly is built in and can be enabled out of the box simply by setting a cache processor using the method `setCache` while building the `LLMApplication`.
 
 The library supports the following caches -
 
-### LMDB
+## LMDB
 
 You can use [LMDB](https://dbdb.io/db/lmdb) to cache values locally on disk.
+
+-   Install LMDB package in your project
+
+```bash
+npm install lmdb
+```
 
 -   Set `LmdbCache` as your cache provider on `LLMApplicationBuilder`
 
@@ -234,7 +282,7 @@ await new LLMApplicationBuilder()
 
 **Note:** The `path` property will be used by the LMDB driver to create a folder housing the LMDB database files.
 
-### InMemory
+## InMemory
 
 You can use a simple in-memory cache to store values during testing.
 
@@ -247,7 +295,7 @@ await new LLMApplicationBuilder()
 
 **Note:** Although this cache can remove duplicate loaders and chunks, its store does not persist between process restarts. You should only be using it for testing.
 
-### Bring your own cache
+## Bring your own cache
 
 You can pass along your own cache provider to the `setCache` method by implementing the interface `BaseCache`. Here's how that would look like -
 
@@ -269,9 +317,35 @@ class MyOwnCache implements BaseCache {
 
 We really encourage you send in a PR to this library if you are implementing a famous or common cache provider, so the community can benefit from it.
 
-### More caches coming soon
+## More caches coming soon
 
 If you want to add support for any other cache providers, please create an [issue](https://github.com/llmembed/embedjs/issues) and we will add it to the list of supported caches. All PRs are welcome.
+
+# Azure OpenAI
+
+In order to be able to use an OpenAI model on Azure, it first needs to be deployed. Please refer to [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/) on how to deploy a model on Azure. To run this library, you will need to deploy two models -
+
+-   text-embedding-ada
+-   GPT-3.5-turbo
+
+Once these models are deployed, using Azure OpenAI instead of the regular OpenAI is easy to do. Just follow these steps -
+
+-   Remove the `OPENAI_API_KEY` environment variable if you have set it already.
+
+-   Set the following environment variables -
+
+```bash
+# Set this to `azure`
+export OPENAI_API_TYPE=azure
+# The API version you want to use
+export OPENAI_API_VERSION=2023-03-15-preview
+# The base URL for your Azure OpenAI resource.  You can find this in the Azure portal under your Azure OpenAI resource.
+export OPENAI_API_BASE=https://your-resource-name.openai.azure.com
+# The API key for your Azure OpenAI resource.  You can find this in the Azure portal under your Azure OpenAI resource.
+export OPENAI_API_KEY=<Your Azure OpenAI API key>
+```
+
+**NOTE:** At the time of writing this, Azure OpenAI is an invite only program.
 
 # Core dependencies
 

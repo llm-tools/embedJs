@@ -22,6 +22,12 @@
     "bugs": {
         "url": "https://github.com/llmembed/embedjs/issues"
     },
+    "publishConfig": {
+        "access": "public"
+    },
+    "files": [
+        "dist/**/*"
+    ],
     "homepage": "https://github.com/llmembed/embedjs#readme",
     "dependencies": {
         "langchain": "^0.0.100",
