@@ -1,8 +1,6 @@
 # EmbedJS
 
-EmbedJS is a framework to easily create LLM powered bots over any dataset.
-
-It abstracts the entire process of loading a dataset, chunking it, creating embeddings and then storing in a vector database.
+EmbedJS is a framework to easily enable LLM powered interactions over any dataset. It simplifies the process of loading a dataset, chunking it, creating embeddings and then storing onto a vector database.
 
 Here's an example
 
@@ -36,6 +34,9 @@ The library also supports caches which provide caching for embeddings, loaders a
 -   [Getting started](#getting-started)
     -   [Installation](#installation)
     -   [Usage](#usage)
+    -   [Temperature](#temperature)
+    -   [Search results count](#search-results-count)
+    -   [Customize the prompt](#customize-the-prompt)
 -   [Loaders supported](#loaders-supported)
     -   [Youtube](#youtube-video)
     -   [PDF](#pdf-file)
@@ -113,6 +114,49 @@ llmApplication.addLoader(
     new TextLoader({ text: 'This content was added at a later time as more info was available.' }),
 );
 ```
+
+## Temperature
+
+The temperature is a number between 0 and 1. It governs the randomness and creativity of the LLM responses. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. You can alter it by -
+
+```TS
+await new LLMApplicationBuilder()
+.setTemperature(0.1)
+```
+
+**NOTE:** The default value is 0.9, which makes the GPT responses very creative.
+
+## Search results count
+
+This is the number of documents to aim for when retrieving results from the vector database. A high number of results might mean there is more non-relevant data in the context. A low number might mean none of the relevant documents are retrieved. You need to set the number that works best for you. The parameter can be altered by -
+
+```TS
+await new LLMApplicationBuilder()
+.setSearchResultCount(10)
+```
+
+**NOTE:** The default value is 7.
+
+It is important to note that the library does not simply dump all contextual document chunks into the prompt. It sends them to the model marking them as context documents. The number of documents still counts toward the token limit.
+
+When the number of documents fetched leads to a request above the token limit, the library uses the following strategy -
+
+> It runs a preprocessing step to select relevant sections from each document until the total number of tokens is less than the maximum number of tokens allowed by the model. It then uses the transformed documents as context to answer the question.
+
+## Customize the prompt
+
+LLM models need some care. The models are notorious for inventing responses when they don't know the answer. Keeping this in mind, the library auto adds a wrapper to all user queries. The default prompt is -
+
+> Use all the provided context to answer the query at the end. Answer in full. If you don't know the answer, just say that you don't know, don't try to make up an answer. Query: {0}
+
+The placeholder `{0}` is replaced with the input query. In some cases, you may want to customize this prompt. This can be done with ease by -
+
+```TS
+await new LLMApplicationBuilder()
+.QueryTemplate('My own query template {0}')
+```
+
+**NOTE:** The library will reject any query template that does not contain the placeholder `{0}`.
 
 # Loaders supported
 

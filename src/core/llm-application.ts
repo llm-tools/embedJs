@@ -11,7 +11,7 @@ import { BaseCache } from '../interfaces/base-cache.js';
 
 export class LLMApplication {
     private readonly queryTemplate: string;
-    private readonly similarityScore: number;
+    private readonly searchResultCount: number;
     private readonly loaders: BaseLoader[];
     private readonly cache?: BaseCache;
     private readonly vectorDb: BaseDb;
@@ -21,7 +21,7 @@ export class LLMApplication {
         this.loaders = llmBuilder.getLoaders();
         this.vectorDb = llmBuilder.getVectorDb();
         this.queryTemplate = llmBuilder.getQueryTemplate();
-        this.similarityScore = llmBuilder.getSimilarityScore();
+        this.searchResultCount = llmBuilder.getSearchResultCount();
         this.cache = llmBuilder.getCache();
 
         if (!this.vectorDb) throw new SyntaxError('VectorDb not set');
@@ -86,7 +86,7 @@ export class LLMApplication {
     async query(query: string): Promise<string> {
         const prompt = stringFormat(this.queryTemplate, query);
         const queryEmbedded = await this.getQueryEmbedding(cleanString(prompt));
-        const contextChunks = await this.vectorDb.similaritySearch(queryEmbedded, this.similarityScore);
+        const contextChunks = await this.vectorDb.similaritySearch(queryEmbedded, this.searchResultCount);
         const translatedChunks = this.translateChunks(contextChunks);
 
         const chain = loadQAMapReduceChain(this.model);

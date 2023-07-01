@@ -4,7 +4,7 @@ import { LLMApplication } from './llm-application.js';
 import { BaseCache } from '../interfaces/base-cache.js';
 
 export class LLMApplicationBuilder {
-    private similarityScore: number;
+    private searchResultCount: number;
     private loaders: BaseLoader[];
     private vectorDb: BaseDb;
     private temperature: number;
@@ -14,7 +14,7 @@ export class LLMApplicationBuilder {
     constructor() {
         this.loaders = [];
         this.temperature = 0.9;
-        this.similarityScore = 7;
+        this.searchResultCount = 7;
 
         this.queryTemplate = `Use all the provided context to answer the query at the end. Answer in full.
         If you don't know the answer, just say that you don't know, don't try to make up an answer.
@@ -32,8 +32,8 @@ export class LLMApplicationBuilder {
         return this;
     }
 
-    setSimilarityScore(similarityScore: number) {
-        this.similarityScore = similarityScore;
+    setSearchResultCount(searchResultCount: number) {
+        this.searchResultCount = searchResultCount;
         return this;
     }
 
@@ -64,8 +64,8 @@ export class LLMApplicationBuilder {
         return this.loaders;
     }
 
-    getSimilarityScore() {
-        return this.similarityScore;
+    getSearchResultCount() {
+        return this.searchResultCount;
     }
 
     getVectorDb() {
