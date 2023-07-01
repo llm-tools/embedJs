@@ -1,13 +1,15 @@
 import { BaseDb } from '../interfaces/base-db.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { LLMApplication } from './llm-application.js';
+import { BaseCache } from '../interfaces/base-cache.js';
 
 export class LLMApplicationBuilder {
     private similarityScore: number;
-    private loaders: BaseLoader<any>[];
+    private loaders: BaseLoader[];
     private vectorDb: BaseDb;
     private temperature: number;
     private queryTemplate: string;
+    private cache?: BaseCache;
 
     constructor() {
         this.loaders = [];
@@ -25,7 +27,7 @@ export class LLMApplicationBuilder {
         return entity;
     }
 
-    addLoader(loader: BaseLoader<any>) {
+    addLoader(loader: BaseLoader) {
         this.loaders.push(loader);
         return this;
     }
@@ -53,6 +55,11 @@ export class LLMApplicationBuilder {
         return this;
     }
 
+    setCache(cache: BaseCache) {
+        this.cache = cache;
+        return this;
+    }
+
     getLoaders() {
         return this.loaders;
     }
@@ -71,5 +78,9 @@ export class LLMApplicationBuilder {
 
     getQueryTemplate() {
         return this.queryTemplate;
+    }
+
+    getCache() {
+        return this.cache;
     }
 }

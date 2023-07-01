@@ -4,7 +4,7 @@
     "type": "module",
     "private": true,
     "scripts": {
-        "start": "tsc && node dist/examples/simple/src/index.js"
+        "start": "tsc && node dist/examples/pinecone/src/index.js"
     },
     "author": "",
     "license": "ISC",

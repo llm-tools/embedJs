@@ -1,17 +1,19 @@
 import { OpenAI } from 'langchain/llms/openai';
+import { loadQAMapReduceChain } from 'langchain/chains';
 
 import { BaseDb } from '../interfaces/base-db.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { LLMApplicationBuilder } from './llm-application-builder.js';
 import { Chunk, EmbeddedChunk } from '../global/types.js';
 import { LLMEmbedding } from './llm-embedding.js';
-import { loadQAMapReduceChain } from 'langchain/chains';
-import { cleanString, stringFormat } from '../global/utils.js';
+import { cleanString, filterAsync, stringFormat } from '../global/utils.js';
+import { BaseCache } from '../interfaces/base-cache.js';
 
 export class LLMApplication {
     private readonly queryTemplate: string;
     private readonly similarityScore: number;
-    private readonly loaders: BaseLoader<any>[];
+    private readonly loaders: BaseLoader[];
+    private readonly cache?: BaseCache;
     private readonly vectorDb: BaseDb;
     private readonly model: OpenAI;
 
@@ -20,6 +22,7 @@ export class LLMApplication {
         this.vectorDb = llmBuilder.getVectorDb();
         this.queryTemplate = llmBuilder.getQueryTemplate();
         this.similarityScore = llmBuilder.getSimilarityScore();
+        this.cache = llmBuilder.getCache();
 
         if (!this.vectorDb) throw new SyntaxError('VectorDb not set');
         this.model = new OpenAI({ temperature: llmBuilder.getTemperature() });
@@ -40,17 +43,24 @@ export class LLMApplication {
 
     async init() {
         await this.vectorDb.init();
+        if (this.cache) await this.cache.init();
 
         for await (const loader of this.loaders) {
             await this.addLoader(loader);
         }
     }
 
-    async addLoader(loader: BaseLoader<any>) {
+    async addLoader(loader: BaseLoader) {
         const chunks = await loader.getChunks();
+        const newChunks = this.cache
+            ? await filterAsync(chunks, async (chunk) => {
+                  return this.cache.hasSeen(chunk.metadata.id);
+              })
+            : chunks;
+        if (newChunks.length === 0) return;
 
-        const embeddings = await this.embedChunks(chunks);
-        const embedChunks = chunks.map((chunk, index) => {
+        const embeddings = await this.embedChunks(newChunks);
+        const embedChunks = newChunks.map((chunk, index) => {
             return <EmbeddedChunk>{
                 pageContent: chunk.pageContent,
                 vector: embeddings[index],
@@ -59,6 +69,13 @@ export class LLMApplication {
         });
 
         await this.vectorDb.insertChunks(embedChunks);
+        if (this.cache) {
+            await Promise.all(
+                newChunks.map(async (chunk) => {
+                    return this.cache.addSeen(chunk.metadata.id);
+                }),
+            );
+        }
     }
 
     async query(query: string): Promise<string> {

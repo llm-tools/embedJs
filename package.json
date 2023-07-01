@@ -44,7 +44,8 @@
     },
     "optionalDependencies": {
         "@pinecone-database/pinecone": "^0.1.6",
-        "vectordb": "^0.1.8"
+        "vectordb": "^0.1.8",
+        "lmdb": "^2.8.2"
     },
     "engines": {
         "node": ">= 18.0.0"

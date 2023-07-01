@@ -1,10 +1,10 @@
-export type Chunk<Meta extends Record<string, unknown> = any> = {
+export type Chunk<Meta extends Record<string, unknown> = Record<string, unknown>> = {
     pageContent: string;
-    metadata: { id: string } & Meta;
+    metadata: Meta & { id: string };
 };
 
-export type EmbeddedChunk<Meta extends Record<string, unknown> = any> = {
-    pageContent: string;
+export type EmbeddedChunk<Meta extends Record<string, unknown> = Record<string, unknown>> = {
     vector: number[];
-    metadata: { id: string } & Meta;
+    pageContent: string;
+    metadata: Meta & { id: string };
 };
