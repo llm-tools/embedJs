@@ -1,4 +1,4 @@
-export const cleanString = (text: string) => {
+export function cleanString(text: string) {
     text = text.replace(/\\/g, '');
     text = text.replace(/#/g, ' ');
     text = text.replace(/\. \./g, '.');
@@ -6,4 +6,10 @@ export const cleanString = (text: string) => {
     text = text.replace(/(\r\n|\n|\r)/gm, ' ');
 
     return text.trim();
-};
+}
+
+export function stringFormat(template: string, ...args: any[]) {
+    return template.replace(/{(\d+)}/g, function (match, number) {
+        return typeof args[number] != 'undefined' ? args[number] : match;
+    });
+}

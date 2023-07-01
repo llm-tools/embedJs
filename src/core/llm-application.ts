@@ -6,8 +6,10 @@ import { LLMApplicationBuilder } from './llm-application-builder.js';
 import { Chunk, EmbeddedChunk } from '../global/types.js';
 import { LLMEmbedding } from './llm-embedding.js';
 import { loadQAMapReduceChain } from 'langchain/chains';
+import { cleanString, stringFormat } from '../global/utils.js';
 
 export class LLMApplication {
+    private readonly queryTemplate: string;
     private readonly similarityScore: number;
     private readonly loaders: BaseLoader<any>[];
     private readonly vectorDb: BaseDb;
@@ -16,6 +18,7 @@ export class LLMApplication {
     constructor(llmBuilder: LLMApplicationBuilder) {
         this.loaders = llmBuilder.getLoaders();
         this.vectorDb = llmBuilder.getVectorDb();
+        this.queryTemplate = llmBuilder.getQueryTemplate();
         this.similarityScore = llmBuilder.getSimilarityScore();
 
         if (!this.vectorDb) throw new SyntaxError('VectorDb not set');
@@ -58,8 +61,9 @@ export class LLMApplication {
         await this.vectorDb.insertChunks(embedChunks);
     }
 
-    async query(prompt: string): Promise<string> {
-        const queryEmbedded = await this.getQueryEmbedding(prompt);
+    async query(query: string): Promise<string> {
+        const prompt = stringFormat(this.queryTemplate, query);
+        const queryEmbedded = await this.getQueryEmbedding(cleanString(prompt));
         const contextChunks = await this.vectorDb.similaritySearch(queryEmbedded, this.similarityScore);
         const translatedChunks = this.translateChunks(contextChunks);
 

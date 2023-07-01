@@ -49,13 +49,19 @@ export class LanceDb implements BaseDb {
     async similaritySearch(query: number[], k: number): Promise<Chunk[]> {
         const results = await this.table.search(query).limit(k).execute();
 
-        return results.map((result) => {
-            const metadata = JSON.parse(<string>result.metadata);
+        return (
+            results
+                //a mandatory record is required by lance during init to get schema
+                //and this record is also returned in results; we filter it out
+                .filter((entry) => entry.id !== 'md5')
+                .map((result) => {
+                    const metadata = JSON.parse(<string>result.metadata);
 
-            return {
-                pageContent: <string>result.pageContent,
-                metadata,
-            };
-        });
+                    return {
+                        pageContent: <string>result.pageContent,
+                        metadata,
+                    };
+                })
+        );
     }
 }

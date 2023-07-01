@@ -1,16 +1,12 @@
 import 'dotenv/config';
 import * as path from 'node:path';
-import { fileURLToPath } from 'url';
+import { LLMApplicationBuilder, PdfLoader, PineconeDb, TextLoader, YoutubeLoader } from '../../../src/index.js';
 
-import { LLMApplicationBuilder, LanceDb, PdfLoader, TextLoader, YoutubeLoader } from '../../../src/index.js';
-
-const __filename = fileURLToPath(import.meta.url);
 const llmApplication = await new LLMApplicationBuilder()
-    .setTemperature(0.1)
     .addLoader(new PdfLoader({ filePath: path.resolve('../paxos-simple.pdf') }))
     .addLoader(new YoutubeLoader({ videoIdOrUrl: 'https://www.youtube.com/watch?v=w2KbwC-s7pY' }))
-    .addLoader(new TextLoader({ text: 'The best name for a company making colorful socks is MrSocks' }))
-    .setVectorDb(new LanceDb({ path: path.resolve(path.dirname(__filename), '../../../db') }))
+    .addLoader(new TextLoader({ text: 'The best company name for a company making colorful socks is MrSocks' }))
+    .setVectorDb(new PineconeDb({ projectName: 'test', namespace: 'dev' }))
     .build();
 
 console.log(await llmApplication.query('What is paxos?'));
