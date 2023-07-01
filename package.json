@@ -1,5 +1,5 @@
 {
-    "name": "llmembed",
+    "name": "@llmembed/embedjs",
     "version": "0.0.1",
     "description": "A framework to easily create LLM Embeddings over a dataset",
     "main": "dist/src/index.js",
@@ -10,18 +10,19 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/adhityan/llmembed.git"
+        "url": "https://github.com/llmembed/embedjs"
     },
     "keywords": [
         "llm",
         "embedding",
         "openai"
     ],
+    "license": "Apache-2.0",
     "author": "K V Adhityan",
     "bugs": {
-        "url": "https://github.com/adhityan/llmembed/issues"
+        "url": "https://github.com/llmembed/embedjs/issues"
     },
-    "homepage": "https://github.com/adhityan/llmembed#readme",
+    "homepage": "https://github.com/llmembed/embedjs#readme",
     "dependencies": {
         "langchain": "^0.0.100",
         "md5": "^2.3.0",

@@ -25,11 +25,11 @@ console.log(await llmApplication.query('What is the best name for a company maki
 // Output: MrSocks
 ```
 
-The library comes with built in loaders for PDFs, Youtube videos, custom text and web pages. You can add your own custom loaders by implementing the abstract class `BaseLoader` or send in a PR to contribute new loaders to the library.
+The library comes with built in loaders for PDFs, Youtube videos, custom text and web pages. You can bring your own custom loader.
 
-You have the choice to use any vector database to store the results. The library comes with built in support for Pinecone and Lance vector databases. Please support us by sending a PR to enable your favorite database.
+You have the choice of vector database to store the results. The library comes with built in support for Pinecone and Lance databases. You can also add a custom database.
 
-The library also provides support for caches which provide caching for embeddings, loaders and optionally queries. Chunks that are already seen are not re-processed. Similarly, entire loaders are cached and not processed if they have been already encountered. The library supports LMDB and inMemory caches by default. Support for more caches is planned. Please support us by sending a PR to fast track your favorite cache implementation.
+The library also supports caches which provide caching for embeddings, loaders and optionally queries. Chunks that are already seen are not re-processed. Similarly, entire loaders are cached and not processed if they have been already encountered. Read below for more information on this.
 
 # Getting started
 
@@ -144,7 +144,7 @@ We really encourage you send in a PR to this library if you are implementing a c
 
 ### More loaders coming soon
 
-If you want to add any other format, please create an [issue](https://github.com/adhityan/llmembed/issues) and we will add it to the list of supported formats. All PRs are welcome.
+If you want to add any other format, please create an [issue](https://github.com/llmembed/embedjs/issues) and we will add it to the list of supported formats. All PRs are welcome.
 
 ## Vector databases supported
 
@@ -213,7 +213,7 @@ We really encourage you send in a PR to this library if you are implementing a f
 
 ### More databases coming soon
 
-If you want to add support for any other vector database, please create an [issue](https://github.com/adhityan/llmembed/issues) and we will add it to the list of supported databases. All PRs are welcome.
+If you want to add support for any other vector database, please create an [issue](https://github.com/llmembed/embedjs/issues) and we will add it to the list of supported databases. All PRs are welcome.
 
 ## Caches
 
@@ -271,7 +271,7 @@ We really encourage you send in a PR to this library if you are implementing a f
 
 ### More caches coming soon
 
-If you want to add support for any other cache providers, please create an [issue](https://github.com/adhityan/llmembed/issues) and we will add it to the list of supported caches. All PRs are welcome.
+If you want to add support for any other cache providers, please create an [issue](https://github.com/llmembed/embedjs/issues) and we will add it to the list of supported caches. All PRs are welcome.
 
 # Core dependencies
 
