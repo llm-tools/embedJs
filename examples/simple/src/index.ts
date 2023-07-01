@@ -7,7 +7,7 @@ import { LLMApplicationBuilder, LanceDb, PdfLoader, WebLoader, YoutubeLoader } f
 const __filename = fileURLToPath(import.meta.url);
 const llmApplication = await new LLMApplicationBuilder()
     .setTemperature(0.1)
-    .addLoader(new PdfLoader({ filePath: path.resolve('../paxos-simple.pdf') }))
+    .addLoader(new PdfLoader({ url: 'https://lamport.azurewebsites.net/pubs/paxos-simple.pdf' }))
     .addLoader(new YoutubeLoader({ videoIdOrUrl: 'https://www.youtube.com/watch?v=w2KbwC-s7pY' }))
     .addLoader(new WebLoader({ url: 'https://adhityan.com/' }))
     .setVectorDb(new LanceDb({ path: path.resolve(path.dirname(__filename), '../../../db') }))

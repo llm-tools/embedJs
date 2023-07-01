@@ -1,6 +1,6 @@
 {
     "name": "@llmembed/embedjs",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "A NodeJS framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -14,7 +14,11 @@
     },
     "keywords": [
         "llm",
+        "gpt",
+        "openai",
+        "chatgpt",
         "embedding",
+        "embeddings",
         "openai"
     ],
     "license": "Apache-2.0",
@@ -39,7 +43,6 @@
     },
     "devDependencies": {
         "@types/node": "^20.3.2",
-        "@types/pdf-parse": "^1.1.1",
         "@typescript-eslint/eslint-plugin": "^5.60.1",
         "@typescript-eslint/parser": "^5.60.1",
         "eslint": "^8.44.0",

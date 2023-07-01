@@ -183,10 +183,22 @@ To add any youtube video to your app, use `YoutubeLoader`.
 
 ## PDF file
 
-To add a pdf file, use `PdfLoader`.
+To add a pdf file, use `PdfLoader`. You can add a local file -
 
 ```TS
 .addLoader(new PdfLoader({ filePath: path.resolve('paxos-simple.pdf') }))
+```
+
+Or, you can add a remote file -
+
+```TS
+.addLoader(new PdfLoader({ url: 'https://lamport.azurewebsites.net/pubs/paxos-simple.pdf' }))
+```
+
+By default, the PdfLoader uses the hash of the filePath or the Url as the loader cache key. In some cases, like when using dynamic files with the same name, you can pass in your own custom uniqueId like so -
+
+```TS
+.addLoader(new PdfLoader({ url: '<URL>', , uniqueId: 'MY_UNIQUE_ID' }))
 ```
 
 **Note:** Currently there is no support for PDF forms and password protected documents
