@@ -1,6 +1,6 @@
 {
     "name": "@llmembed/embedjs",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "A framework to easily create LLM Embeddings over a dataset",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",

@@ -1,5 +1,15 @@
 # EmbedJS
 
+<p>
+<a href="https://www.npmjs.com/package/@llmembed/embedjs"  target="_blank">
+<img alt="npm (scoped)" src="https://img.shields.io/npm/v/%40llmembed/embedjs">
+</a>
+
+<a href="https://www.npmjs.com/package/@llmembed/embedjs"  target="_blank">
+<img alt="NPM" src="https://img.shields.io/npm/l/%40llmembed%2Fembedjs">
+</a>
+</p>
+
 EmbedJS is a NodeJS framework to easily enable LLM powered interactions over any dataset. It simplifies the process of loading a dataset, chunking it, creating embeddings and then storing onto a vector database.
 
 Here's an example
@@ -56,6 +66,7 @@ The library also supports caches which provide caching for embeddings, loaders a
     -   [How to request new cache providers](#more-caches-coming-soon)
 -   [Usage with Azure OpenAI](#azure-openai)
 -   [Dependencies](#core-dependencies)
+-   [Examples](#projects)
 -   [Author](#author)
 
 # Getting started
@@ -399,7 +410,15 @@ EmbedJS is built on top of the fantastic work being done on OpenAI and the open 
 -   [OpenAI Ada embedding](https://platform.openai.com/docs/guides/embeddings) to create embeddings
 -   [OpenAI ChatGPT API](https://platform.openai.com/docs/guides/gpt/chat-completions-api) as the LLM to get answers to prompts.
 
-# Author
+# Projects
+
+Here's a list of projects / examples built with EmbedJs
+
+| **Project**                                                                  | **Description**                      | **Author**   |
+| ---------------------------------------------------------------------------- | ------------------------------------ | ------------ |
+| [nestjs-embedjs-example](https://github.com/llmembed/nestjs-embedjs-example) | A NestJS template built with EmbedJS | K V Adhityan |
+
+# Contributors
 
 -   [K V Adhityan](https://adhityan.com/)
 
