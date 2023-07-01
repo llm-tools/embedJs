@@ -1,7 +1,7 @@
 {
     "name": "@llmembed/embedjs",
-    "version": "0.0.5",
-    "description": "A framework to easily create LLM Embeddings over a dataset",
+    "version": "0.0.7",
+    "description": "A NodeJS framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "type": "module",
@@ -49,10 +49,21 @@
         "typescript": "^5.1.6",
         "@types/html-to-text": "^9.0.1"
     },
-    "optionalDependencies": {
+    "peerDependencies": {
         "@pinecone-database/pinecone": "^0.1.6",
         "lmdb": "^2.8.2",
         "vectordb": "^0.1.8"
+    },
+    "peerDependenciesMeta": {
+        "@pinecone-database/pinecone": {
+            "optional": true
+        },
+        "vectordb": {
+            "optional": true
+        },
+        "lmdb": {
+            "optional": true
+        }
     },
     "engines": {
         "node": ">= 18.0.0"

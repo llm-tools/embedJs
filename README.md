@@ -10,7 +10,7 @@
 </a>
 </p>
 
-EmbedJS is a NodeJS framework to easily enable LLM powered interactions over any dataset. It simplifies the process of loading a dataset, chunking it, creating embeddings and then storing onto a vector database.
+EmbedJS is a NodeJS framework that enables LLM powered interactions over any dataset with ease. It simplifies the process of loading a dataset, chunking it, creating embeddings and then storing onto a vector database.
 
 Here's an example
 
