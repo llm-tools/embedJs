@@ -1,6 +1,6 @@
 # EmbedJS
 
-EmbedJS is a framework to easily enable LLM powered interactions over any dataset. It simplifies the process of loading a dataset, chunking it, creating embeddings and then storing onto a vector database.
+EmbedJS is a NodeJS framework to easily enable LLM powered interactions over any dataset. It simplifies the process of loading a dataset, chunking it, creating embeddings and then storing onto a vector database.
 
 Here's an example
 
@@ -9,18 +9,18 @@ const llmApplication = await new LLMApplicationBuilder()
     .setTemperature(0.1)
     .addLoader(new PdfLoader({ filePath: path.resolve('../paxos-simple.pdf') }))
     .addLoader(new YoutubeLoader({ videoIdOrUrl: 'https://www.youtube.com/watch?v=w2KbwC-s7pY' }))
-    .addLoader(new TextLoader({ text: 'The best name for a company making colorful socks is MrSocks' }))
+    .addLoader(new WebLoader({ url: 'https://adhityan.com/' }))
     .setVectorDb(new LanceDb({ path: path.resolve('/db') }))
     .build();
 
 console.log(await llmApplication.query('What is paxos?'));
-// Output: Paxos is an algorithm for implementing a fault-tolerant distributed system. It assumes a network of processes, each of which plays the role of proposer, acceptor, and learner. The algorithm chooses a leader, which plays the roles of the distinguished proposer and learner. The algorithm is used to reach consensus on a chosen value, and is obtained by the straightforward application of consensus to the state machine approach for building a distributed system.
+// Paxos is an algorithm for implementing a fault-tolerant distributed system. It assumes a network of processes, each of which plays the role of proposer, acceptor, and learner. The algorithm chooses a leader, which plays the roles of the distinguished proposer and learner. The algorithm is used to reach consensus on a chosen value, and is obtained by the straightforward application of consensus to the state machine approach for building a distributed system.
 
 console.log(await llmApplication.query('Why Does the M2 Mac Pro Exist?'));
-// Output: The Mac Pro exists to provide users with a powerful and expandable workstation-class computer.
+// The Mac Pro exists to provide users with access to PCI slots, as well as other unique features such as its design and performance capabilities.
 
-console.log(await llmApplication.query('What is the best name for a company making colorful socks?'));
-// Output: MrSocks
+console.log(await llmApplication.query('Who is Adhityan?'));
+// Adhityan is a programmer, entrepreneur, and architect who is the Director of Engineering at Shift and has a presence on LinkedIn, GitHub, and Angel.co.
 ```
 
 The library comes with built in loaders for PDFs, Youtube videos, custom text and web pages. You can bring your own custom loader.

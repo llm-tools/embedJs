@@ -1,6 +1,6 @@
 {
     "name": "@llmembed/embedjs",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "A framework to easily create LLM Embeddings over a dataset",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
@@ -30,6 +30,8 @@
     ],
     "homepage": "https://github.com/llmembed/embedjs#readme",
     "dependencies": {
+        "axios": "^1.4.0",
+        "html-to-text": "^9.0.5",
         "langchain": "^0.0.100",
         "md5": "^2.3.0",
         "pdf-parse-fork": "^1.2.0",
@@ -44,12 +46,13 @@
         "eslint-config-prettier": "^8.8.0",
         "eslint-plugin-prettier": "^4.2.1",
         "prettier": "^2.8.8",
-        "typescript": "^5.1.6"
+        "typescript": "^5.1.6",
+        "@types/html-to-text": "^9.0.1"
     },
     "optionalDependencies": {
         "@pinecone-database/pinecone": "^0.1.6",
-        "vectordb": "^0.1.8",
-        "lmdb": "^2.8.2"
+        "lmdb": "^2.8.2",
+        "vectordb": "^0.1.8"
     },
     "engines": {
         "node": ">= 18.0.0"
