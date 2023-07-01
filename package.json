@@ -26,7 +26,6 @@
     "dependencies": {
         "langchain": "^0.0.100",
         "md5": "^2.3.0",
-        "nanoid": "^4.0.2",
         "pdf-parse-fork": "^1.2.0",
         "youtube-transcript": "^1.0.6"
     },

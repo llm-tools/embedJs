@@ -5,12 +5,11 @@ import md5 from 'md5';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { cleanString } from '../global/utils.js';
 
-export class YoutubeLoader
-    implements BaseLoader<{ type: 'YOUTUBE'; chunkId: number; id: string; videoIdOrUrl: string }>
-{
+export class YoutubeLoader extends BaseLoader<{ type: 'YOUTUBE'; chunkId: number; id: string; videoIdOrUrl: string }> {
     private readonly videoIdOrUrl: string;
 
     constructor({ videoIdOrUrl }: { videoIdOrUrl: string }) {
+        super(md5(videoIdOrUrl));
         this.videoIdOrUrl = videoIdOrUrl;
     }
 

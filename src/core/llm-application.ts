@@ -51,6 +51,9 @@ export class LLMApplication {
     }
 
     async addLoader(loader: BaseLoader) {
+        const uniqueId = loader.getUniqueId();
+        if (this.cache && (await this.cache.hasSeen(uniqueId))) return;
+
         const chunks = await loader.getChunks();
         const newChunks = this.cache
             ? await filterAsync(chunks, async (chunk) => {
@@ -75,6 +78,8 @@ export class LLMApplication {
                     return this.cache.addSeen(chunk.metadata.id);
                 }),
             );
+
+            await this.cache.addSeen(uniqueId);
         }
     }
 

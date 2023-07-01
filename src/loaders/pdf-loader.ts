@@ -7,10 +7,11 @@ import md5 from 'md5';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { cleanString } from '../global/utils.js';
 
-export class PdfLoader implements BaseLoader<{ type: 'PDF'; chunkId: number; pdfName: string; id: string }> {
-    private filePath: string;
+export class PdfLoader extends BaseLoader<{ type: 'PDF'; chunkId: number; pdfName: string; id: string }> {
+    private readonly filePath: string;
 
-    constructor({ filePath }: { filePath: string }) {
+    constructor({ filePath, uniqueId }: { filePath: string; uniqueId?: string }) {
+        super(md5(uniqueId ?? filePath));
         this.filePath = filePath;
     }
 
