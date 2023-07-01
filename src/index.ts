@@ -10,8 +10,10 @@ import { WebLoader } from './loaders/web-loader.js';
 import { BaseLoader } from './interfaces/base-loader.js';
 import { BaseDb } from './interfaces/base-db.js';
 import { BaseCache } from 'langchain/schema';
+import { LLMApplication } from './core/llm-application.js';
 
 export {
+    LLMApplication,
     LLMApplicationBuilder,
     PineconeDb,
     LanceDb,

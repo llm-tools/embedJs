@@ -65,7 +65,7 @@ The library also supports caches which provide caching for embeddings, loaders a
 You can install the library via NPM or Yarn
 
 ```bash
-npm install embedjs
+npm i @llmembed/embedjs
 ```
 
 ## Usage
@@ -391,13 +391,13 @@ export OPENAI_API_KEY=<Your Azure OpenAI API key>
 
 **NOTE:** At the time of writing this, Azure OpenAI is an invite only program.
 
-# Core dependencies
+# Important dependencies
 
 EmbedJS is built on top of the fantastic work being done on OpenAI and the open source community behind it. Internally it uses -
 
 -   [Langchain](https://github.com/hwchase17/langchain) as an LLM library to load and chunk data
--   [OpenAI's Ada embedding model](https://platform.openai.com/docs/guides/embeddings) to create embeddings
--   [OpenAI's ChatGPT API](https://platform.openai.com/docs/guides/gpt/chat-completions-api) as the LLM to get answers to prompts.
+-   [OpenAI Ada embedding](https://platform.openai.com/docs/guides/embeddings) to create embeddings
+-   [OpenAI ChatGPT API](https://platform.openai.com/docs/guides/gpt/chat-completions-api) as the LLM to get answers to prompts.
 
 # Author
 

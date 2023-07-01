@@ -1,7 +1,7 @@
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import pdf from 'pdf-parse';
+import pdf from 'pdf-parse-fork';
 import md5 from 'md5';
 
 import { BaseLoader } from '../interfaces/base-loader.js';

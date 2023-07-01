@@ -1,7 +1,8 @@
 import { PineconeClient } from '@pinecone-database/pinecone';
+import { UpsertOperationRequest } from '@pinecone-database/pinecone/dist/pinecone-generated-ts-fetch/index.js';
+
 import { BaseDb } from '../interfaces/base-db.js';
 import { Chunk, EmbeddedChunk } from '../global/types.js';
-import { UpsertOperationRequest } from '@pinecone-database/pinecone/dist/pinecone-generated-ts-fetch/index.js';
 
 export class PineconeDb implements BaseDb {
     private namespace: string;
@@ -13,6 +14,7 @@ export class PineconeDb implements BaseDb {
         this.projectName = projectName;
         this.namespace = namespace;
     }
+
     async init() {
         await this.client.init({
             apiKey: process.env.PINECONE_API_KEY,

@@ -23,7 +23,6 @@ export class WebLoader extends BaseLoader<{ type: 'WEB'; chunkId: number; id: st
         });
 
         const chunks = await chunker.splitText(cleanString(text));
-        console.log(chunks);
         return chunks.map((chunk, index) => {
             return {
                 pageContent: chunk,
