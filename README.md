@@ -301,7 +301,7 @@ In this case, the `path` property is used as a prefix to create the temporary di
 
 ## Chroma
 
-[Chroma](https://trychroma.com/) is an open source vector database. It's designed to be Python first and to connect to it from NodeJS, you will need to run Chroma in a container following the steps [listed here](https://docs.trychroma.com/). Once done, follow these steps to use Chroma as your vector database -
+[Chroma](https://trychroma.com/) is an open source vector database. It's designed to be Python first and to connect to it from NodeJS, you will need to run Chroma in a container following the steps [listed here](https://docs.trychroma.com/getting-started). Once done, follow these steps to use Chroma as your vector database -
 
 -   Install Chroma package in your project
 
