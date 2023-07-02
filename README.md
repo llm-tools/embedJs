@@ -66,7 +66,7 @@ The library also supports caches which provide caching for embeddings, loaders a
     -   [Custom cache implementation](#bring-your-own-cache)
     -   [How to request new cache providers](#more-caches-coming-soon)
 -   [Embedding Models](#embedding-models)
-    -   [ADA](#adaembeddings)
+    -   [ADA](#ada)
     -   [Cohere](#cohere)
     -   [Private embedding models](#use-custom-embedding-model)
     -   [Request support for embedding models](#more-embedding-models-coming-soon)
@@ -424,7 +424,7 @@ However in some advanced cases, you may want to change this; after all, differen
 
 The library supports the following embedding models -
 
-## AdaEmbeddings
+## Ada
 
 The `text-embedding-ada-002	
 ` is the default embedding model used by the libary. You can read more about it [here](https://openai.com/blog/new-and-improved-embedding-model). This model returns vectors with dimension 1536.
