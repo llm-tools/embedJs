@@ -12,7 +12,7 @@
 
 EmbedJS is a NodeJS framework that enables LLM powered interactions over any dataset with ease. It simplifies the process of loading a dataset, chunking it, creating embeddings and then storing onto a vector database.
 
-Here's an example
+Here's an example -
 
 ```TS
 const llmApplication = await new LLMApplicationBuilder()
@@ -100,14 +100,12 @@ OPENAI_API_KEY="sk-<REST_OF_YOUR_KEY>"
 ```TS
 import * as path from 'node:path';
 
-import {
-    LLMApplicationBuilder,
-    LmdbCache,
-    PdfLoader,
-    PineconeDb,
-    TextLoader,
-    YoutubeLoader,
-} from '../../../src/index.js';
+import { LLMApplicationBuilder } from '@llmembed/embedjs';
+import { PdfLoader } from '@llmembed/embedjs/loader/pdf';
+import { LmdbCache } from '@llmembed/embedjs/cache/lmdb';
+import { TextLoader } from '@llmembed/embedjs/loader/text';
+import { YoutubeLoader } from '@llmembed/embedjs/loader/youtube';
+import { PineconeDb } from '@llmembed/embedjs/databases/pinecone';
 
 const llmApplication = await new LLMApplicationBuilder()
     .addLoader(new PdfLoader({ filePath: path.resolve('../paxos-simple.pdf') }))
@@ -118,7 +116,7 @@ const llmApplication = await new LLMApplicationBuilder()
     .build();
 ```
 
--   Now that you have your instance of `LLMApplication`, you can use it to query against the data set, like so -
+-   That's it! Now that you have your instance of `LLMApplication`, you can use it to query against the data set, like so -
 
 ```TS
 await llmApplication.query('What is paxos?');

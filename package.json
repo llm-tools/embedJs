@@ -1,6 +1,6 @@
 {
     "name": "@llmembed/embedjs",
-    "version": "0.0.15",
+    "version": "0.0.16",
     "description": "A NodeJS framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -117,6 +117,22 @@
         "./embeddings/cohere": {
             "types": "./dist/embeddings/cohere-embeddings.d.ts",
             "import": "./dist/embeddings/cohere-embeddings.js"
+        },
+        "./loader/pdf": {
+            "types": "./dist/loaders/pdf-loader.d.ts",
+            "import": "./dist/loaders/pdf-loader.js"
+        },
+        "./loader/text": {
+            "types": "./dist/loaders/text-loader.d.ts",
+            "import": "./dist/loaders/text-loader.js"
+        },
+        "./loader/web": {
+            "types": "./dist/loaders/web-loader.d.ts",
+            "import": "./dist/loaders/web-loader.js"
+        },
+        "./loader/youtube": {
+            "types": "./dist/loaders/youtube-loader.d.ts",
+            "import": "./dist/loaders/youtube-loader.js"
         },
         "./package.json": "./package.json"
     }
