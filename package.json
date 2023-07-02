@@ -1,6 +1,6 @@
 {
     "name": "@llmembed/embedjs",
-    "version": "0.0.9",
+    "version": "0.0.10",
     "description": "A NodeJS framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -52,7 +52,7 @@
         "typescript": "^5.1.6",
         "@types/html-to-text": "^9.0.1"
     },
-    "peerDependencies": {
+    "optionalDependencies": {
         "@pinecone-database/pinecone": "^0.1.6",
         "lmdb": "^2.8.2",
         "vectordb": "^0.1.8",
