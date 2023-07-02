@@ -11,6 +11,7 @@ import { BaseLoader } from './interfaces/base-loader.js';
 import { BaseDb } from './interfaces/base-db.js';
 import { BaseCache } from 'langchain/schema';
 import { LLMApplication } from './core/llm-application.js';
+import { ChromaDb } from './databases/chroma-db.js';
 
 export {
     LLMApplication,
@@ -26,4 +27,5 @@ export {
     BaseCache,
     BaseDb,
     BaseLoader,
+    ChromaDb,
 };

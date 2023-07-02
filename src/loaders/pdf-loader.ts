@@ -30,7 +30,6 @@ export class PdfLoader extends BaseLoader<{ type: 'PDF'; chunkId: number; pathOr
         const pdfParsed = await pdf(fileBuffer);
 
         const chunks = await chunker.splitText(cleanString(pdfParsed.text));
-        console.log(chunks);
         return chunks.map((chunk, index) => {
             return {
                 pageContent: chunk,

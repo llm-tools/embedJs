@@ -298,6 +298,28 @@ npm install vectordb
 
 In this case, the `path` property is used as a prefix to create the temporary directory in the OS temp directory folder.
 
+## Chroma
+
+[Chroma](https://trychroma.com/) is an open source vector database. It's designed to be Python first and to connect to it from NodeJS, you will need to run Chroma in a container following the steps [listed here](https://docs.trychroma.com/). Once done, follow these steps to use Chroma as your vector database -
+
+-   Install Chroma package in your project
+
+```bash
+npm install chromadb
+```
+
+-   Set Chhroma database as your choice of `vectorDb`
+
+```TS
+.setVectorDb(new ChromaDb({ url: 'http://localhost:8000' }))
+```
+
+**Note:** This is the default url and port if you run the Chroma docker container using the command `docker-compose up -d --build`.
+
+A warning -
+
+> In our testing, chroma performed the poorest in being able to retrieve relevant documents among the supported vector databases.
+
 ## Bring your own database
 
 You can pass along your vector database to the `setVectorDb` method by implementing the interface `BaseDb`. Here's how that would look like -

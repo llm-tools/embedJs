@@ -1,6 +1,8 @@
 import { Chunk } from '../global/types.js';
 
-export abstract class BaseLoader<Meta extends Record<string, unknown> = Record<string, unknown>> {
+export abstract class BaseLoader<
+    Meta extends Record<string, string | number | boolean> = Record<string, string | number | boolean>,
+> {
     protected readonly uniqueId: string;
 
     constructor(uniqueId: string) {
