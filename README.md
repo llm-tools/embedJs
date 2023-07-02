@@ -65,6 +65,11 @@ The library also supports caches which provide caching for embeddings, loaders a
     -   [In memory cache](#inmemory)
     -   [Custom cache implementation](#bring-your-own-cache)
     -   [How to request new cache providers](#more-caches-coming-soon)
+-   [Embedding Models](#embedding-models)
+    -   [ADA](#adaembeddings)
+    -   [Cohere](#cohere)
+    -   [Private embedding models](#use-custom-embedding-model)
+    -   [Request support for embedding models](#more-embedding-models-coming-soon)
 -   [Usage with Azure OpenAI](#azure-openai)
 -   [Dependencies](#core-dependencies)
 -   [Examples](#projects)
@@ -410,6 +415,68 @@ We really encourage you send in a PR to this library if you are implementing a f
 ## More caches coming soon
 
 If you want to add support for any other cache providers, please create an [issue](https://github.com/llmembed/embedjs/issues) and we will add it to the list of supported caches. All PRs are welcome.
+
+# Embedding models
+
+Embedding models are LLMs that convert a string into vector better suited for processing. In most cases, the default `text-embedding-ada-002` model from OpenAI is going to be good enough. If you want to use this model, you do not have to do anything.
+
+However in some advanced cases, you may want to change this; after all, different embedding models perform differently under different curcumstances. The library allows you to do this using the method `setEmbeddingModel` while building the `LLMApplication`.
+
+The library supports the following embedding models -
+
+## AdaEmbeddings
+
+The `text-embedding-ada-002	
+` is the default embedding model used by the libary. You can read more about it [here](https://openai.com/blog/new-and-improved-embedding-model). This model returns vectors with dimension 1536.
+
+You do not have to do anything to enable it.
+
+## Cohere
+
+The library supports usage of [Cohere-AI](https://cohere.com) `embed-english-v2.0` embedding model out of the box. This model returns vectors with dimension 4096.
+
+Here's what you have to do to enable it -
+
+-   Sign up for an account with Cohere-AI if you have not done so already. Once done, go to the [API Keys](https://dashboard.cohere.ai/api-keys) section and copy an API_KEY.
+
+-   Load the key you just obtained in the environment variable `COHERE_API_KEY`
+
+```bash
+COHERE_API_KEY="<YOUR_KEY>"
+```
+
+-   Set `CohereEmbeddings` as your embedding model on `LLMApplicationBuilder`
+
+```TS
+await new LLMApplicationBuilder()
+.setEmbeddingModel(new CohereEmbeddings())
+```
+
+## Use custom embedding model
+
+You can use your own custom embedding model by implementing the `setEmbeddingModel` interface. Here's how that would look like -
+
+```TS
+class MyOwnEmbeddingImplementation implements BaseEmbeddings {
+    embedDocuments(texts: string[]): Promise<number[][]> {
+        throw new Error("Method not implemented.");
+    }
+
+    embedQuery(text: string): Promise<number[]> {
+        throw new Error("Method not implemented.");
+    }
+
+    getDimensions(): number {
+        throw new Error("Method not implemented.");
+    }
+}
+```
+
+Once done, you can pass this class to the `setEmbeddingModel` method like shown in the Cohere example above. That said, we really encourage you send in a PR to this library if you are implementing a famous or common embedding provider, so the community can benefit from it.
+
+## More embedding models coming soon
+
+If you want us to add support for a specific embedding model, please create an [issue](https://github.com/llmembed/embedjs/issues) and we will prioritize it. Our current priority is to add support for the [HuggingFace's Sentence Transformer](https://huggingface.co/sentence-transformers) model. All PRs are welcome.
 
 # Azure OpenAI
 

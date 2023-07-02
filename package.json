@@ -62,7 +62,8 @@
         "lmdb": "^2.8.2",
         "vectordb": "^0.1.8",
         "chromadb": "^1.5.3",
-        "hnswlib-node": "^1.4.2"
+        "hnswlib-node": "^1.4.2",
+        "cohere-ai": "^5.1.0"
     },
     "peerDependenciesMeta": {
         "@pinecone-database/pinecone": {
@@ -75,6 +76,9 @@
             "optional": true
         },
         "lmdb": {
+            "optional": true
+        },
+        "cohere-ai": {
             "optional": true
         }
     },
@@ -105,6 +109,14 @@
         "./cache/memory": {
             "types": "./dist/databases/memory-cache.d.ts",
             "import": "./dist/databases/memory-cache.js"
+        },
+        "./embeddings/ada": {
+            "types": "./dist/embeddings/ada-embeddings.d.ts",
+            "import": "./dist/embeddings/ada-embeddings.js"
+        },
+        "./embeddings/cohere": {
+            "types": "./dist/embeddings/cohere-embeddings.d.ts",
+            "import": "./dist/embeddings/cohere-embeddings.js"
         },
         "./package.json": "./package.json"
     }
