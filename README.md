@@ -57,6 +57,7 @@ The library also supports caches which provide caching for embeddings, loaders a
 -   [Vector databases supported](#vector-databases-supported)
     -   [Pinecone](#pinecone)
     -   [LanceDB](#lancedb)
+    -   [Chroma](#chroma)
     -   [Own Database](#bring-your-own-database)
     -   [How to request new vector databases](#more-databases-coming-soon)
 -   [Caches](#caches)
