@@ -71,7 +71,7 @@ The library also supports caches which provide caching for embeddings, loaders a
     -   [Private embedding models](#use-custom-embedding-model)
     -   [Request support for embedding models](#more-embedding-models-coming-soon)
 -   [Usage with Azure OpenAI](#azure-openai)
--   [Dependencies](#core-dependencies)
+-   [Dependencies](#important-dependencies)
 -   [Examples](#projects)
 -   [Author](#author)
 
