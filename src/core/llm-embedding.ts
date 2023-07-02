@@ -1,34 +1,37 @@
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-import { Chunk } from '../global/types.js';
 import { Document } from 'langchain/document';
+
+import { Chunk } from '../global/types.js';
+import { BaseEmbeddings } from '../interfaces/base-embeddings.js';
 
 export class LLMEmbedding {
     private static singleton: LLMEmbedding;
 
-    public static getInstance() {
-        if (!LLMEmbedding.singleton) {
-            LLMEmbedding.singleton = new LLMEmbedding();
-        }
+    public static init(embeddingModel: BaseEmbeddings) {
+        if (!this.singleton) {
+            this.singleton = new LLMEmbedding(embeddingModel);
+        } else throw new Error('Reinitialized embedding model');
+    }
 
+    public static getInstance() {
         return LLMEmbedding.singleton;
     }
 
-    private readonly embedding: OpenAIEmbeddings;
-
-    private constructor() {
-        this.embedding = new OpenAIEmbeddings({ maxConcurrency: 3, maxRetries: 5 });
+    public static getEmbedding() {
+        return LLMEmbedding.getInstance().embedding;
     }
 
-    public getEmbedding() {
-        return this.embedding;
-    }
-
-    public translateChunks(chunks: Chunk[]) {
+    public static translateChunks(chunks: Chunk[]) {
         return chunks.map((chunk) => {
             return <Document>{
                 pageContent: chunk.pageContent,
                 metadata: chunk.metadata,
             };
         });
+    }
+
+    private readonly embedding: BaseEmbeddings;
+
+    private constructor(embeddingModel: BaseEmbeddings) {
+        this.embedding = embeddingModel;
     }
 }

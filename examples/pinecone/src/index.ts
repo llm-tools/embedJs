@@ -2,14 +2,9 @@ import 'dotenv/config';
 import * as path from 'node:path';
 import { fileURLToPath } from 'url';
 
-import {
-    LLMApplicationBuilder,
-    LmdbCache,
-    PdfLoader,
-    PineconeDb,
-    TextLoader,
-    YoutubeLoader,
-} from '../../../src/index.js';
+import { LLMApplicationBuilder, PdfLoader, TextLoader, YoutubeLoader } from '../../../src/index.js';
+import { PineconeDb } from '../../../src/databases/pinecone-db.js';
+import { LmdbCache } from '../../../src/cache/lmdb-cache.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const llmApplication = await new LLMApplicationBuilder()

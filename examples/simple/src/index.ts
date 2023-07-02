@@ -2,7 +2,8 @@ import 'dotenv/config';
 import * as path from 'node:path';
 import { fileURLToPath } from 'url';
 
-import { LLMApplicationBuilder, LanceDb, PdfLoader, WebLoader, YoutubeLoader } from '../../../src/index.js';
+import { LLMApplicationBuilder, PdfLoader, WebLoader, YoutubeLoader } from '../../../src/index.js';
+import { LanceDb } from '../../../src/databases/lance-db.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const llmApplication = await new LLMApplicationBuilder()

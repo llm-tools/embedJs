@@ -16,7 +16,7 @@ export class LanceDb implements BaseDb {
         this.path = path;
     }
 
-    async init() {
+    async init({ dimensions }: { dimensions: number }) {
         if (!this.isTemp && !fsOld.existsSync(this.path)) {
             await fs.mkdir(this.path);
         }
@@ -28,7 +28,7 @@ export class LanceDb implements BaseDb {
         if (list.indexOf(LanceDb.STATIC_DB_NAME) > -1) this.table = await client.openTable(LanceDb.STATIC_DB_NAME);
         else {
             this.table = await client.createTable(LanceDb.STATIC_DB_NAME, [
-                { id: 'md5', pageContent: 'sample', vector: Array(1536), metadata: 'json' },
+                { id: 'md5', pageContent: 'sample', vector: Array(dimensions), metadata: 'json' },
             ]);
         }
     }

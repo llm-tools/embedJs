@@ -24,25 +24,18 @@ export class LLMApplication {
         this.searchResultCount = llmBuilder.getSearchResultCount();
         this.cache = llmBuilder.getCache();
 
+        LLMEmbedding.init(llmBuilder.getEmbeddingModel());
         if (!this.vectorDb) throw new SyntaxError('VectorDb not set');
         this.model = new OpenAI({ temperature: llmBuilder.getTemperature() });
     }
 
     private async embedChunks(chunks: Chunk[]) {
         const texts = chunks.map(({ pageContent }) => pageContent);
-        return LLMEmbedding.getInstance().getEmbedding().embedDocuments(texts);
-    }
-
-    private async getQueryEmbedding(query: string) {
-        return LLMEmbedding.getInstance().getEmbedding().embedQuery(query);
-    }
-
-    private translateChunks(chunks: Chunk[]) {
-        return LLMEmbedding.getInstance().translateChunks(chunks);
+        return LLMEmbedding.getEmbedding().embedDocuments(texts);
     }
 
     async init() {
-        await this.vectorDb.init();
+        await this.vectorDb.init({ dimensions: LLMEmbedding.getEmbedding().getDimensions() });
         if (this.cache) await this.cache.init();
 
         for await (const loader of this.loaders) {
@@ -85,9 +78,9 @@ export class LLMApplication {
 
     async query(query: string): Promise<string> {
         const prompt = stringFormat(this.queryTemplate, query);
-        const queryEmbedded = await this.getQueryEmbedding(cleanString(prompt));
+        const queryEmbedded = await LLMEmbedding.getEmbedding().embedQuery(cleanString(prompt));
         const contextChunks = await this.vectorDb.similaritySearch(queryEmbedded, this.searchResultCount);
-        const translatedChunks = this.translateChunks(contextChunks);
+        const translatedChunks = LLMEmbedding.translateChunks(contextChunks);
 
         const chain = loadQAMapReduceChain(this.model);
         const response = await chain.call({

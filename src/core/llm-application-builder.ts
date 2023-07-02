@@ -2,6 +2,8 @@ import { BaseDb } from '../interfaces/base-db.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { LLMApplication } from './llm-application.js';
 import { BaseCache } from '../interfaces/base-cache.js';
+import { BaseEmbeddings } from '../interfaces/base-embeddings.js';
+import { AdaEmbeddings } from '../embeddings/ada-embeddings.js';
 
 export class LLMApplicationBuilder {
     private searchResultCount: number;
@@ -10,11 +12,13 @@ export class LLMApplicationBuilder {
     private temperature: number;
     private queryTemplate: string;
     private cache?: BaseCache;
+    private embeddingModel: BaseEmbeddings;
 
     constructor() {
         this.loaders = [];
         this.temperature = 0.9;
         this.searchResultCount = 7;
+        this.embeddingModel = new AdaEmbeddings();
 
         this.queryTemplate = `Use all the provided context to answer the query at the end. Answer in full.
         If you don't know the answer, just say that you don't know, don't try to make up an answer.
@@ -60,6 +64,11 @@ export class LLMApplicationBuilder {
         return this;
     }
 
+    setEmbeddingModel(embeddingModel: BaseEmbeddings) {
+        this.embeddingModel = embeddingModel;
+        return this;
+    }
+
     getLoaders() {
         return this.loaders;
     }
@@ -82,5 +91,9 @@ export class LLMApplicationBuilder {
 
     getCache() {
         return this.cache;
+    }
+
+    getEmbeddingModel() {
+        return this.embeddingModel;
     }
 }

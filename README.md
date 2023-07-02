@@ -172,7 +172,7 @@ await new LLMApplicationBuilder()
 
 # Loaders supported
 
-Currently, the library supports the following formats -
+Loaders take a specific format, process the input and create chunks of the data. Currently, the library supports the following formats -
 
 ## Youtube video
 
@@ -327,7 +327,7 @@ You can pass along your vector database to the `setVectorDb` method by implement
 
 ```TS
 class MyOwnDb implements BaseDb {
-    async init(): Promise<void> {
+    async init({ dimensions }: { dimensions: number }): Promise<void> {
         throw new Error('Method not implemented.');
     }
 

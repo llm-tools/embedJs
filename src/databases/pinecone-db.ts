@@ -15,7 +15,7 @@ export class PineconeDb implements BaseDb {
         this.namespace = namespace;
     }
 
-    async init() {
+    async init({ dimensions }: { dimensions: number }) {
         await this.client.init({
             apiKey: process.env.PINECONE_API_KEY,
             environment: process.env.PINECONE_ENVIRONMENT,
@@ -27,7 +27,7 @@ export class PineconeDb implements BaseDb {
         await this.client.createIndex({
             createRequest: {
                 name: this.projectName,
-                dimension: 1536,
+                dimension: dimensions,
             },
         });
     }

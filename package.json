@@ -1,6 +1,6 @@
 {
     "name": "@llmembed/embedjs",
-    "version": "0.0.10",
+    "version": "0.0.14",
     "description": "A NodeJS framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -13,13 +13,18 @@
         "url": "https://github.com/llmembed/embedjs"
     },
     "keywords": [
+        "ai",
+        "ml",
         "llm",
         "gpt",
         "openai",
         "chatgpt",
         "embedding",
         "embeddings",
-        "openai"
+        "openai",
+        "langchain",
+        "prompt",
+        "vector"
     ],
     "license": "Apache-2.0",
     "author": "K V Adhityan",
@@ -52,11 +57,12 @@
         "typescript": "^5.1.6",
         "@types/html-to-text": "^9.0.1"
     },
-    "optionalDependencies": {
+    "peerDependencies": {
         "@pinecone-database/pinecone": "^0.1.6",
         "lmdb": "^2.8.2",
         "vectordb": "^0.1.8",
-        "chromadb": "^1.5.3"
+        "chromadb": "^1.5.3",
+        "hnswlib-node": "^1.4.2"
     },
     "peerDependenciesMeta": {
         "@pinecone-database/pinecone": {
@@ -74,5 +80,32 @@
     },
     "engines": {
         "node": ">= 18.0.0"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        },
+        "./databases/lance": {
+            "types": "./dist/databases/lance-db.d.ts",
+            "import": "./dist/databases/lance-db.js"
+        },
+        "./databases/pinecone": {
+            "types": "./dist/databases/pinecone-db.d.ts",
+            "import": "./dist/databases/pinecone-db.js"
+        },
+        "./databases/chroma": {
+            "types": "./dist/databases/chroma-db.d.ts",
+            "import": "./dist/databases/chroma-db.js"
+        },
+        "./cache/lmdb": {
+            "types": "./dist/databases/lmdb-cache.d.ts",
+            "import": "./dist/databases/lmdb-cache.js"
+        },
+        "./cache/memory": {
+            "types": "./dist/databases/memory-cache.d.ts",
+            "import": "./dist/databases/memory-cache.js"
+        },
+        "./package.json": "./package.json"
     }
 }
