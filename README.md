@@ -100,12 +100,9 @@ OPENAI_API_KEY="sk-<REST_OF_YOUR_KEY>"
 ```TS
 import * as path from 'node:path';
 
-import { LLMApplicationBuilder } from '@llmembed/embedjs';
-import { PdfLoader } from '@llmembed/embedjs/loader/pdf';
-import { LmdbCache } from '@llmembed/embedjs/cache/lmdb';
-import { TextLoader } from '@llmembed/embedjs/loader/text';
-import { YoutubeLoader } from '@llmembed/embedjs/loader/youtube';
+import { LLMApplicationBuilder, PdfLoader, YoutubeLoader, TextLoader } from '@llmembed/embedjs';
 import { PineconeDb } from '@llmembed/embedjs/databases/pinecone';
+import { LmdbCache } from '@llmembed/embedjs/cache/lmdb';
 
 const llmApplication = await new LLMApplicationBuilder()
     .addLoader(new PdfLoader({ filePath: path.resolve('../paxos-simple.pdf') }))

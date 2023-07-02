@@ -2,12 +2,9 @@ import 'dotenv/config';
 import * as path from 'node:path';
 import { fileURLToPath } from 'url';
 
-import { LLMApplicationBuilder } from '../../../src/index.js';
+import { LLMApplicationBuilder, PdfLoader, WebLoader, YoutubeLoader } from '../../../src/index.js';
 import { CohereEmbeddings } from '../../../src/embeddings/cohere-embeddings.js';
 import { LanceDb } from '../../../src/databases/lance-db.js';
-import { PdfLoader } from '../../../src/loaders/pdf-loader.js';
-import { YoutubeLoader } from '../../../src/loaders/youtube-loader.js';
-import { WebLoader } from '../../../src/loaders/web-loader.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const llmApplication = await new LLMApplicationBuilder()
