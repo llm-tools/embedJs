@@ -1,6 +1,6 @@
 {
     "name": "@llmembed/embedjs",
-    "version": "0.0.19",
+    "version": "0.0.20",
     "description": "A NodeJS framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -81,6 +81,9 @@
         },
         "cohere-ai": {
             "optional": true
+        },
+        "hnswlib-node": {
+            "optional": true
         }
     },
     "engines": {
@@ -102,6 +105,10 @@
         "./databases/chroma": {
             "types": "./dist/databases/chroma-db.d.ts",
             "import": "./dist/databases/chroma-db.js"
+        },
+        "./databases/hnswlib": {
+            "types": "./dist/databases/hnswlib-db.d.ts",
+            "import": "./dist/databases/hnswlib-db.js"
         },
         "./cache/lmdb": {
             "types": "./dist/databases/lmdb-cache.d.ts",

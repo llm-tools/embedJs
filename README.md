@@ -58,6 +58,7 @@ The library also supports caches which provide caching for embeddings, loaders a
     -   [Pinecone](#pinecone)
     -   [LanceDB](#lancedb)
     -   [Chroma](#chroma)
+    -   [HNSWLib](#hnswlib)
     -   [Own Database](#bring-your-own-database)
     -   [How to request new vector databases](#more-databases-coming-soon)
 -   [Caches](#caches)
@@ -320,6 +321,24 @@ npm install chromadb
 A warning -
 
 > In our testing, chroma performed the poorest in being able to retrieve relevant documents among the supported vector databases.
+
+## HNSWLib
+
+[HNSWLib](https://github.com/nmslib/hnswlib) is an in-memory vectorstore. It is great for beginners to get started with since you do not need access to the file system or a cloud service. Follow these steps to use HNSWLib as your vector database -
+
+-   Install HNSWLib package in your project
+
+```bash
+npm install hnswlib-node
+```
+
+-   Set HNSWLib database as your choice of `vectorDb`
+
+```TS
+.setVectorDb(new HNSWDb())
+```
+
+**Note:** This is a purely in-memory vector store. All values are lost when application is restarted.
 
 ## Bring your own database
 

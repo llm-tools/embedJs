@@ -1,7 +1,9 @@
+export type Metadata<T> = T & { id: string };
+
 export type Chunk<Meta extends Record<string, string | number | boolean> = Record<string, string | number | boolean>> =
     {
         pageContent: string;
-        metadata: Meta & { id: string };
+        metadata: Metadata<Meta>;
     };
 
 export type EmbeddedChunk<
@@ -9,5 +11,5 @@ export type EmbeddedChunk<
 > = {
     vector: number[];
     pageContent: string;
-    metadata: Meta & { id: string };
+    metadata: Metadata<Meta>;
 };
