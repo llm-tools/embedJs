@@ -88,9 +88,9 @@ npm i @llmembed/embedjs
 
 ## Usage
 
--   We use OpenAI's embedding model to create embeddings for chunks and ChatGPT API as LLM to get answer given the relevant docs. Make sure that you have an OpenAI account and an API key. If you have dont have an API key, you can create one by visiting [this link](https://platform.openai.com/account/api-keys).
+-   We use OpenAI's ChatGPT API to get answers to the queries. Make sure that you have an OpenAI account and an API key. You can create one [here](https://platform.openai.com/account/api-keys). There is also built in support for [Azure OpenAI](<(#azure-openai)>).
 
--   Once you have the API key, set it in an environment variable called `OPENAI_API_KEY`. There is also built in support for **Azure OpenAI**. Check the section on this at the end.
+-   Once you have your OpenAI API key, set it in an environment variable called `OPENAI_API_KEY`.
 
 ```bash
 OPENAI_API_KEY="sk-<REST_OF_YOUR_KEY>"
