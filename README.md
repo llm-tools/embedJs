@@ -88,7 +88,7 @@ npm i @llmembed/embedjs
 
 ## Usage
 
--   We use OpenAI's ChatGPT API to get answers to the queries. Make sure that you have an OpenAI account and an API key. You can create one [here](https://platform.openai.com/account/api-keys). There is also built in support for [Azure OpenAI](<(#azure-openai)>).
+-   We use OpenAI's ChatGPT API to get answers to the queries. Make sure that you have an OpenAI account and an API key. You can create an account [here](https://platform.openai.com/account/api-keys). There is also built in support for **Azure OpenAI**, read [documentation](#azure-openai) on it at the end.
 
 -   Once you have your OpenAI API key, set it in an environment variable called `OPENAI_API_KEY`.
 
