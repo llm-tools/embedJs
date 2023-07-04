@@ -77,8 +77,9 @@ export class LLMApplication {
     }
 
     async query(query: string): Promise<string> {
-        const prompt = stringFormat(this.queryTemplate, query);
-        const queryEmbedded = await LLMEmbedding.getEmbedding().embedQuery(cleanString(prompt));
+        const cleanQuery = cleanString(query);
+        const prompt = stringFormat(this.queryTemplate, cleanQuery);
+        const queryEmbedded = await LLMEmbedding.getEmbedding().embedQuery(cleanQuery);
         const contextChunks = await this.vectorDb.similaritySearch(queryEmbedded, this.searchResultCount);
         const translatedChunks = LLMEmbedding.translateChunks(contextChunks);
 
