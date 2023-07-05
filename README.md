@@ -39,6 +39,8 @@ You have the choice of vector database to store the results. The library comes w
 
 The library also supports caches which provide caching for embeddings, loaders and optionally queries. Chunks that are already seen are not re-processed. Similarly, entire loaders are cached and not processed if they have been already encountered. Read below for more information on this.
 
+> I am looking for maintainers and contributors. Reach out to me on [Linkedin](https://www.linkedin.com/in/adhityan/) if you are interested or send in a PR.
+
 # Contents
 
 -   [Getting started](#getting-started)
