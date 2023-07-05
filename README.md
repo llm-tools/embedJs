@@ -88,6 +88,8 @@ You can install the library via NPM or Yarn
 npm i @llmembed/embedjs
 ```
 
+**Note:** The library uses the newer ES6 modules and `import` syntax. There is support for the older `require` syntax coming very soon.
+
 ## Usage
 
 -   We use OpenAI's ChatGPT API to get answers to the queries. Make sure that you have an OpenAI account and an API key. You can create an account [here](https://platform.openai.com/account/api-keys). There is also built in support for **Azure OpenAI**, read [documentation](#azure-openai) on it at the end.
