@@ -1,13 +1,16 @@
 {
     "name": "@llmembed/embedjs",
-    "version": "0.0.22",
+    "version": "0.0.23",
     "description": "A NodeJS framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "type": "module",
     "scripts": {
-        "build": "tsc",
-        "prepublishOnly": "tsc"
+        "build": "npm run clean && npm run build:esm && npm run build:cjs",
+        "clean": "rimraf dist/",
+        "build:esm": "tsc --outDir dist/",
+        "build:cjs": "tsc --outDir dist-cjs/ -p tsconfig.cjs.json && node scripts/move-cjs-to-dist.js && rimraf dist-cjs",
+        "prepublishOnly": "npm run build"
     },
     "repository": {
         "type": "git",
@@ -48,6 +51,7 @@
         "youtube-transcript": "^1.0.6"
     },
     "devDependencies": {
+        "@types/html-to-text": "^9.0.1",
         "@types/node": "^20.3.2",
         "@typescript-eslint/eslint-plugin": "^5.60.1",
         "@typescript-eslint/parser": "^5.60.1",
@@ -55,16 +59,16 @@
         "eslint-config-prettier": "^8.8.0",
         "eslint-plugin-prettier": "^4.2.1",
         "prettier": "^2.8.8",
-        "typescript": "^5.1.6",
-        "@types/html-to-text": "^9.0.1"
+        "rimraf": "^5.0.1",
+        "typescript": "^5.1.6"
     },
     "peerDependencies": {
         "@pinecone-database/pinecone": "^0.1.6",
-        "lmdb": "^2.8.2",
-        "vectordb": "^0.1.8",
         "chromadb": "^1.5.3",
+        "cohere-ai": "^5.1.0",
         "hnswlib-node": "^1.4.2",
-        "cohere-ai": "^5.1.0"
+        "lmdb": "^2.8.2",
+        "vectordb": "^0.1.8"
     },
     "peerDependenciesMeta": {
         "@pinecone-database/pinecone": {
@@ -92,39 +96,48 @@
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
-            "import": "./dist/index.js"
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
         },
         "./databases/lance": {
             "types": "./dist/databases/lance-db.d.ts",
-            "import": "./dist/databases/lance-db.js"
+            "import": "./dist/databases/lance-db.js",
+            "require": "./dist/databases/lance-db.cjs"
         },
         "./databases/pinecone": {
             "types": "./dist/databases/pinecone-db.d.ts",
-            "import": "./dist/databases/pinecone-db.js"
+            "import": "./dist/databases/pinecone-db.js",
+            "require": "./dist/databases/pinecone-db.cjs"
         },
         "./databases/chroma": {
             "types": "./dist/databases/chroma-db.d.ts",
-            "import": "./dist/databases/chroma-db.js"
+            "import": "./dist/databases/chroma-db.js",
+            "require": "./dist/databases/chroma-db.cjs"
         },
         "./databases/hnswlib": {
             "types": "./dist/databases/hnswlib-db.d.ts",
-            "import": "./dist/databases/hnswlib-db.js"
+            "import": "./dist/databases/hnswlib-db.js",
+            "require": "./dist/databases/hnswlib-db.cjs"
         },
         "./cache/lmdb": {
             "types": "./dist/databases/lmdb-cache.d.ts",
-            "import": "./dist/databases/lmdb-cache.js"
+            "import": "./dist/databases/lmdb-cache.js",
+            "require": "./dist/databases/lmdb-cache.cjs"
         },
         "./cache/memory": {
             "types": "./dist/databases/memory-cache.d.ts",
-            "import": "./dist/databases/memory-cache.js"
+            "import": "./dist/databases/memory-cache.js",
+            "require": "./dist/databases/memory-cache.cjs"
         },
         "./embeddings/ada": {
             "types": "./dist/embeddings/ada-embeddings.d.ts",
-            "import": "./dist/embeddings/ada-embeddings.js"
+            "import": "./dist/embeddings/ada-embeddings.js",
+            "require": "./dist/embeddings/ada-embeddings.cjs"
         },
         "./embeddings/cohere": {
             "types": "./dist/embeddings/cohere-embeddings.d.ts",
-            "import": "./dist/embeddings/cohere-embeddings.js"
+            "import": "./dist/embeddings/cohere-embeddings.js",
+            "require": "./dist/embeddings/cohere-embeddings.cjs"
         },
         "./package.json": "./package.json"
     }
