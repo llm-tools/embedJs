@@ -76,17 +76,26 @@ export class LLMApplication {
         }
     }
 
-    async query(query: string): Promise<string> {
+    async getContext(query: string) {
         const cleanQuery = cleanString(query);
         const prompt = stringFormat(this.queryTemplate, cleanQuery);
         const queryEmbedded = await LLMEmbedding.getEmbedding().embedQuery(cleanQuery);
         const contextChunks = await this.vectorDb.similaritySearch(queryEmbedded, this.searchResultCount);
         const translatedChunks = LLMEmbedding.translateChunks(contextChunks);
 
+        return {
+            prompt,
+            supportingContext: translatedChunks,
+        };
+    }
+
+    async query(query: string): Promise<string> {
+        const context = await this.getContext(query);
+
         const chain = loadQAMapReduceChain(this.model);
         const response = await chain.call({
-            input_documents: translatedChunks,
-            question: prompt,
+            input_documents: context.supportingContext,
+            question: context.prompt,
         });
 
         return <string>response.text;

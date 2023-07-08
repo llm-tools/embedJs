@@ -175,6 +175,14 @@ await new LLMApplicationBuilder()
 
 **NOTE:** The library will reject any query template that does not contain the placeholder `{0}`.
 
+## Get Context
+
+During development, you may want to test the performance and quality of the `Loaders` you have enabled without incurring any OpenAI credits. You can do this by using the `getContext` method -
+
+```TS
+await llmApplication.getContext('What is Steve Jobs?')
+```
+
 # Loaders supported
 
 Loaders take a specific format, process the input and create chunks of the data. Currently, the library supports the following formats -
