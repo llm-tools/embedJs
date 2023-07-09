@@ -1,9 +1,9 @@
-import type { HierarchicalNSW as HierarchicalNSWType } from 'hnswlib-node';
+import HNSWLib from 'hnswlib-node';
 import { BaseDb } from '../interfaces/base-db.js';
 import { Chunk, EmbeddedChunk, Metadata } from '../global/types.js';
 
 export class HNSWDb implements BaseDb {
-    private index: HierarchicalNSWType;
+    private index: HNSWLib.HierarchicalNSW;
 
     private docCount: number;
     private docMap: Map<number, { pageContent: string; metadata: Metadata<Record<string, string | number | boolean>> }>;
@@ -14,8 +14,7 @@ export class HNSWDb implements BaseDb {
     }
 
     async init({ dimensions }: { dimensions: number }) {
-        const { HierarchicalNSW } = await HNSWDb.imports();
-        this.index = await new HierarchicalNSW('cosine', dimensions);
+        this.index = await new HNSWLib.HierarchicalNSW('cosine', dimensions);
         this.index.initIndex(0);
     }
 
@@ -36,17 +35,5 @@ export class HNSWDb implements BaseDb {
         k = Math.min(k, this.index.getCurrentCount());
         const result = this.index.searchKnn(query, k, (label) => this.docMap.has(label));
         return result.neighbors.map((label) => this.docMap.get(label));
-    }
-
-    static async imports(): Promise<{ HierarchicalNSW: typeof HierarchicalNSWType }> {
-        try {
-            const {
-                default: { HierarchicalNSW },
-            } = await import('hnswlib-node');
-
-            return { HierarchicalNSW };
-        } catch (err) {
-            throw new Error('Please install hnswlib-node as a dependency with, e.g. `npm install -S hnswlib-node`');
-        }
     }
 }

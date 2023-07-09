@@ -1,6 +1,6 @@
 {
     "name": "@llmembed/embedjs",
-    "version": "0.0.25",
+    "version": "0.0.26",
     "description": "A NodeJS framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
