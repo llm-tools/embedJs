@@ -176,12 +176,20 @@ await new LLMApplicationBuilder()
 
 **NOTE:** The library will reject any query template that does not contain the placeholder `{0}`.
 
-## Get context
+## Get context (dry run)
 
 During development, you may want to test the performance and quality of the `Loaders` you have enabled without incurring any OpenAI credits. You can do this by using the `getContext` method -
 
 ```TS
 await llmApplication.getContext('What is Steve Jobs?')
+```
+
+## Get count of embedded chunks
+
+You can fetch the count of embeddedings stored in your vector database at any time by calling the `getEmbeddingsCount` method -
+
+```TS
+await llmApplication.getEmbeddingsCount()
 ```
 
 # Loaders supported

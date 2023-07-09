@@ -76,6 +76,10 @@ export class LLMApplication {
         }
     }
 
+    async getEmbeddingsCount(): Promise<number> {
+        return this.vectorDb.getVectorCount();
+    }
+
     async getContext(query: string) {
         const cleanQuery = cleanString(query);
         const prompt = stringFormat(this.queryTemplate, cleanQuery);
