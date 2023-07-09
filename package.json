@@ -1,6 +1,6 @@
 {
     "name": "@llmembed/embedjs",
-    "version": "0.0.24",
+    "version": "0.0.25",
     "description": "A NodeJS framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -127,14 +127,14 @@
             "require": "./dist/databases/hnswlib-db.cjs"
         },
         "./cache/lmdb": {
-            "types": "./dist/databases/lmdb-cache.d.ts",
-            "import": "./dist/databases/lmdb-cache.js",
-            "require": "./dist/databases/lmdb-cache.cjs"
+            "types": "./dist/cache/lmdb-cache.d.ts",
+            "import": "./dist/cache/lmdb-cache.js",
+            "require": "./dist/cache/lmdb-cache.cjs"
         },
         "./cache/memory": {
-            "types": "./dist/databases/memory-cache.d.ts",
-            "import": "./dist/databases/memory-cache.js",
-            "require": "./dist/databases/memory-cache.cjs"
+            "types": "./dist/cache/memory-cache.d.ts",
+            "import": "./dist/cache/memory-cache.js",
+            "require": "./dist/cache/memory-cache.cjs"
         },
         "./embeddings/ada": {
             "types": "./dist/embeddings/ada-embeddings.d.ts",
