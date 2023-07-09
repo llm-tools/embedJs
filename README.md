@@ -49,6 +49,7 @@ The library also supports caches which provide caching for embeddings, loaders a
     -   [Temperature](#temperature)
     -   [Search results count](#search-results-count)
     -   [Customize the prompt](#customize-the-prompt)
+    -   [Get context](#get-context)
 -   [Loaders supported](#loaders-supported)
     -   [Youtube](#youtube-video)
     -   [PDF](#pdf-file)
@@ -175,7 +176,7 @@ await new LLMApplicationBuilder()
 
 **NOTE:** The library will reject any query template that does not contain the placeholder `{0}`.
 
-## Get Context
+## Get context
 
 During development, you may want to test the performance and quality of the `Loaders` you have enabled without incurring any OpenAI credits. You can do this by using the `getContext` method -
 

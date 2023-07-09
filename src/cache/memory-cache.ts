@@ -1,7 +1,7 @@
 import { BaseCache } from '../interfaces/base-cache.js';
 
 export class MemoryCache implements BaseCache {
-    private data: Object;
+    private data: Record<string, boolean>;
 
     async init(): Promise<void> {
         this.data = {};
