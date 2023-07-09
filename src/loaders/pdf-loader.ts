@@ -21,7 +21,7 @@ export class PdfLoader extends BaseLoader<{ type: 'PDF'; chunkId: number; pathOr
     }
 
     async getChunks() {
-        const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 1000, chunkOverlap: 0, keepSeparator: false });
+        const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 500, chunkOverlap: 0, keepSeparator: false });
 
         let fileBuffer: Buffer;
         if (!this.isUrl) fileBuffer = await fs.readFile(this.pathOrUrl);

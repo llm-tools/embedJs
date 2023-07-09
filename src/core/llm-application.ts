@@ -50,7 +50,7 @@ export class LLMApplication {
         const chunks = await loader.getChunks();
         const newChunks = this.cache
             ? await filterAsync(chunks, async (chunk) => {
-                  return this.cache.hasSeen(chunk.metadata.id);
+                  return !(await this.cache.hasSeen(chunk.metadata.id));
               })
             : chunks;
         if (newChunks.length === 0) return;

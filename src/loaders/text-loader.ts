@@ -13,7 +13,7 @@ export class TextLoader extends BaseLoader<{ type: 'TEXT'; chunkId: number; id: 
     }
 
     async getChunks() {
-        const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 300, chunkOverlap: 0, keepSeparator: false });
+        const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 200, chunkOverlap: 0, keepSeparator: false });
         const chunks = await chunker.splitText(cleanString(this.text));
 
         return chunks.map((chunk, index) => {
