@@ -26,7 +26,7 @@ export class LLMApplication {
 
         LLMEmbedding.init(llmBuilder.getEmbeddingModel());
         if (!this.vectorDb) throw new SyntaxError('VectorDb not set');
-        this.model = new OpenAI({ temperature: llmBuilder.getTemperature() });
+        this.model = new OpenAI({ temperature: llmBuilder.getTemperature(), modelName: 'gpt-3.5-turbo' });
     }
 
     private async embedChunks(chunks: Chunk[]) {

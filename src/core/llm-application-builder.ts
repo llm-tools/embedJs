@@ -16,7 +16,7 @@ export class LLMApplicationBuilder {
 
     constructor() {
         this.loaders = [];
-        this.temperature = 0.9;
+        this.temperature = 0.1;
         this.searchResultCount = 7;
         this.embeddingModel = new AdaEmbeddings();
 

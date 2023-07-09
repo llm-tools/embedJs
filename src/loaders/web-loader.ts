@@ -15,7 +15,7 @@ export class WebLoader extends BaseLoader<{ type: 'WEB'; chunkId: number; id: st
     }
 
     async getChunks() {
-        const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 300, chunkOverlap: 0 });
+        const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 500, chunkOverlap: 0, keepSeparator: false });
 
         const { data } = await axios.get<string>(this.url, { responseType: 'document' });
         const text = convert(data, {

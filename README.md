@@ -142,7 +142,7 @@ await new LLMApplicationBuilder()
 .setTemperature(0.1)
 ```
 
-**NOTE:** The default value is 0.9, which makes the GPT responses very creative.
+**NOTE:** The default value is 0.1, which makes the GPT responses very precise.
 
 ## Search results count
 
