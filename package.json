@@ -1,6 +1,6 @@
 {
     "name": "@llmembed/embedjs",
-    "version": "0.0.26",
+    "version": "0.0.27",
     "description": "A NodeJS framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -10,7 +10,8 @@
         "clean": "rimraf dist/",
         "build:esm": "tsc --outDir dist/",
         "build:cjs": "tsc --outDir dist-cjs/ -p tsconfig.cjs.json && node scripts/move-cjs-to-dist.js && rimraf dist-cjs",
-        "prepublishOnly": "npm run build"
+        "prepublishOnly": "npm run build",
+        "tsc": "tsc --noEmit --pretty"
     },
     "repository": {
         "type": "git",

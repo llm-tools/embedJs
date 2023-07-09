@@ -36,4 +36,8 @@ export class HNSWDb implements BaseDb {
         const result = this.index.searchKnn(query, k, (label) => this.docMap.has(label));
         return result.neighbors.map((label) => this.docMap.get(label));
     }
+
+    async getVectorCount(): Promise<number> {
+        return this.index.getCurrentCount();
+    }
 }

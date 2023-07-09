@@ -49,7 +49,7 @@ The library also supports caches which provide caching for embeddings, loaders a
     -   [Temperature](#temperature)
     -   [Search results count](#search-results-count)
     -   [Customize the prompt](#customize-the-prompt)
-    -   [Get context](#get-context)
+    -   [Dry run](#get-context)
 -   [Loaders supported](#loaders-supported)
     -   [Youtube](#youtube-video)
     -   [PDF](#pdf-file)
@@ -368,6 +368,10 @@ class MyOwnDb implements BaseDb {
     }
 
     async similaritySearch(query: number[], k: number): Promise<Chunk[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    async getVectorCount(): Promise<number> {
         throw new Error('Method not implemented.');
     }
 }

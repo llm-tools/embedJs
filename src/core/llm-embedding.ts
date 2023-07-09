@@ -9,7 +9,7 @@ export class LLMEmbedding {
     public static init(embeddingModel: BaseEmbeddings) {
         if (!this.singleton) {
             this.singleton = new LLMEmbedding(embeddingModel);
-        } else throw new Error('Reinitialized embedding model');
+        }
     }
 
     public static getInstance() {

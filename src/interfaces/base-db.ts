@@ -4,4 +4,5 @@ export interface BaseDb {
     init({}: { dimensions: number }): Promise<void>;
     insertChunks(chunks: EmbeddedChunk[]): Promise<number>;
     similaritySearch(query: number[], k: number): Promise<Chunk[]>;
+    getVectorCount(): Promise<number>;
 }

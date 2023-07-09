@@ -83,4 +83,13 @@ export class PineconeDb implements BaseDb {
             };
         });
     }
+
+    async getVectorCount(): Promise<number> {
+        const index = this.client.Index(this.projectName);
+        return (
+            await index.describeIndexStats({
+                describeIndexStatsRequest: {},
+            })
+        ).totalVectorCount;
+    }
 }
