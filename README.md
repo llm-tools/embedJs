@@ -555,9 +555,10 @@ EmbedJS is built on top of the fantastic work being done on OpenAI and the open 
 
 Here's a list of projects / examples built with EmbedJs
 
-| **Project**                                                                  | **Description**                      | **Author**   |
-| ---------------------------------------------------------------------------- | ------------------------------------ | ------------ |
-| [nestjs-embedjs-example](https://github.com/llmembed/nestjs-embedjs-example) | A NestJS template built with EmbedJS | K V Adhityan |
+| **Project**                                                                     | **Description**                      | **Author**   |
+| ------------------------------------------------------------------------------- | ------------------------------------ | ------------ |
+| [nestjs-embedjs-example](https://github.com/llmembed/nestjs-embedjs-example)    | A NestJS template built with EmbedJS | K V Adhityan |
+| [nextjs-chatbot-template](https://github.com/llmembed/chat-bot-nextjs-template) | A NextJS chat bot template           | K V Adhityan |
 
 # Contributors
 
