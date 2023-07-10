@@ -10,6 +10,7 @@ import { cleanString, filterAsync, stringFormat } from '../global/utils.js';
 import { BaseCache } from '../interfaces/base-cache.js';
 
 export class LLMApplication {
+    private readonly initLoaders: boolean;
     private readonly queryTemplate: string;
     private readonly searchResultCount: number;
     private readonly loaders: BaseLoader[];
@@ -23,6 +24,7 @@ export class LLMApplication {
         this.queryTemplate = llmBuilder.getQueryTemplate();
         this.searchResultCount = llmBuilder.getSearchResultCount();
         this.cache = llmBuilder.getCache();
+        this.initLoaders = llmBuilder.getLoaderInit();
 
         LLMEmbedding.init(llmBuilder.getEmbeddingModel());
         if (!this.vectorDb) throw new SyntaxError('VectorDb not set');
@@ -38,8 +40,10 @@ export class LLMApplication {
         await this.vectorDb.init({ dimensions: LLMEmbedding.getEmbedding().getDimensions() });
         if (this.cache) await this.cache.init();
 
-        for await (const loader of this.loaders) {
-            await this.addLoader(loader);
+        if (this.initLoaders) {
+            for await (const loader of this.loaders) {
+                await this.addLoader(loader);
+            }
         }
     }
 

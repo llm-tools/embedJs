@@ -13,12 +13,14 @@ export class LLMApplicationBuilder {
     private queryTemplate: string;
     private cache?: BaseCache;
     private embeddingModel: BaseEmbeddings;
+    private initLoaders: boolean;
 
     constructor() {
         this.loaders = [];
         this.temperature = 0.1;
         this.searchResultCount = 7;
         this.embeddingModel = new AdaEmbeddings();
+        this.initLoaders = true;
 
         this.queryTemplate = `Use all the provided context to answer the query at the end. Answer in full.
         If you don't know the answer, just say that you don't know, don't try to make up an answer.
@@ -69,6 +71,11 @@ export class LLMApplicationBuilder {
         return this;
     }
 
+    setLoaderInit(shouldDo: boolean) {
+        this.initLoaders = shouldDo;
+        return this;
+    }
+
     getLoaders() {
         return this.loaders;
     }
@@ -95,5 +102,9 @@ export class LLMApplicationBuilder {
 
     getEmbeddingModel() {
         return this.embeddingModel;
+    }
+
+    getLoaderInit() {
+        return this.initLoaders;
     }
 }
