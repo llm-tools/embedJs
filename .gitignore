@@ -131,3 +131,23 @@ dist
 
 #Application specific
 other/
+
+#build folders
+build/
+dist/
+
+#databases
+local.db
+data/
+mysql/
+postgres/
+mariadb/
+redis/
+nats/
+db/
+keys/
+kafka/
+zookeeper/
+acme.json
+temp/
+storage/

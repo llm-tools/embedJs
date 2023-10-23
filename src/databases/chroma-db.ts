@@ -58,4 +58,8 @@ export class ChromaDb implements BaseDb {
     async getVectorCount(): Promise<number> {
         return this.collection.count();
     }
+
+    async reset(): Promise<void> {
+        await this.collection.delete();
+    }
 }

@@ -92,4 +92,9 @@ export class PineconeDb implements BaseDb {
             })
         ).totalVectorCount;
     }
+
+    async reset(): Promise<void> {
+        const index = this.client.Index(this.projectName);
+        await index.delete1({ deleteAll: true });
+    }
 }

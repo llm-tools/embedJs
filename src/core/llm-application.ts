@@ -1,5 +1,6 @@
 import { OpenAI } from 'langchain/llms/openai';
-import { loadQAMapReduceChain } from 'langchain/chains';
+import { BufferMemory } from 'langchain/memory';
+import { ConversationChain } from 'langchain/chains';
 
 import { BaseDb } from '../interfaces/base-db.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
@@ -18,6 +19,8 @@ export class LLMApplication {
     private readonly vectorDb: BaseDb;
     private readonly model: OpenAI;
 
+    private executor: ConversationChain;
+
     constructor(llmBuilder: LLMApplicationBuilder) {
         this.loaders = llmBuilder.getLoaders();
         this.vectorDb = llmBuilder.getVectorDb();
@@ -28,7 +31,7 @@ export class LLMApplication {
 
         LLMEmbedding.init(llmBuilder.getEmbeddingModel());
         if (!this.vectorDb) throw new SyntaxError('VectorDb not set');
-        this.model = new OpenAI({ temperature: llmBuilder.getTemperature(), modelName: 'gpt-3.5-turbo' });
+        this.model = new OpenAI({ temperature: llmBuilder.getTemperature(), modelName: llmBuilder.getModel() });
     }
 
     private async embedChunks(chunks: Chunk[]) {
@@ -45,6 +48,11 @@ export class LLMApplication {
                 await this.addLoader(loader);
             }
         }
+    }
+
+    async resetChainExecutor() {
+        const memory = new BufferMemory();
+        this.executor = new ConversationChain({ llm: this.model, memory });
     }
 
     async addLoader(loader: BaseLoader) {
@@ -84,28 +92,41 @@ export class LLMApplication {
         return this.vectorDb.getVectorCount();
     }
 
+    async deleteAllEmbeddings(areYouSure: boolean = false) {
+        if (!areYouSure) {
+            console.warn('Reset embeddings called without confirmation. No action taken.');
+            return;
+        }
+
+        await this.vectorDb.reset();
+    }
+
+    async getEmbeddings(cleanQuery: string) {
+        const queryEmbedded = await LLMEmbedding.getEmbedding().embedQuery(cleanQuery);
+        return this.vectorDb.similaritySearch(queryEmbedded, this.searchResultCount);
+    }
+
     async getContext(query: string) {
         const cleanQuery = cleanString(query);
-        const prompt = stringFormat(this.queryTemplate, cleanQuery);
-        const queryEmbedded = await LLMEmbedding.getEmbedding().embedQuery(cleanQuery);
-        const contextChunks = await this.vectorDb.similaritySearch(queryEmbedded, this.searchResultCount);
-        const translatedChunks = LLMEmbedding.translateChunks(contextChunks);
+        const contextChunks = await this.getEmbeddings(cleanQuery);
+
+        const prompt = cleanString(stringFormat(this.queryTemplate, cleanQuery));
 
         return {
             prompt,
-            supportingContext: translatedChunks,
+            supportingContext: contextChunks,
         };
     }
 
-    async query(query: string): Promise<string> {
+    async query(query: string, newChat = false): Promise<string> {
         const context = await this.getContext(query);
 
-        const chain = loadQAMapReduceChain(this.model);
-        const response = await chain.call({
-            input_documents: context.supportingContext,
-            question: context.prompt,
+        if (this.executor === undefined || newChat) await this.resetChainExecutor();
+
+        const result = await this.executor.call({
+            input: `${context.prompt} \nSupporting documents:\n${JSON.stringify(context.supportingContext)}`,
         });
 
-        return <string>response.text;
+        return result.response;
     }
 }

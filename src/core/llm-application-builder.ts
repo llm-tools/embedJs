@@ -14,17 +14,20 @@ export class LLMApplicationBuilder {
     private cache?: BaseCache;
     private embeddingModel: BaseEmbeddings;
     private initLoaders: boolean;
+    private modelName: string;
 
     constructor() {
         this.loaders = [];
         this.temperature = 0.1;
         this.searchResultCount = 7;
+        this.modelName = 'gpt-3.5-turbo';
         this.embeddingModel = new AdaEmbeddings();
         this.initLoaders = true;
 
-        this.queryTemplate = `Use all the provided context to answer the query at the end. Answer in full.
+        this.queryTemplate = `You are a helpful chat bot. Use all the provided context to answer the query at the end. Answer in full.
         If you don't know the answer, just say that you don't know, don't try to make up an answer.
-        Query: {0}`;
+
+        USER: {0}`;
     }
 
     async build() {
@@ -76,6 +79,11 @@ export class LLMApplicationBuilder {
         return this;
     }
 
+    setModel(model: string) {
+        this.modelName = model;
+        return this;
+    }
+
     getLoaders() {
         return this.loaders;
     }
@@ -106,5 +114,9 @@ export class LLMApplicationBuilder {
 
     getLoaderInit() {
         return this.initLoaders;
+    }
+
+    getModel() {
+        return this.modelName;
     }
 }

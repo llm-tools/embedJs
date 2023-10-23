@@ -68,4 +68,8 @@ export class LanceDb implements BaseDb {
     async getVectorCount(): Promise<number> {
         return this.table.countRows();
     }
+
+    async reset(): Promise<void> {
+        await this.table.delete('id IS NOT NULL');
+    }
 }

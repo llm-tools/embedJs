@@ -2,6 +2,7 @@
     "extends": "./tsconfig.json",
     "compilerOptions": {
       "module": "commonjs",
+      "moduleResolution": "Node10",
       "declaration": false
     },
     "exclude": [
