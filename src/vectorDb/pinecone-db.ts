@@ -1,5 +1,4 @@
-import { PineconeClient } from '@pinecone-database/pinecone';
-import { UpsertOperationRequest } from '@pinecone-database/pinecone/dist/pinecone-generated-ts-fetch/index.js';
+import { Pinecone, PineconeRecord } from '@pinecone-database/pinecone';
 
 import { BaseDb } from '../interfaces/base-db.js';
 import { Chunk, EmbeddedChunk } from '../global/types.js';
@@ -7,70 +6,57 @@ import { Chunk, EmbeddedChunk } from '../global/types.js';
 export class PineconeDb implements BaseDb {
     private namespace: string;
     private projectName: string;
-    private client: PineconeClient;
+    private client: Pinecone;
 
     constructor({ projectName, namespace }: { projectName: string; namespace: string }) {
-        this.client = new PineconeClient();
+        this.client = new Pinecone({
+            apiKey: process.env.PINECONE_API_KEY,
+            environment: process.env.PINECONE_ENVIRONMENT,
+        });
         this.projectName = projectName;
         this.namespace = namespace;
     }
 
     async init({ dimensions }: { dimensions: number }) {
-        await this.client.init({
-            apiKey: process.env.PINECONE_API_KEY,
-            environment: process.env.PINECONE_ENVIRONMENT,
-        });
-
-        const list = await this.client.listIndexes();
+        const list = (await this.client.listIndexes()).map((i) => i.name);
         if (list.indexOf(this.projectName) > -1) return;
 
         await this.client.createIndex({
-            createRequest: {
-                name: this.projectName,
-                dimension: dimensions,
-            },
+            name: this.projectName,
+            dimension: dimensions,
         });
     }
 
     async insertChunks(chunks: EmbeddedChunk[]): Promise<number> {
         let processed = 0;
         const chunkSize = 300;
-        //Pinecone allows a maximum of 1000 entries and total 2MB per upsert
-        //2MB is hard to predict right, batch size of 300 is arbitary but should be mostly under 300
+        const index = this.client.Index(this.projectName).namespace(this.namespace);
 
         for (let i = 0; i < chunks.length; i += chunkSize) {
             const chunkBatch = chunks.slice(i, i + chunkSize);
 
-            const upsertCommand: UpsertOperationRequest = {
-                upsertRequest: {
-                    vectors: chunkBatch.map((chunk) => {
-                        return {
-                            id: chunk.metadata.id,
-                            values: chunk.vector,
-                            metadata: { pageContent: chunk.pageContent, ...chunk.metadata },
-                        };
-                    }),
-                    namespace: this.namespace,
-                },
-            };
+            const upsertCommand: PineconeRecord[] = chunkBatch.map((chunk) => {
+                return {
+                    id: chunk.metadata.id,
+                    values: chunk.vector,
+                    metadata: { pageContent: chunk.pageContent, ...chunk.metadata },
+                };
+            });
 
-            const index = this.client.Index(this.projectName);
-            processed += (await index.upsert(upsertCommand)).upsertedCount;
+            await index.upsert(upsertCommand);
+            processed += chunkBatch.length;
         }
 
         return processed;
     }
 
     async similaritySearch(query: number[], k: number): Promise<Chunk[]> {
-        const index = this.client.Index(this.projectName);
+        const index = this.client.Index(this.projectName).namespace(this.namespace);
         const queryResponse = await index.query({
-            queryRequest: {
-                topK: k,
-                vector: query,
-                namespace: this.namespace,
-                includeMetadata: true,
-                includeValues: true,
-            },
+            topK: k,
+            vector: query,
+            includeMetadata: true,
+            includeValues: true,
         });
 
         return queryResponse.matches.map((match) => {
@@ -85,16 +71,11 @@ export class PineconeDb implements BaseDb {
     }
 
     async getVectorCount(): Promise<number> {
-        const index = this.client.Index(this.projectName);
-        return (
-            await index.describeIndexStats({
-                describeIndexStatsRequest: {},
-            })
-        ).totalVectorCount;
+        const index = this.client.Index(this.projectName).namespace(this.namespace);
+        return (await index.describeIndexStats()).totalRecordCount;
     }
 
     async reset(): Promise<void> {
-        const index = this.client.Index(this.projectName);
-        await index.delete1({ deleteAll: true });
+        return this.client.Index(this.projectName).namespace(this.namespace).deleteAll();
     }
 }
