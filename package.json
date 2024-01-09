@@ -1,6 +1,6 @@
 {
-    "name": "@llmembed/embedjs",
-    "version": "0.0.32",
+    "name": "@llm-tools/embedjs",
+    "version": "0.0.34",
     "description": "A NodeJS framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -15,7 +15,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/llmembed/embedjs"
+        "url": "https://github.com/llm-tools/embedjs"
     },
     "keywords": [
         "ai",
@@ -29,12 +29,13 @@
         "openai",
         "langchain",
         "prompt",
-        "vector"
+        "vector",
+        "rag"
     ],
     "license": "Apache-2.0",
     "author": "K V Adhityan",
     "bugs": {
-        "url": "https://github.com/llmembed/embedjs/issues"
+        "url": "https://github.com/llm-tools/embedjs/issues"
     },
     "publishConfig": {
         "access": "public"
@@ -42,33 +43,35 @@
     "files": [
         "dist/**/*"
     ],
-    "homepage": "https://github.com/llmembed/embedjs#readme",
+    "homepage": "https://github.com/llm-tools/embedjs#readme",
     "dependencies": {
-        "axios": "^1.5.1",
+        "@langchain/cohere": "^0.0.2",
+        "@langchain/openai": "^0.0.10",
+        "axios": "^1.6.5",
         "html-to-text": "^9.0.5",
-        "langchain": "^0.0.100",
+        "langchain": "^0.1.1",
         "md5": "^2.3.0",
         "pdf-parse-fork": "^1.2.0",
         "youtube-transcript": "^1.0.6"
     },
     "devDependencies": {
-        "@types/html-to-text": "^9.0.3",
-        "@types/node": "^20.8.7",
-        "@typescript-eslint/eslint-plugin": "^6.8.0",
-        "@typescript-eslint/parser": "^6.8.0",
-        "eslint": "^8.52.0",
-        "eslint-config-prettier": "^9.0.0",
-        "eslint-plugin-prettier": "^5.0.1",
-        "prettier": "^3.0.3",
-        "rimraf": "^5.0.5",
-        "typescript": "^5.2.2",
+        "@pinecone-database/pinecone": "^1.1.2",
         "@tsconfig/recommended": "^1.0.3",
-        "@pinecone-database/pinecone": "^1.1.1",
-        "chromadb": "^1.5.11",
-        "cohere-ai": "^6.2.2",
-        "hnswlib-node": "^2.0.0",
-        "lmdb": "^2.8.5",
-        "vectordb": "^0.3.3"
+        "@types/html-to-text": "^9.0.4",
+        "@types/node": "^20.10.8",
+        "@typescript-eslint/eslint-plugin": "^6.18.1",
+        "@typescript-eslint/parser": "^6.18.1",
+        "chromadb": "^1.7.3",
+        "cohere-ai": "^7.6.2",
+        "eslint": "^8.56.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-prettier": "^5.1.2",
+        "hnswlib-node": "^2.1.0",
+        "lmdb": "^2.9.2",
+        "prettier": "^3.1.1",
+        "rimraf": "^5.0.5",
+        "typescript": "^5.3.3",
+        "vectordb": "^0.4.2"
     },
     "peerDependencies": {
         "@pinecone-database/pinecone": "^0.1.6",
@@ -107,25 +110,25 @@
             "import": "./dist/index.js",
             "require": "./dist/index.cjs"
         },
-        "./databases/lance": {
-            "types": "./dist/databases/lance-db.d.ts",
-            "import": "./dist/databases/lance-db.js",
-            "require": "./dist/databases/lance-db.cjs"
+        "./vectorDb/lance": {
+            "types": "./dist/vectorDb/lance-db.d.ts",
+            "import": "./dist/vectorDb/lance-db.js",
+            "require": "./dist/vectorDb/lance-db.cjs"
         },
-        "./databases/pinecone": {
-            "types": "./dist/databases/pinecone-db.d.ts",
-            "import": "./dist/databases/pinecone-db.js",
-            "require": "./dist/databases/pinecone-db.cjs"
+        "./vectorDb/pinecone": {
+            "types": "./dist/vectorDb/pinecone-db.d.ts",
+            "import": "./dist/vectorDb/pinecone-db.js",
+            "require": "./dist/vectorDb/pinecone-db.cjs"
         },
-        "./databases/chroma": {
-            "types": "./dist/databases/chroma-db.d.ts",
-            "import": "./dist/databases/chroma-db.js",
-            "require": "./dist/databases/chroma-db.cjs"
+        "./vectorDb/chroma": {
+            "types": "./dist/vectorDb/chroma-db.d.ts",
+            "import": "./dist/vectorDb/chroma-db.js",
+            "require": "./dist/vectorDb/chroma-db.cjs"
         },
-        "./databases/hnswlib": {
-            "types": "./dist/databases/hnswlib-db.d.ts",
-            "import": "./dist/databases/hnswlib-db.js",
-            "require": "./dist/databases/hnswlib-db.cjs"
+        "./vectorDb/hnswlib": {
+            "types": "./dist/vectorDb/hnswlib-db.d.ts",
+            "import": "./dist/vectorDb/hnswlib-db.js",
+            "require": "./dist/vectorDb/hnswlib-db.cjs"
         },
         "./cache/lmdb": {
             "types": "./dist/cache/lmdb-cache.d.ts",

@@ -1,4 +1,5 @@
-import { CohereEmbeddings as LangChainCohereEmbeddings } from 'langchain/embeddings';
+import { CohereEmbeddings as LangChainCohereEmbeddings } from '@langchain/cohere';
+
 import { BaseEmbeddings } from '../interfaces/base-embeddings.js';
 
 export class CohereEmbeddings implements BaseEmbeddings {
@@ -6,7 +7,6 @@ export class CohereEmbeddings implements BaseEmbeddings {
 
     constructor() {
         this.model = new LangChainCohereEmbeddings({
-            modelName: 'embed-english-v2.0',
             maxConcurrency: 3,
             maxRetries: 5,
         });

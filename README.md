@@ -1,12 +1,12 @@
 # EmbedJS
 
 <p>
-<a href="https://www.npmjs.com/package/@llmembed/embedjs"  target="_blank">
-<img alt="NPM Version" src="https://img.shields.io/npm/v/%40llmembed/embedjs">
+<a href="https://www.npmjs.com/package/@@llm-tools/embedjs"  target="_blank">
+<img alt="NPM Version" src="https://img.shields.io/npm/v/%40llm-tools/embedjs">
 </a>
 
-<a href="https://www.npmjs.com/package/@llmembed/embedjs"  target="_blank">
-<img alt="License" src="https://img.shields.io/npm/l/%40llmembed%2Fembedjs">
+<a href="https://www.npmjs.com/package/@llm-tools/embedjs"  target="_blank">
+<img alt="License" src="https://img.shields.io/npm/l/%40llm-tools%2Fembedjs">
 </a>
 </p>
 
@@ -86,7 +86,7 @@ The library also supports caches which provide caching for embeddings, loaders a
 You can install the library via NPM or Yarn
 
 ```bash
-npm i @llmembed/embedjs
+npm i @llm-tools/embedjs
 ```
 
 **Note:** The library uses the newer ES6 modules and `import` syntax. There is support for the older `require` syntax coming very soon.
@@ -106,9 +106,9 @@ OPENAI_API_KEY="sk-<REST_OF_YOUR_KEY>"
 ```TS
 import * as path from 'node:path';
 
-import { LLMApplicationBuilder, PdfLoader, YoutubeLoader, TextLoader } from '@llmembed/embedjs';
-import { PineconeDb } from '@llmembed/embedjs/databases/pinecone';
-import { LmdbCache } from '@llmembed/embedjs/cache/lmdb';
+import { LLMApplicationBuilder, PdfLoader, YoutubeLoader, TextLoader } from '@llm-tools/embedjs';
+import { PineconeDb } from '@llm-tools/embedjs/vectorDb/pinecone';
+import { LmdbCache } from '@llm-tools/embedjs/cache/lmdb';
 
 const llmApplication = await new LLMApplicationBuilder()
     .addLoader(new PdfLoader({ filePath: path.resolve('../paxos-simple.pdf') }))
@@ -264,7 +264,7 @@ We really encourage you send in a PR to this library if you are implementing a c
 
 ## More loaders coming soon
 
-If you want to add any other format, please create an [issue](https://github.com/llmembed/embedjs/issues) and we will add it to the list of supported formats. All PRs are welcome.
+If you want to add any other format, please create an [issue](https://github.com/llm-tools/embedjs/issues) and we will add it to the list of supported formats. All PRs are welcome.
 
 # Vector databases supported
 
@@ -389,7 +389,7 @@ We really encourage you send in a PR to this library if you are implementing a f
 
 ## More databases coming soon
 
-If you want to add support for any other vector database, please create an [issue](https://github.com/llmembed/embedjs/issues) and we will add it to the list of supported databases. All PRs are welcome.
+If you want to add support for any other vector database, please create an [issue](https://github.com/llm-tools/embedjs/issues) and we will add it to the list of supported databases. All PRs are welcome.
 
 # Caches
 
@@ -453,7 +453,7 @@ We really encourage you send in a PR to this library if you are implementing a f
 
 ## More caches coming soon
 
-If you want to add support for any other cache providers, please create an [issue](https://github.com/llmembed/embedjs/issues) and we will add it to the list of supported caches. All PRs are welcome.
+If you want to add support for any other cache providers, please create an [issue](https://github.com/llm-tools/embedjs/issues) and we will add it to the list of supported caches. All PRs are welcome.
 
 # Embedding models
 
@@ -515,7 +515,7 @@ Once done, you can pass this class to the `setEmbeddingModel` method like shown 
 
 ## More embedding models coming soon
 
-If you want us to add support for a specific embedding model, please create an [issue](https://github.com/llmembed/embedjs/issues) and we will prioritize it. Our current priority is to add support for the [HuggingFace's Sentence Transformer](https://huggingface.co/sentence-transformers) model. All PRs are welcome.
+If you want us to add support for a specific embedding model, please create an [issue](https://github.com/llm-tools/embedjs/issues) and we will prioritize it. Our current priority is to add support for the [HuggingFace's Sentence Transformer](https://huggingface.co/sentence-transformers) model. All PRs are welcome.
 
 # Azure OpenAI
 
@@ -555,10 +555,10 @@ EmbedJS is built on top of the fantastic work being done on OpenAI and the open 
 
 Here's a list of projects / examples built with EmbedJs
 
-| **Project**                                                                     | **Description**                      | **Author**   |
-| ------------------------------------------------------------------------------- | ------------------------------------ | ------------ |
-| [nestjs-embedjs-template](https://github.com/llmembed/nestjs-embedjs-template)    | A NestJS server side template  | K V Adhityan |
-| [nextjs-chatbot-template](https://github.com/llmembed/chat-bot-nextjs-template) | A NextJS chat bot template           | K V Adhityan |
+| **Project**                                                                      | **Description**               | **Author**   |
+| -------------------------------------------------------------------------------- | ----------------------------- | ------------ |
+| [nestjs-embedjs-template](https://github.com/llm-tools/nestjs-embedjs-template)  | A NestJS server side template | K V Adhityan |
+| [nextjs-chatbot-template](https://github.com/llm-tools/chat-bot-nextjs-template) | A NextJS chat bot template    | K V Adhityan |
 
 # Contributors
 

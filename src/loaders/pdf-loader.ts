@@ -14,7 +14,7 @@ export class PdfLoader extends BaseLoader<{ type: 'PDF'; chunkId: number; pathOr
     constructor({ url, uniqueId }: { url: string; uniqueId?: string });
     constructor({ filePath, uniqueId }: { filePath: string; uniqueId?: string });
     constructor({ filePath, url, uniqueId }: { filePath?: string; url?: string; uniqueId?: string }) {
-        super(md5(uniqueId ?? filePath ?? url));
+        super(`PdfLoader_${md5(uniqueId ?? filePath ?? url)}`);
 
         this.isUrl = filePath ? false : true;
         this.pathOrUrl = filePath ?? url;

@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 
 import { LLMApplicationBuilder, PdfLoader, WebLoader, YoutubeLoader } from '../../../src/index.js';
 import { CohereEmbeddings } from '../../../src/embeddings/cohere-embeddings.js';
-import { LanceDb } from '../../../src/databases/lance-db.js';
+import { LanceDb } from '../../../src/vectorDb/lance-db.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const llmApplication = await new LLMApplicationBuilder()

@@ -9,7 +9,7 @@ export class YoutubeLoader extends BaseLoader<{ type: 'YOUTUBE'; chunkId: number
     private readonly videoIdOrUrl: string;
 
     constructor({ videoIdOrUrl }: { videoIdOrUrl: string }) {
-        super(md5(videoIdOrUrl));
+        super(`YoutubeLoader_${md5(videoIdOrUrl)}`);
         this.videoIdOrUrl = videoIdOrUrl;
     }
 

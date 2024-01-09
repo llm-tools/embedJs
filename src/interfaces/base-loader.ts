@@ -10,6 +10,7 @@ export abstract class BaseLoader<
     }
 
     abstract getChunks(): Promise<Chunk<Meta>[]>;
+
     getUniqueId(): string {
         return this.uniqueId;
     }

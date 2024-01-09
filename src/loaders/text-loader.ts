@@ -8,7 +8,7 @@ export class TextLoader extends BaseLoader<{ type: 'TEXT'; chunkId: number; id: 
     private readonly text: string;
 
     constructor({ text }: { text: string }) {
-        super(md5(text));
+        super(`TextLoader_${md5(text)}`);
         this.text = text;
     }
 

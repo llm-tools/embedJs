@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
 import { LLMApplicationBuilder, PdfLoader, WebLoader } from '../../../src/index.js';
-import { ChromaDb } from '../../../src/databases/chroma-db.js';
+import { ChromaDb } from '../../../src/vectorDb/chroma-db.js';
 
 const llmApplication = await new LLMApplicationBuilder()
     .setSearchResultCount(30)

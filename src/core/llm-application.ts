@@ -1,4 +1,4 @@
-import { OpenAI } from 'langchain/llms/openai';
+import { OpenAI } from '@langchain/openai';
 import { BufferMemory } from 'langchain/memory';
 import { ConversationChain } from 'langchain/chains';
 
@@ -55,9 +55,9 @@ export class LLMApplication {
         this.executor = new ConversationChain({ llm: this.model, memory });
     }
 
-    async addLoader(loader: BaseLoader) {
+    async addLoader(loader: BaseLoader): Promise<number> {
         const uniqueId = loader.getUniqueId();
-        if (this.cache && (await this.cache.hasSeen(uniqueId))) return;
+        if (this.cache && (await this.cache.hasSeen(uniqueId))) return 0;
 
         const chunks = await loader.getChunks();
         const newChunks = this.cache
@@ -65,7 +65,7 @@ export class LLMApplication {
                   return !(await this.cache.hasSeen(chunk.metadata.id));
               })
             : chunks;
-        if (newChunks.length === 0) return;
+        if (newChunks.length === 0) return 0;
 
         const embeddings = await this.embedChunks(newChunks);
         const embedChunks = newChunks.map((chunk, index) => {
@@ -76,7 +76,7 @@ export class LLMApplication {
             };
         });
 
-        await this.vectorDb.insertChunks(embedChunks);
+        const newInserts = await this.vectorDb.insertChunks(embedChunks);
         if (this.cache) {
             await Promise.all(
                 newChunks.map(async (chunk) => {
@@ -86,6 +86,8 @@ export class LLMApplication {
 
             await this.cache.addSeen(uniqueId);
         }
+
+        return newInserts;
     }
 
     async getEmbeddingsCount(): Promise<number> {

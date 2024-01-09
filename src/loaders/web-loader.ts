@@ -10,7 +10,7 @@ export class WebLoader extends BaseLoader<{ type: 'WEB'; chunkId: number; id: st
     private readonly url: string;
 
     constructor({ url }: { url: string }) {
-        super(md5(url));
+        super(`WebLoader_${md5(url)}`);
         this.url = url;
     }
 
