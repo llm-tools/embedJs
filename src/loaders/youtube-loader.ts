@@ -14,7 +14,7 @@ export class YoutubeLoader extends BaseLoader<{ type: 'YoutubeLoader'; chunkId: 
     }
 
     async getChunks() {
-        const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 300, chunkOverlap: 0, keepSeparator: false });
+        const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 2000, chunkOverlap: 0 });
         const transcripts = await YoutubeTranscript.fetchTranscript(this.videoIdOrUrl, { lang: 'en' });
 
         const chunks: string[] = [];
