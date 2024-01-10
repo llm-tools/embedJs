@@ -254,7 +254,7 @@ class CustomLoader extends BaseLoader<{ customChunkMetadata: string }> {
         super('uniqueId');
     }
 
-    async getChunks(): Promise<Chunk<{ customChunkMetadata: string }>[]> {
+    async getChunks() {
         throw new Error('Method not implemented.');
     }
 }
@@ -382,6 +382,14 @@ class MyOwnDb implements BaseDb {
     async getVectorCount(): Promise<number> {
         throw new Error('Method not implemented.');
     }
+
+    async deleteKeys(keys: string[]): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    async reset(): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
 }
 ```
 
@@ -429,6 +437,19 @@ await new LLMApplicationBuilder()
 
 **Note:** Although this cache can remove duplicate loaders and chunks, its store does not persist between process restarts. You should only be using it for testing.
 
+## Redis
+
+You can use redis as a cache to store values during testing.
+
+-   Set `RedisCache` as your cache provider on `LLMApplicationBuilder`
+
+```TS
+await new LLMApplicationBuilder()
+.setCache(new RedisCache())
+```
+
+**Note:** The library internally uses `IORedis` to work with redis. `RedisCache` constructor supports all `IORedis` constructor parameters. Check [`IORedis` documentation](https://github.com/redis/ioredis) for more detials.
+
 ## Bring your own cache
 
 You can pass along your own cache provider to the `setCache` method by implementing the interface `BaseCache`. Here's how that would look like -
@@ -439,11 +460,15 @@ class MyOwnCache implements BaseCache {
         throw new Error("Method not implemented.");
     }
 
-    async addSeen(chunkHash: string): Promise<void> {
+    async addLoader(loaderId: string, chunkCount: number, chunkSeenHash: string): Promise<void> {
         throw new Error("Method not implemented.");
     }
 
-    async hasSeen(chunkHash: string): Promise<boolean> {
+    async getLoader(loaderId: string): Promise<{ chunkCount: number, chunkSeenHash: string }> {
+        throw new Error("Method not implemented.");
+    }
+
+    async hasLoader(loaderId: string): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
 }

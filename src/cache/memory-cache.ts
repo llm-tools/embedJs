@@ -1,27 +1,21 @@
 import { BaseCache } from '../interfaces/base-cache.js';
 
 export class MemoryCache implements BaseCache {
-    private loaderList: Record<string, boolean>;
-    private loaderCount: Record<string, number>;
+    private loaderList: Record<string, { chunkCount: number; chunkSeenHash: string }>;
 
     async init(): Promise<void> {
         this.loaderList = {};
-        this.loaderCount = {};
     }
 
-    async setLoaderSeen(loaderId: string): Promise<void> {
-        this.loaderList[loaderId] = true;
+    async addLoader(loaderId: string, chunkCount: number, chunkSeenHash: string): Promise<void> {
+        this.loaderList[loaderId] = { chunkCount, chunkSeenHash };
     }
 
-    async hasSeenLoader(loaderId: string): Promise<boolean> {
+    async getLoader(loaderId: string): Promise<{ chunkCount: number; chunkSeenHash: string }> {
+        return this.loaderList[loaderId];
+    }
+
+    async hasLoader(loaderId: string): Promise<boolean> {
         return this.loaderList.hasOwnProperty(loaderId);
-    }
-
-    async setLoaderCount(loaderId: string, count: number): Promise<void> {
-        this.loaderCount[loaderId] = count;
-    }
-
-    async getLoaderCount(loaderId: string): Promise<number> {
-        return this.loaderCount[loaderId];
     }
 }

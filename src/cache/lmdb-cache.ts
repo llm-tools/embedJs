@@ -16,19 +16,15 @@ export class LmdbCache implements BaseCache {
         });
     }
 
-    async setLoaderSeen(loaderId: string): Promise<void> {
-        await this.database.put(loaderId, true);
+    async addLoader(loaderId: string, chunkCount: number, chunkSeenHash: string): Promise<void> {
+        await this.database.put(loaderId, { chunkCount, chunkSeenHash });
     }
 
-    async hasSeenLoader(loaderId: string): Promise<boolean> {
-        return this.database.doesExist(loaderId);
-    }
-
-    async setLoaderCount(loaderId: string, count: number): Promise<void> {
-        await this.database.put(loaderId, count);
-    }
-
-    async getLoaderCount(loaderId: string): Promise<number> {
+    async getLoader(loaderId: string): Promise<{ chunkCount: number; chunkSeenHash: string }> {
         return this.database.get(loaderId);
+    }
+
+    async hasLoader(loaderId: string): Promise<boolean> {
+        return this.database.doesExist(loaderId);
     }
 }

@@ -14,22 +14,18 @@ export class RedisCache implements BaseCache {
         this.redis = new Redis(this.options);
     }
 
-    async setLoaderSeen(loaderId: string): Promise<void> {
-        await this.redis.set(loaderId, 1);
+    async addLoader(loaderId: string, chunkCount: number, chunkSeenHash: string): Promise<void> {
+        await this.redis.set(loaderId, JSON.stringify({ chunkCount, chunkSeenHash }));
     }
 
-    async hasSeenLoader(loaderId: string): Promise<boolean> {
-        return (await this.redis.get(loaderId)) === '1';
-    }
-
-    async setLoaderCount(loaderId: string, count: number): Promise<void> {
-        await this.redis.set(loaderId, count);
-    }
-
-    async getLoaderCount(loaderId: string): Promise<number> {
+    async getLoader(loaderId: string): Promise<{ chunkCount: number; chunkSeenHash: string } | null> {
         const result = await this.redis.get(loaderId);
 
-        if (!result) return 0;
-        return parseInt(result);
+        if (!result) return null;
+        return JSON.parse(result);
+    }
+
+    async hasLoader(loaderId: string): Promise<boolean> {
+        return !!(await this.redis.get(loaderId));
     }
 }

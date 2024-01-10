@@ -21,3 +21,5 @@ export type EmbeddedChunk<
     pageContent: string;
     metadata: Metadata<Meta>;
 };
+
+export type AddLoaderReturn = { entriesAdded: number; uniqueId: string }

@@ -1,12 +1,13 @@
 import { OpenAI } from '@langchain/openai';
 import { BufferMemory } from 'langchain/memory';
 import { ConversationChain } from 'langchain/chains';
+import md5 from 'md5';
 
 import { BaseDb } from '../interfaces/base-db.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { LLMApplicationBuilder } from './llm-application-builder.js';
 import { cleanString, stringFormat } from '../global/utils.js';
-import { Chunk, EmbeddedChunk } from '../global/types.js';
+import { AddLoaderReturn, Chunk, EmbeddedChunk } from '../global/types.js';
 import { BaseCache } from '../interfaces/base-cache.js';
 import { LLMEmbedding } from './llm-embedding.js';
 
@@ -59,10 +60,20 @@ export class LLMApplication {
         this.executor = new ConversationChain({ llm: this.model, memory });
     }
 
-    async addLoader(loader: BaseLoader): Promise<number> {
+    async addLoader(loader: BaseLoader): Promise<AddLoaderReturn> {
         const uniqueId = loader.getUniqueId();
-        if (this.cache && (await this.cache.hasSeenLoader(uniqueId))) {
-            const previousChunkCount = await this.cache.getLoaderCount(uniqueId);
+
+        const chunks = await loader.getChunks();
+        if (chunks.length === 0) return { entriesAdded: 0, uniqueId };
+
+        const chunkSeenHash = md5(chunks.map((c) => c.contentHash).reduce((p, c) => `${p}_${c}`, ''));
+        if (this.cache && (await this.cache.hasLoader(uniqueId))) {
+            const { chunkCount: previousChunkCount, chunkSeenHash: previousChunkSeenHash } =
+                await this.cache.getLoader(uniqueId);
+
+            if (chunks.length === previousChunkCount && chunkSeenHash === previousChunkSeenHash) {
+                return { entriesAdded: 0, uniqueId };
+            }
 
             const chunkIds: string[] = [];
             for (let i = 0; i < previousChunkCount; i++) {
@@ -71,9 +82,6 @@ export class LLMApplication {
 
             await this.vectorDb.deleteKeys(chunkIds);
         }
-
-        const chunks = await loader.getChunks();
-        if (chunks.length === 0) return 0;
 
         const formattedChunks: Chunk[] = chunks.map((chunk) => ({
             pageContent: chunk.pageContent,
@@ -93,12 +101,8 @@ export class LLMApplication {
         });
 
         const newInserts = await this.vectorDb.insertChunks(embedChunks);
-        if (this.cache) {
-            await this.cache.setLoaderCount(uniqueId, formattedChunks.length);
-            await this.cache.setLoaderSeen(uniqueId);
-        }
-
-        return newInserts;
+        if (this.cache) await this.cache.addLoader(uniqueId, formattedChunks.length, chunkSeenHash);
+        return { entriesAdded: newInserts, uniqueId };
     }
 
     async getEmbeddingsCount(): Promise<number> {
