@@ -5,10 +5,10 @@ import { ConversationChain } from 'langchain/chains';
 import { BaseDb } from '../interfaces/base-db.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { LLMApplicationBuilder } from './llm-application-builder.js';
+import { cleanString, stringFormat } from '../global/utils.js';
 import { Chunk, EmbeddedChunk } from '../global/types.js';
-import { LLMEmbedding } from './llm-embedding.js';
-import { cleanString, filterAsync, stringFormat } from '../global/utils.js';
 import { BaseCache } from '../interfaces/base-cache.js';
+import { LLMEmbedding } from './llm-embedding.js';
 
 export class LLMApplication {
     private readonly initLoaders: boolean;
@@ -34,9 +34,13 @@ export class LLMApplication {
         this.model = new OpenAI({ temperature: llmBuilder.getTemperature(), modelName: llmBuilder.getModel() });
     }
 
-    private async embedChunks(chunks: Chunk[]) {
+    private async embedChunks(chunks: Pick<Chunk, 'pageContent'>[]) {
         const texts = chunks.map(({ pageContent }) => pageContent);
         return LLMEmbedding.getEmbedding().embedDocuments(texts);
+    }
+
+    private getChunkUniqueId(loaderUniqueId: string, chunkId: number) {
+        return `${loaderUniqueId}_${chunkId}`;
     }
 
     async init() {
@@ -57,18 +61,30 @@ export class LLMApplication {
 
     async addLoader(loader: BaseLoader): Promise<number> {
         const uniqueId = loader.getUniqueId();
-        if (this.cache && (await this.cache.hasSeen(uniqueId))) return 0;
+        if (this.cache && (await this.cache.hasSeenLoader(uniqueId))) {
+            const previousChunkCount = await this.cache.getLoaderCount(uniqueId);
+
+            const chunkIds: string[] = [];
+            for (let i = 0; i < previousChunkCount; i++) {
+                chunkIds.push(this.getChunkUniqueId(uniqueId, i));
+            }
+
+            await this.vectorDb.deleteKeys(chunkIds);
+        }
 
         const chunks = await loader.getChunks();
-        const newChunks = this.cache
-            ? await filterAsync(chunks, async (chunk) => {
-                  return !(await this.cache.hasSeen(chunk.metadata.id));
-              })
-            : chunks;
-        if (newChunks.length === 0) return 0;
+        if (chunks.length === 0) return 0;
 
-        const embeddings = await this.embedChunks(newChunks);
-        const embedChunks = newChunks.map((chunk, index) => {
+        const formattedChunks: Chunk[] = chunks.map((chunk) => ({
+            pageContent: chunk.pageContent,
+            metadata: {
+                ...chunk.metadata,
+                id: this.getChunkUniqueId(uniqueId, chunk.metadata.chunkId),
+            },
+        }));
+
+        const embeddings = await this.embedChunks(formattedChunks);
+        const embedChunks = formattedChunks.map((chunk, index) => {
             return <EmbeddedChunk>{
                 pageContent: chunk.pageContent,
                 vector: embeddings[index],
@@ -78,13 +94,8 @@ export class LLMApplication {
 
         const newInserts = await this.vectorDb.insertChunks(embedChunks);
         if (this.cache) {
-            await Promise.all(
-                newChunks.map(async (chunk) => {
-                    return this.cache.addSeen(chunk.metadata.id);
-                }),
-            );
-
-            await this.cache.addSeen(uniqueId);
+            await this.cache.setLoaderCount(uniqueId, formattedChunks.length);
+            await this.cache.setLoaderSeen(uniqueId);
         }
 
         return newInserts;

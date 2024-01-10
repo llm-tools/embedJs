@@ -1,12 +1,13 @@
 {
     "name": "@llm-tools/embedjs",
-    "version": "0.0.34",
+    "version": "0.0.35",
     "description": "A NodeJS framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "type": "module",
     "scripts": {
         "build": "npm run clean && npm run build:esm && npm run build:cjs",
+        "build:local": "npm run build:esm && npm run build:cjs",
         "clean": "rimraf dist/",
         "build:esm": "tsc --outDir dist/",
         "build:cjs": "tsc --outDir dist-cjs/ -p tsconfig.cjs.json && node scripts/move-cjs-to-dist.js && rimraf dist-cjs",
@@ -71,7 +72,8 @@
         "prettier": "^3.1.1",
         "rimraf": "^5.0.5",
         "typescript": "^5.3.3",
-        "vectordb": "^0.4.2"
+        "vectordb": "^0.4.2",
+        "ioredis": "^5.3.2"
     },
     "peerDependencies": {
         "@pinecone-database/pinecone": "^0.1.6",
@@ -79,7 +81,8 @@
         "cohere-ai": "^5.1.0",
         "hnswlib-node": "^1.4.2",
         "lmdb": "^2.8.2",
-        "vectordb": "^0.1.8"
+        "vectordb": "^0.1.8",
+        "ioredis": "^5.3.2"
     },
     "peerDependenciesMeta": {
         "@pinecone-database/pinecone": {
@@ -98,6 +101,9 @@
             "optional": true
         },
         "hnswlib-node": {
+            "optional": true
+        },
+        "ioredis": {
             "optional": true
         }
     },
@@ -139,6 +145,11 @@
             "types": "./dist/cache/memory-cache.d.ts",
             "import": "./dist/cache/memory-cache.js",
             "require": "./dist/cache/memory-cache.cjs"
+        },
+        "./cache/redis": {
+            "types": "./dist/cache/redis-cache.d.ts",
+            "import": "./dist/cache/redis-cache.js",
+            "require": "./dist/cache/redis-cache.cjs"
         },
         "./embeddings/ada": {
             "types": "./dist/embeddings/ada-embeddings.d.ts",

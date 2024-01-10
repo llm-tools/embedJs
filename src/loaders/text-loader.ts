@@ -4,7 +4,7 @@ import md5 from 'md5';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { cleanString } from '../global/utils.js';
 
-export class TextLoader extends BaseLoader<{ type: 'TEXT'; chunkId: number; id: string; textId: string }> {
+export class TextLoader extends BaseLoader<{ type: 'TextLoader'; chunkId: number; textId: string }> {
     private readonly text: string;
 
     constructor({ text }: { text: string }) {
@@ -19,10 +19,10 @@ export class TextLoader extends BaseLoader<{ type: 'TEXT'; chunkId: number; id: 
         return chunks.map((chunk, index) => {
             return {
                 pageContent: chunk,
+                contentHash: md5(chunk),
                 metadata: {
-                    type: <'TEXT'>'TEXT',
+                    type: <'TextLoader'>'TextLoader',
                     textId: this.uniqueId,
-                    id: md5(chunk),
                     chunkId: index,
                 },
             };

@@ -1,7 +1,7 @@
-import { Chunk } from '../global/types.js';
+import { LoaderChunk } from '../global/types.js';
 
 export abstract class BaseLoader<
-    Meta extends Record<string, string | number | boolean> = Record<string, string | number | boolean>,
+    T extends Record<string, string | number | boolean> = Record<string, string | number | boolean>,
 > {
     protected readonly uniqueId: string;
 
@@ -9,7 +9,7 @@ export abstract class BaseLoader<
         this.uniqueId = uniqueId;
     }
 
-    abstract getChunks(): Promise<Chunk<Meta>[]>;
+    abstract getChunks(): Promise<LoaderChunk<T>[]>;
 
     getUniqueId(): string {
         return this.uniqueId;

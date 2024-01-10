@@ -5,7 +5,7 @@ import md5 from 'md5';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { cleanString } from '../global/utils.js';
 
-export class YoutubeLoader extends BaseLoader<{ type: 'YOUTUBE'; chunkId: number; id: string; videoIdOrUrl: string }> {
+export class YoutubeLoader extends BaseLoader<{ type: 'YoutubeLoader'; chunkId: number; videoIdOrUrl: string }> {
     private readonly videoIdOrUrl: string;
 
     constructor({ videoIdOrUrl }: { videoIdOrUrl: string }) {
@@ -25,10 +25,10 @@ export class YoutubeLoader extends BaseLoader<{ type: 'YOUTUBE'; chunkId: number
         return chunks.map((chunk, index) => {
             return {
                 pageContent: chunk,
+                contentHash: md5(chunk),
                 metadata: {
-                    type: <'YOUTUBE'>'YOUTUBE',
+                    type: <'YoutubeLoader'>'YoutubeLoader',
                     videoIdOrUrl: md5(this.videoIdOrUrl),
-                    id: md5(chunk),
                     chunkId: index,
                 },
             };

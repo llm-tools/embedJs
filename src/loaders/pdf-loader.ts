@@ -7,7 +7,7 @@ import md5 from 'md5';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { cleanString } from '../global/utils.js';
 
-export class PdfLoader extends BaseLoader<{ type: 'PDF'; chunkId: number; pathOrUrl: string; id: string }> {
+export class PdfLoader extends BaseLoader<{ type: 'PdfLoader'; chunkId: number; pathOrUrl: string }> {
     private readonly pathOrUrl: string;
     private readonly isUrl: boolean;
 
@@ -33,10 +33,10 @@ export class PdfLoader extends BaseLoader<{ type: 'PDF'; chunkId: number; pathOr
         return chunks.map((chunk, index) => {
             return {
                 pageContent: chunk,
+                contentHash: md5(chunk),
                 metadata: {
-                    type: <'PDF'>'PDF',
+                    type: <'PdfLoader'>'PdfLoader',
                     pathOrUrl: this.pathOrUrl,
-                    id: md5(chunk),
                     chunkId: index,
                 },
             };

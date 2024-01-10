@@ -59,6 +59,12 @@ export class ChromaDb implements BaseDb {
         return this.collection.count();
     }
 
+    async deleteKeys(keys: string[]): Promise<void> {
+        await this.collection.delete({
+            ids: keys,
+        });
+    }
+
     async reset(): Promise<void> {
         await this.collection.delete();
     }

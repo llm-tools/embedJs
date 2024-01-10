@@ -69,6 +69,10 @@ export class LanceDb implements BaseDb {
         return this.table.countRows();
     }
 
+    async deleteKeys(keys: string[]): Promise<void> {
+        await this.table.delete(`id IS IN (${keys.map((key) => `'${key}'`).join(',')})`);
+    }
+
     async reset(): Promise<void> {
         await this.table.delete('id IS NOT NULL');
     }

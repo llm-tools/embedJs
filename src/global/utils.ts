@@ -28,3 +28,7 @@ export async function filterAsync<T>(
     const filterMap = await mapAsync(array, callbackfn);
     return array.filter((_value, index) => filterMap[index]);
 }
+
+export function createArrayChunks<T>(arr: T[], size: number) {
+    return Array.from({ length: Math.ceil(arr.length / size) }, (_v, i) => arr.slice(i * size, i * size + size));
+}

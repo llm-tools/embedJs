@@ -1,4 +1,4 @@
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+import { OpenAIEmbeddings } from '@langchain/openai';
 import { BaseEmbeddings } from '../interfaces/base-embeddings.js';
 
 export class AdaEmbeddings implements BaseEmbeddings {

@@ -2,6 +2,7 @@ import { Pinecone, PineconeRecord } from '@pinecone-database/pinecone';
 
 import { BaseDb } from '../interfaces/base-db.js';
 import { Chunk, EmbeddedChunk } from '../global/types.js';
+import { createArrayChunks, mapAsync } from '../global/utils.js';
 
 export class PineconeDb implements BaseDb {
     private namespace: string;
@@ -75,7 +76,13 @@ export class PineconeDb implements BaseDb {
         return (await index.describeIndexStats()).totalRecordCount;
     }
 
+    async deleteKeys(keys: string[]): Promise<void> {
+        const index = await this.client.Index(this.projectName).namespace(this.namespace);
+        const chunkedKeys = createArrayChunks(keys, 1000); //Pinecone only allows deleting 1000 chunks at a time
+        await mapAsync(chunkedKeys, async (set) => index.deleteMany(set));
+    }
+
     async reset(): Promise<void> {
-        return this.client.Index(this.projectName).namespace(this.namespace).deleteAll();
+        await this.client.Index(this.projectName).namespace(this.namespace).deleteAll();
     }
 }

@@ -6,7 +6,7 @@ import md5 from 'md5';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { cleanString } from '../global/utils.js';
 
-export class WebLoader extends BaseLoader<{ type: 'WEB'; chunkId: number; id: string; urlId: string }> {
+export class WebLoader extends BaseLoader<{ type: 'WebLoader'; chunkId: number; urlId: string }> {
     private readonly url: string;
 
     constructor({ url }: { url: string }) {
@@ -26,10 +26,10 @@ export class WebLoader extends BaseLoader<{ type: 'WEB'; chunkId: number; id: st
         return chunks.map((chunk, index) => {
             return {
                 pageContent: chunk,
+                contentHash: md5(chunk),
                 metadata: {
-                    type: <'WEB'>'WEB',
+                    type: <'WebLoader'>'WebLoader',
                     urlId: this.uniqueId,
-                    id: md5(chunk),
                     chunkId: index,
                 },
             };

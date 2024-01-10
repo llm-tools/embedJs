@@ -41,6 +41,10 @@ export class HNSWDb implements BaseDb {
         return this.index.getCurrentCount();
     }
 
+    async deleteKeys(_keys: string[]): Promise<void> {
+        throw new Error('Not supported');
+    }
+
     async reset(): Promise<void> {
         await this.index.resizeIndex(0);
     }

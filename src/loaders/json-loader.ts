@@ -3,7 +3,7 @@ import md5 from 'md5';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { cleanString } from '../global/utils.js';
 
-export class JsonLoader extends BaseLoader<{ type: 'JSON'; chunkId: number; id: string }> {
+export class JsonLoader extends BaseLoader<{ type: 'JsonLoader'; chunkId: number }> {
     private readonly object: Record<string, unknown> | Record<string, unknown>[];
     private readonly pickKeysForEmbedding: string[];
 
@@ -29,7 +29,7 @@ export class JsonLoader extends BaseLoader<{ type: 'JSON'; chunkId: number; id: 
                     .filter((key) => key in entry) // line can be removed to make it inclusive
                     .map((key) => [key, entry[key]]),
             );
-            const string = cleanString(JSON.stringify(subset));
+            const s = cleanString(JSON.stringify(subset));
 
             if ('id' in entry) {
                 entry.preEmbedId = entry.id;
@@ -37,10 +37,10 @@ export class JsonLoader extends BaseLoader<{ type: 'JSON'; chunkId: number; id: 
             }
 
             return {
-                pageContent: string,
+                pageContent: s,
+                contentHash: md5(s),
                 metadata: {
-                    type: <'JSON'>'JSON',
-                    id: md5(string),
+                    type: <'JsonLoader'>'JsonLoader',
                     chunkId: index,
                     ...entry,
                 },
