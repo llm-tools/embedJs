@@ -1,6 +1,3 @@
-import { OpenAI } from '@langchain/openai';
-import { BufferMemory } from 'langchain/memory';
-import { ConversationChain } from 'langchain/chains';
 import createDebugMessages from 'debug';
 
 import { BaseDb } from '../interfaces/base-db.js';
@@ -9,6 +6,7 @@ import { AddLoaderReturn, Chunk, EmbeddedChunk } from '../global/types.js';
 import { LLMApplicationBuilder } from './llm-application-builder.js';
 import { DEFAULT_INSERT_BATCH_SIZE } from '../global/constants.js';
 import { cleanString, stringFormat } from '../global/utils.js';
+import { BaseModel } from '../interfaces/base-model.js';
 import { BaseCache } from '../interfaces/base-cache.js';
 import { LLMEmbedding } from './llm-embedding.js';
 
@@ -20,11 +18,10 @@ export class LLMApplication {
     private readonly loaders: BaseLoader[];
     private readonly cache?: BaseCache;
     private readonly vectorDb: BaseDb;
-    private readonly model: OpenAI;
-
-    private executor: ConversationChain;
+    private readonly model: BaseModel;
 
     constructor(llmBuilder: LLMApplicationBuilder) {
+        this.model = llmBuilder.getModel();
         this.loaders = llmBuilder.getLoaders();
         this.vectorDb = llmBuilder.getVectorDb();
         this.queryTemplate = llmBuilder.getQueryTemplate();
@@ -33,8 +30,8 @@ export class LLMApplication {
         this.initLoaders = llmBuilder.getLoaderInit();
 
         LLMEmbedding.init(llmBuilder.getEmbeddingModel());
+        if (!this.model) throw new SyntaxError('Model not set');
         if (!this.vectorDb) throw new SyntaxError('VectorDb not set');
-        this.model = new OpenAI({ temperature: llmBuilder.getTemperature(), modelName: llmBuilder.getModel() });
     }
 
     private async embedChunks(chunks: Pick<Chunk, 'pageContent'>[]) {
@@ -60,11 +57,6 @@ export class LLMApplication {
                 await this.addLoader(loader);
             }
         }
-    }
-
-    public async resetChainExecutor() {
-        const memory = new BufferMemory();
-        this.executor = new ConversationChain({ llm: this.model, memory });
     }
 
     private async batchLoadEmbeddings(loaderUniqueId: string, formattedChunks: Chunk[]) {
@@ -162,13 +154,10 @@ export class LLMApplication {
 
     public async query(query: string, newChat = false): Promise<string> {
         const context = await this.getContext(query);
+        return this.model.query(context.prompt, context.supportingContext, newChat);
+    }
 
-        if (this.executor === undefined || newChat) await this.resetChainExecutor();
-
-        const result = await this.executor.call({
-            input: `${context.prompt} \nSupporting documents:\n${JSON.stringify(context.supportingContext)}`,
-        });
-
-        return result.response;
+    public async resetChainExecutor() {
+        await this.model.resetContext();
     }
 }

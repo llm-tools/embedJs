@@ -4,6 +4,9 @@ import { LLMApplication } from './llm-application.js';
 import { BaseCache } from '../interfaces/base-cache.js';
 import { BaseEmbeddings } from '../interfaces/base-embeddings.js';
 import { AdaEmbeddings } from '../embeddings/ada-embeddings.js';
+import { AVAILABLE_MODELS } from '../global/constants.js';
+import { BaseModel } from '../interfaces/base-model.js';
+import { OpenAiModel } from '../models/openai-model.js';
 
 export class LLMApplicationBuilder {
     private searchResultCount: number;
@@ -14,13 +17,12 @@ export class LLMApplicationBuilder {
     private cache?: BaseCache;
     private embeddingModel: BaseEmbeddings;
     private initLoaders: boolean;
-    private modelName: string;
+    private model: BaseModel;
 
     constructor() {
         this.loaders = [];
         this.temperature = 0.1;
         this.searchResultCount = 7;
-        this.modelName = 'gpt-3.5-turbo';
         this.embeddingModel = new AdaEmbeddings();
         this.initLoaders = true;
 
@@ -53,6 +55,7 @@ export class LLMApplicationBuilder {
 
     setTemperature(temperature: number) {
         this.temperature = temperature;
+        if (this.model) this.setModel(this.model);
         return this;
     }
 
@@ -79,8 +82,13 @@ export class LLMApplicationBuilder {
         return this;
     }
 
-    setModel(model: string) {
-        this.modelName = model;
+    setModel(model: AVAILABLE_MODELS | BaseModel) {
+        if (typeof model === 'object') this.model = model;
+        else {
+            if (model === AVAILABLE_MODELS.OPENAI_GPT3) this.model = new OpenAiModel(this.temperature, 'gpt-3.5-turbo');
+            else if (model === AVAILABLE_MODELS.OPENAI_GPT4) this.model = new OpenAiModel(this.temperature, 'gpt-4');
+        }
+
         return this;
     }
 
@@ -117,6 +125,6 @@ export class LLMApplicationBuilder {
     }
 
     getModel() {
-        return this.modelName;
+        return this.model;
     }
 }
