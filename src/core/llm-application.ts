@@ -1,6 +1,7 @@
 import { OpenAI } from '@langchain/openai';
 import { BufferMemory } from 'langchain/memory';
 import { ConversationChain } from 'langchain/chains';
+import createDebugMessages from 'debug';
 import md5 from 'md5';
 
 import { BaseDb } from '../interfaces/base-db.js';
@@ -12,6 +13,7 @@ import { BaseCache } from '../interfaces/base-cache.js';
 import { LLMEmbedding } from './llm-embedding.js';
 
 export class LLMApplication {
+    private readonly debug = createDebugMessages('embedjs:core');
     private readonly initLoaders: boolean;
     private readonly queryTemplate: string;
     private readonly searchResultCount: number;
@@ -46,7 +48,12 @@ export class LLMApplication {
 
     async init() {
         await this.vectorDb.init({ dimensions: LLMEmbedding.getEmbedding().getDimensions() });
-        if (this.cache) await this.cache.init();
+        this.debug('Initialized vector database');
+
+        if (this.cache) {
+            await this.cache.init();
+            this.debug('Initialized cache');
+        }
 
         if (this.initLoaders) {
             for await (const loader of this.loaders) {
@@ -62,8 +69,11 @@ export class LLMApplication {
 
     async addLoader(loader: BaseLoader): Promise<AddLoaderReturn> {
         const uniqueId = loader.getUniqueId();
+        this.debug('Add loader called for', uniqueId);
+        await loader.init();
 
         const chunks = await loader.getChunks();
+        this.debug(`Chunks count ${chunks.length}`, uniqueId);
         if (chunks.length === 0) return { entriesAdded: 0, uniqueId };
 
         const chunkSeenHash = md5(chunks.map((c) => c.contentHash).reduce((p, c) => `${p}_${c}`, ''));
@@ -72,6 +82,7 @@ export class LLMApplication {
                 await this.cache.getLoader(uniqueId);
 
             if (chunks.length === previousChunkCount && chunkSeenHash === previousChunkSeenHash) {
+                this.debug('Skipping chunk delete and returning as loader is unchanged', uniqueId);
                 return { entriesAdded: 0, uniqueId };
             }
 
@@ -80,6 +91,10 @@ export class LLMApplication {
                 chunkIds.push(this.getChunkUniqueId(uniqueId, i));
             }
 
+            this.debug(
+                `Loader previously run but chunks are different. Deleting previous ${chunkIds.length} keys`,
+                uniqueId,
+            );
             await this.vectorDb.deleteKeys(chunkIds);
         }
 
@@ -92,6 +107,7 @@ export class LLMApplication {
         }));
 
         const embeddings = await this.embedChunks(formattedChunks);
+        this.debug('Embeddings obtained for loader', uniqueId);
         const embedChunks = formattedChunks.map((chunk, index) => {
             return <EmbeddedChunk>{
                 pageContent: chunk.pageContent,
@@ -102,6 +118,7 @@ export class LLMApplication {
 
         const newInserts = await this.vectorDb.insertChunks(embedChunks);
         if (this.cache) await this.cache.addLoader(uniqueId, formattedChunks.length, chunkSeenHash);
+        this.debug(`Add loader completed with new ${newInserts} entries for`, uniqueId);
         return { entriesAdded: newInserts, uniqueId };
     }
 

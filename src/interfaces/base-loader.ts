@@ -9,9 +9,11 @@ export abstract class BaseLoader<
         this.uniqueId = uniqueId;
     }
 
-    abstract getChunks(): Promise<LoaderChunk<T>[]>;
+    async init() {}
 
     getUniqueId(): string {
         return this.uniqueId;
     }
+
+    abstract getChunks(): Promise<LoaderChunk<T>[]>;
 }

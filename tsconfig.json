@@ -14,7 +14,7 @@
         "noUnusedParameters": true,
         "useDefineForClassFields": true,
         "strictPropertyInitialization": false,
-        "allowJs": true,
+        "allowJs": false,
         "strict": false
     },
     "include": ["src/**/*"],
