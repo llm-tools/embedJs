@@ -14,11 +14,11 @@ export class RedisCache implements BaseCache {
         this.redis = new Redis(this.options);
     }
 
-    async addLoader(loaderId: string, chunkCount: number, chunkSeenHash: string): Promise<void> {
-        await this.redis.set(loaderId, JSON.stringify({ chunkCount, chunkSeenHash }));
+    async addLoader(loaderId: string, chunkCount: number): Promise<void> {
+        await this.redis.set(loaderId, JSON.stringify({ chunkCount }));
     }
 
-    async getLoader(loaderId: string): Promise<{ chunkCount: number; chunkSeenHash: string } | null> {
+    async getLoader(loaderId: string): Promise<{ chunkCount: number } | null> {
         const result = await this.redis.get(loaderId);
 
         if (!result) return null;

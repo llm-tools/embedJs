@@ -16,11 +16,11 @@ export class LmdbCache implements BaseCache {
         });
     }
 
-    async addLoader(loaderId: string, chunkCount: number, chunkSeenHash: string): Promise<void> {
-        await this.database.put(loaderId, { chunkCount, chunkSeenHash });
+    async addLoader(loaderId: string, chunkCount: number): Promise<void> {
+        await this.database.put(loaderId, { chunkCount });
     }
 
-    async getLoader(loaderId: string): Promise<{ chunkCount: number; chunkSeenHash: string }> {
+    async getLoader(loaderId: string): Promise<{ chunkCount: number }> {
         return this.database.get(loaderId);
     }
 

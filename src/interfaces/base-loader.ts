@@ -1,3 +1,4 @@
+import createDebugMessages from 'debug';
 import { LoaderChunk } from '../global/types.js';
 
 export abstract class BaseLoader<
@@ -7,6 +8,7 @@ export abstract class BaseLoader<
 
     constructor(uniqueId: string) {
         this.uniqueId = uniqueId;
+        createDebugMessages('embedjs:loader:BaseLoader')(`New loader class initalized with key ${uniqueId}`);
     }
 
     async init() {}
@@ -15,5 +17,5 @@ export abstract class BaseLoader<
         return this.uniqueId;
     }
 
-    abstract getChunks(): Promise<LoaderChunk<T>[]>;
+    abstract getChunks(): AsyncGenerator<LoaderChunk<T>, void, void>;
 }

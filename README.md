@@ -254,7 +254,7 @@ class CustomLoader extends BaseLoader<{ customChunkMetadata: string }> {
         super('uniqueId');
     }
 
-    async getChunks() {
+    async *getChunks() {
         throw new Error('Method not implemented.');
     }
 }
@@ -460,11 +460,11 @@ class MyOwnCache implements BaseCache {
         throw new Error("Method not implemented.");
     }
 
-    async addLoader(loaderId: string, chunkCount: number, chunkSeenHash: string): Promise<void> {
+    async addLoader(loaderId: string, chunkCount: number ): Promise<void> {
         throw new Error("Method not implemented.");
     }
 
-    async getLoader(loaderId: string): Promise<{ chunkCount: number, chunkSeenHash: string }> {
+    async getLoader(loaderId: string): Promise<{ chunkCount: number }> {
         throw new Error("Method not implemented.");
     }
 

@@ -1,0 +1,1 @@
+export const DEFAULT_INSERT_BATCH_SIZE = 500;

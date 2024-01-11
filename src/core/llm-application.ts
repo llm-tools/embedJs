@@ -2,13 +2,13 @@ import { OpenAI } from '@langchain/openai';
 import { BufferMemory } from 'langchain/memory';
 import { ConversationChain } from 'langchain/chains';
 import createDebugMessages from 'debug';
-import md5 from 'md5';
 
 import { BaseDb } from '../interfaces/base-db.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
-import { LLMApplicationBuilder } from './llm-application-builder.js';
-import { cleanString, stringFormat } from '../global/utils.js';
 import { AddLoaderReturn, Chunk, EmbeddedChunk } from '../global/types.js';
+import { LLMApplicationBuilder } from './llm-application-builder.js';
+import { DEFAULT_INSERT_BATCH_SIZE } from '../global/constants.js';
+import { cleanString, stringFormat } from '../global/utils.js';
 import { BaseCache } from '../interfaces/base-cache.js';
 import { LLMEmbedding } from './llm-embedding.js';
 
@@ -46,7 +46,7 @@ export class LLMApplication {
         return `${loaderUniqueId}_${chunkId}`;
     }
 
-    async init() {
+    public async init() {
         await this.vectorDb.init({ dimensions: LLMEmbedding.getEmbedding().getDimensions() });
         this.debug('Initialized vector database');
 
@@ -62,52 +62,17 @@ export class LLMApplication {
         }
     }
 
-    async resetChainExecutor() {
+    public async resetChainExecutor() {
         const memory = new BufferMemory();
         this.executor = new ConversationChain({ llm: this.model, memory });
     }
 
-    async addLoader(loader: BaseLoader): Promise<AddLoaderReturn> {
-        const uniqueId = loader.getUniqueId();
-        this.debug('Add loader called for', uniqueId);
-        await loader.init();
-
-        const chunks = await loader.getChunks();
-        this.debug(`Chunks count ${chunks.length}`, uniqueId);
-        if (chunks.length === 0) return { entriesAdded: 0, uniqueId };
-
-        const chunkSeenHash = md5(chunks.map((c) => c.contentHash).reduce((p, c) => `${p}_${c}`, ''));
-        if (this.cache && (await this.cache.hasLoader(uniqueId))) {
-            const { chunkCount: previousChunkCount, chunkSeenHash: previousChunkSeenHash } =
-                await this.cache.getLoader(uniqueId);
-
-            if (chunks.length === previousChunkCount && chunkSeenHash === previousChunkSeenHash) {
-                this.debug('Skipping chunk delete and returning as loader is unchanged', uniqueId);
-                return { entriesAdded: 0, uniqueId };
-            }
-
-            const chunkIds: string[] = [];
-            for (let i = 0; i < previousChunkCount; i++) {
-                chunkIds.push(this.getChunkUniqueId(uniqueId, i));
-            }
-
-            this.debug(
-                `Loader previously run but chunks are different. Deleting previous ${chunkIds.length} keys`,
-                uniqueId,
-            );
-            await this.vectorDb.deleteKeys(chunkIds);
-        }
-
-        const formattedChunks: Chunk[] = chunks.map((chunk) => ({
-            pageContent: chunk.pageContent,
-            metadata: {
-                ...chunk.metadata,
-                id: this.getChunkUniqueId(uniqueId, chunk.metadata.chunkId),
-            },
-        }));
+    private async batchLoadEmbeddings(loaderUniqueId: string, formattedChunks: Chunk[]) {
+        if (formattedChunks.length === 0) return 0;
 
         const embeddings = await this.embedChunks(formattedChunks);
-        this.debug('Embeddings obtained for loader', uniqueId);
+        this.debug(`Batch embeddings (size ${formattedChunks.length}) obtained for loader`, loaderUniqueId);
+
         const embedChunks = formattedChunks.map((chunk, index) => {
             return <EmbeddedChunk>{
                 pageContent: chunk.pageContent,
@@ -116,17 +81,60 @@ export class LLMApplication {
             };
         });
 
-        const newInserts = await this.vectorDb.insertChunks(embedChunks);
-        if (this.cache) await this.cache.addLoader(uniqueId, formattedChunks.length, chunkSeenHash);
-        this.debug(`Add loader completed with new ${newInserts} entries for`, uniqueId);
+        return this.vectorDb.insertChunks(embedChunks);
+    }
+
+    public async addLoader(loader: BaseLoader): Promise<AddLoaderReturn> {
+        const uniqueId = loader.getUniqueId();
+        this.debug('Add loader called for', uniqueId);
+        await loader.init();
+
+        const chunks = await loader.getChunks();
+        if (this.cache && (await this.cache.hasLoader(uniqueId))) {
+            const { chunkCount: previousChunkCount } = await this.cache.getLoader(uniqueId);
+
+            const chunkIds: string[] = [];
+            for (let i = 0; i < previousChunkCount; i++) {
+                chunkIds.push(this.getChunkUniqueId(uniqueId, i));
+            }
+
+            this.debug(`Loader previously run. Deleting previous ${chunkIds.length} keys`, uniqueId);
+            await this.vectorDb.deleteKeys(chunkIds);
+        }
+
+        let batchSize = 0,
+            newInserts = 0,
+            formattedChunks: Chunk[] = [];
+        for await (const chunk of chunks) {
+            batchSize++;
+
+            const formattedChunk = {
+                pageContent: chunk.pageContent,
+                metadata: {
+                    ...chunk.metadata,
+                    id: this.getChunkUniqueId(uniqueId, chunk.metadata.chunkId),
+                },
+            };
+            formattedChunks.push(formattedChunk);
+
+            if (batchSize % DEFAULT_INSERT_BATCH_SIZE === 0) {
+                newInserts += await this.batchLoadEmbeddings(uniqueId, formattedChunks);
+                formattedChunks = [];
+                batchSize = 0;
+            }
+        }
+        newInserts += await this.batchLoadEmbeddings(uniqueId, formattedChunks);
+
+        if (this.cache) await this.cache.addLoader(uniqueId, formattedChunks.length);
+        this.debug(`Add loader completed with ${newInserts} new entries for`, uniqueId);
         return { entriesAdded: newInserts, uniqueId };
     }
 
-    async getEmbeddingsCount(): Promise<number> {
+    public async getEmbeddingsCount(): Promise<number> {
         return this.vectorDb.getVectorCount();
     }
 
-    async deleteAllEmbeddings(areYouSure: boolean = false) {
+    public async deleteAllEmbeddings(areYouSure: boolean = false) {
         if (!areYouSure) {
             console.warn('Reset embeddings called without confirmation. No action taken.');
             return;
@@ -135,12 +143,12 @@ export class LLMApplication {
         await this.vectorDb.reset();
     }
 
-    async getEmbeddings(cleanQuery: string) {
+    public async getEmbeddings(cleanQuery: string) {
         const queryEmbedded = await LLMEmbedding.getEmbedding().embedQuery(cleanQuery);
         return this.vectorDb.similaritySearch(queryEmbedded, this.searchResultCount);
     }
 
-    async getContext(query: string) {
+    public async getContext(query: string) {
         const cleanQuery = cleanString(query);
         const contextChunks = await this.getEmbeddings(cleanQuery);
 
@@ -152,7 +160,7 @@ export class LLMApplication {
         };
     }
 
-    async query(query: string, newChat = false): Promise<string> {
+    public async query(query: string, newChat = false): Promise<string> {
         const context = await this.getContext(query);
 
         if (this.executor === undefined || newChat) await this.resetChainExecutor();

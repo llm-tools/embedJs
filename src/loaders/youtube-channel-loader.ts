@@ -2,7 +2,6 @@ import md5 from 'md5';
 import usetube from 'usetube';
 import createDebugMessages from 'debug';
 
-import { mapAsync } from '../global/utils.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { YoutubeLoader } from './youtube-loader.js';
 
@@ -19,35 +18,34 @@ export class YoutubeChannelLoader extends BaseLoader<{
         this.channelId = channelId;
     }
 
-    async getChunks() {
+    async *getChunks() {
         try {
             const videos = await usetube.getChannelVideos(this.channelId);
             this.debug(`Channel '${this.channelId}' returned ${videos.length} videos`);
             const videoIds = videos.map((v) => v.id);
 
-            const chunks = (
-                await mapAsync(videoIds, (videoId) => {
-                    const youtubeLoader = new YoutubeLoader({ videoIdOrUrl: videoId });
-                    return youtubeLoader.getChunks();
-                })
-            )
-                .flat(1)
-                .map((c) => {
-                    delete c.metadata.videoIdOrUrl;
-                    return c;
-                });
+            let i = 0;
+            for (const videoId of videoIds) {
+                const youtubeLoader = new YoutubeLoader({ videoIdOrUrl: videoId });
 
-            return chunks.map((chunk) => ({
-                ...chunk,
-                metadata: {
-                    ...chunk.metadata,
-                    type: <'YoutubeChannelLoader'>'YoutubeChannelLoader',
-                    channelId: this.channelId,
-                },
-            }));
+                for await (const chunk of youtubeLoader.getChunks()) {
+                    delete chunk.metadata.videoIdOrUrl;
+
+                    yield {
+                        ...chunk,
+                        metadata: {
+                            ...chunk.metadata,
+                            type: <'YoutubeChannelLoader'>'YoutubeChannelLoader',
+                            channelId: this.channelId,
+                            chunkId: i,
+                        },
+                    };
+
+                    i++;
+                }
+            }
         } catch (e) {
             this.debug('Could not get videos for channel', this.channelId, e);
-            return [];
         }
     }
 }

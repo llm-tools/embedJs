@@ -20,10 +20,11 @@ export class JsonLoader extends BaseLoader<{ type: 'JsonLoader'; chunkId: number
         this.object = object;
     }
 
-    async getChunks() {
+    async *getChunks() {
         const array = Array.isArray(this.object) ? this.object : [this.object];
 
-        return array.map((entry, index) => {
+        let i = 0;
+        for(const entry of array) {
             const subset = Object.fromEntries(
                 this.pickKeysForEmbedding
                     .filter((key) => key in entry) // line can be removed to make it inclusive
@@ -36,15 +37,17 @@ export class JsonLoader extends BaseLoader<{ type: 'JsonLoader'; chunkId: number
                 delete entry.id;
             }
 
-            return {
+            yield {
                 pageContent: s,
                 contentHash: md5(s),
                 metadata: {
                     type: <'JsonLoader'>'JsonLoader',
-                    chunkId: index,
+                    chunkId: i,
                     ...entry,
                 },
             };
-        });
+
+            i++;
+        }
     }
 }

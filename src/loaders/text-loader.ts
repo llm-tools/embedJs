@@ -12,20 +12,23 @@ export class TextLoader extends BaseLoader<{ type: 'TextLoader'; chunkId: number
         this.text = text;
     }
 
-    async getChunks() {
+    async *getChunks() {
         const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 300, chunkOverlap: 0 });
         const chunks = await chunker.splitText(cleanString(this.text));
 
-        return chunks.map((chunk, index) => {
-            return {
+        let i = 0;
+        for (const chunk of chunks) {
+            yield {
                 pageContent: chunk,
                 contentHash: md5(chunk),
                 metadata: {
                     type: <'TextLoader'>'TextLoader',
                     textId: this.uniqueId,
-                    chunkId: index,
+                    chunkId: i,
                 },
             };
-        });
+
+            i++;
+        }
     }
 }

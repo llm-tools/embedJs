@@ -1,6 +1,6 @@
 {
     "name": "@llm-tools/embedjs",
-    "version": "0.0.36",
+    "version": "0.0.37",
     "description": "A NodeJS framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -54,6 +54,7 @@
         "langchain": "^0.1.2",
         "md5": "^2.3.0",
         "pdf-parse-fork": "^1.2.0",
+        "sitemapper": "^3.2.8",
         "usetube": "^2.2.7",
         "youtube-transcript": "^1.0.6"
     },

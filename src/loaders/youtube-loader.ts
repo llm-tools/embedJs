@@ -15,32 +15,31 @@ export class YoutubeLoader extends BaseLoader<{ type: 'YoutubeLoader'; chunkId: 
         this.videoIdOrUrl = videoIdOrUrl;
     }
 
-    async getChunks() {
+    async *getChunks() {
         const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 2000, chunkOverlap: 0 });
 
         try {
             const transcripts = await YoutubeTranscript.fetchTranscript(this.videoIdOrUrl, { lang: 'en' });
             this.debug(`Transcripts (length ${transcripts.length}) obtained for video`, this.videoIdOrUrl);
 
-            const chunks: string[] = [];
-            for await (const transcript of transcripts) {
-                chunks.push(...(await chunker.splitText(cleanString(transcript.text))));
-            }
+            let i = 0;
+            for (const transcript of transcripts) {
+                for (const chunk of await chunker.splitText(cleanString(transcript.text))) {
+                    yield {
+                        pageContent: chunk,
+                        contentHash: md5(chunk),
+                        metadata: {
+                            type: <'YoutubeLoader'>'YoutubeLoader',
+                            videoIdOrUrl: md5(this.videoIdOrUrl),
+                            chunkId: i,
+                        },
+                    };
 
-            return chunks.map((chunk, index) => {
-                return {
-                    pageContent: chunk,
-                    contentHash: md5(chunk),
-                    metadata: {
-                        type: <'YoutubeLoader'>'YoutubeLoader',
-                        videoIdOrUrl: md5(this.videoIdOrUrl),
-                        chunkId: index,
-                    },
-                };
-            });
+                    i++;
+                }
+            }
         } catch (e) {
             this.debug('Could not get transcripts for video', this.videoIdOrUrl, e);
-            return [];
         }
     }
 }

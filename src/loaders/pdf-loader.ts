@@ -20,7 +20,7 @@ export class PdfLoader extends BaseLoader<{ type: 'PdfLoader'; chunkId: number; 
         this.pathOrUrl = filePath ?? url;
     }
 
-    async getChunks() {
+    async *getChunks() {
         const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 1000, chunkOverlap: 0 });
 
         let fileBuffer: Buffer;
@@ -29,17 +29,20 @@ export class PdfLoader extends BaseLoader<{ type: 'PdfLoader'; chunkId: number; 
             fileBuffer = Buffer.from((await axios.get(this.pathOrUrl, { responseType: 'arraybuffer' })).data, 'binary');
         const pdfParsed = await pdf(fileBuffer);
 
+        let i = 0;
         const chunks = await chunker.splitText(cleanString(pdfParsed.text));
-        return chunks.map((chunk, index) => {
-            return {
+        for (const chunk of chunks) {
+            yield {
                 pageContent: chunk,
                 contentHash: md5(chunk),
                 metadata: {
                     type: <'PdfLoader'>'PdfLoader',
                     pathOrUrl: this.pathOrUrl,
-                    chunkId: index,
+                    chunkId: i,
                 },
             };
-        });
+
+            i++;
+        }
     }
 }

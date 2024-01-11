@@ -1,10 +1,13 @@
 import { Pinecone, PineconeRecord } from '@pinecone-database/pinecone';
+import createDebugMessages from 'debug';
 
 import { BaseDb } from '../interfaces/base-db.js';
 import { Chunk, EmbeddedChunk } from '../global/types.js';
 import { createArrayChunks, mapAsync } from '../global/utils.js';
 
 export class PineconeDb implements BaseDb {
+    private readonly debug = createDebugMessages('embedjs:vector:PineconeDb');
+    private static readonly PINECONE_INSERT_CHUNK_SIZE = 500;
     private namespace: string;
     private projectName: string;
     private client: Pinecone;
@@ -25,16 +28,16 @@ export class PineconeDb implements BaseDb {
         await this.client.createIndex({
             name: this.projectName,
             dimension: dimensions,
+            metric: 'cosine',
         });
     }
 
     async insertChunks(chunks: EmbeddedChunk[]): Promise<number> {
         let processed = 0;
-        const chunkSize = 300;
         const index = this.client.Index(this.projectName).namespace(this.namespace);
 
-        for (let i = 0; i < chunks.length; i += chunkSize) {
-            const chunkBatch = chunks.slice(i, i + chunkSize);
+        for (let i = 0; i < chunks.length; i += PineconeDb.PINECONE_INSERT_CHUNK_SIZE) {
+            const chunkBatch = chunks.slice(i, i + PineconeDb.PINECONE_INSERT_CHUNK_SIZE);
 
             const upsertCommand: PineconeRecord[] = chunkBatch.map((chunk) => {
                 return {
@@ -44,6 +47,7 @@ export class PineconeDb implements BaseDb {
                 };
             });
 
+            this.debug(`Inserting Pinecone batch`);
             await index.upsert(upsertCommand);
             processed += chunkBatch.length;
         }
