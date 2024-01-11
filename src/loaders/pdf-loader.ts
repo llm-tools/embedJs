@@ -11,10 +11,10 @@ export class PdfLoader extends BaseLoader<{ type: 'PdfLoader'; chunkId: number; 
     private readonly pathOrUrl: string;
     private readonly isUrl: boolean;
 
-    constructor({ url, uniqueId }: { url: string; uniqueId?: string });
-    constructor({ filePath, uniqueId }: { filePath: string; uniqueId?: string });
-    constructor({ filePath, url, uniqueId }: { filePath?: string; url?: string; uniqueId?: string }) {
-        super(`PdfLoader_${md5(uniqueId ?? filePath ?? url)}`);
+    constructor({ url }: { url: string; });
+    constructor({ filePath }: { filePath: string;  });
+    constructor({ filePath, url }: { filePath?: string; url?: string;  }) {
+        super(`PdfLoader_${md5(filePath ? `FILE_${filePath}` : `URL_${url}`)}`);
 
         this.isUrl = filePath ? false : true;
         this.pathOrUrl = filePath ?? url;
