@@ -47,7 +47,7 @@
     "homepage": "https://github.com/llm-tools/embedjs#readme",
     "dependencies": {
         "@langchain/cohere": "^0.0.2",
-        "@langchain/openai": "^0.0.10",
+        "@langchain/openai": "^0.0.11",
         "axios": "^1.6.5",
         "debug": "^4.3.4",
         "html-to-text": "^9.0.5",
@@ -56,10 +56,12 @@
         "pdf-parse-fork": "^1.2.0",
         "sitemapper": "^3.2.8",
         "usetube": "^2.2.7",
+        "uuid": "^9.0.1",
         "youtube-transcript": "^1.0.6"
     },
     "devDependencies": {
         "@pinecone-database/pinecone": "^1.1.2",
+        "@qdrant/js-client-rest": "^1.7.0",
         "@tsconfig/recommended": "^1.0.3",
         "@types/debug": "^4.1.12",
         "@types/html-to-text": "^9.0.4",
@@ -83,6 +85,7 @@
     },
     "peerDependencies": {
         "@pinecone-database/pinecone": "^0.1.6",
+        "@qdrant/js-client-rest": "^1.7.0",
         "chromadb": "^1.5.3",
         "cohere-ai": "^5.1.0",
         "hnswlib-node": "^1.4.2",
@@ -111,6 +114,9 @@
         },
         "ioredis": {
             "optional": true
+        },
+        "@qdrant/js-client-rest": {
+            "optional": true
         }
     },
     "engines": {
@@ -136,6 +142,11 @@
             "types": "./dist/vectorDb/chroma-db.d.ts",
             "import": "./dist/vectorDb/chroma-db.js",
             "require": "./dist/vectorDb/chroma-db.cjs"
+        },
+        "./vectorDb/qdrant": {
+            "types": "./dist/vectorDb/qdrant-db.d.ts",
+            "import": "./dist/vectorDb/qdrant-db.js",
+            "require": "./dist/vectorDb/qdrant-db.cjs"
         },
         "./vectorDb/hnswlib": {
             "types": "./dist/vectorDb/hnswlib-db.d.ts",

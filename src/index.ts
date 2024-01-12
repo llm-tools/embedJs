@@ -12,6 +12,8 @@ import { BaseCache } from './interfaces/base-cache.js';
 import { YoutubeChannelLoader } from './loaders/youtube-channel-loader.js';
 import { YoutubeSearchLoader } from './loaders/youtube-search-loader.js';
 import { SitemapLoader } from './loaders/sitemap-loader.js';
+import { BaseModel } from './interfaces/base-model.js';
+import { AVAILABLE_MODELS } from './global/constants.js';
 
 export {
     LLMApplication,
@@ -28,4 +30,6 @@ export {
     YoutubeChannelLoader,
     YoutubeSearchLoader,
     SitemapLoader,
+    BaseModel,
+    AVAILABLE_MODELS,
 };

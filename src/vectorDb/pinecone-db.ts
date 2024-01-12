@@ -8,9 +8,10 @@ import { createArrayChunks, mapAsync } from '../global/utils.js';
 export class PineconeDb implements BaseDb {
     private readonly debug = createDebugMessages('embedjs:vector:PineconeDb');
     private static readonly PINECONE_INSERT_CHUNK_SIZE = 500;
-    private namespace: string;
-    private projectName: string;
-    private client: Pinecone;
+
+    private readonly client: Pinecone;
+    private readonly namespace: string;
+    private readonly projectName: string;
 
     constructor({ projectName, namespace }: { projectName: string; namespace: string }) {
         this.client = new Pinecone({

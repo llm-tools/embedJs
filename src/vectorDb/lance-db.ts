@@ -6,10 +6,10 @@ import { BaseDb } from '../interfaces/base-db.js';
 import { Chunk, EmbeddedChunk } from '../global/types.js';
 
 export class LanceDb implements BaseDb {
-    private static STATIC_DB_NAME = 'vectors';
+    private static readonly STATIC_DB_NAME = 'vectors';
+    private readonly isTemp: boolean = true;
+    private readonly path: string;
     private table: Table<number[]>;
-    private isTemp: boolean = true;
-    private path: string;
 
     constructor({ path, isTemp }: { path: string; isTemp?: boolean }) {
         this.isTemp = isTemp !== undefined ? isTemp : false;

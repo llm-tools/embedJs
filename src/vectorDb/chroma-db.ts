@@ -4,9 +4,9 @@ import { BaseDb } from '../interfaces/base-db.js';
 import { Chunk, EmbeddedChunk } from '../global/types.js';
 
 export class ChromaDb implements BaseDb {
-    private static STATIC_COLLECTION_NAME = 'vectors';
+    private static readonly STATIC_COLLECTION_NAME = 'vectors';
+    private readonly url: string;
     private collection: Collection;
-    private url: string;
 
     constructor({ url }: { url: string }) {
         this.url = url;
