@@ -91,7 +91,16 @@ export class QdrantDb implements BaseDb {
     async deleteKeys(keys: string[]): Promise<void> {
         await this.client.delete(this.projectName, {
             wait: true,
-            points: keys,
+            filter: {
+                must: [
+                    {
+                        key: 'id',
+                        match: {
+                            any: keys,
+                        },
+                    },
+                ],
+            },
         });
     }
 

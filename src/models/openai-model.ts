@@ -25,7 +25,6 @@ export class OpenAiModel extends BaseModel {
     }
 
     async resetContext(): Promise<void> {
-        const memory = new BufferMemory();
-        this.executor = new ConversationChain({ llm: this.model, memory });
+        this.executor = new ConversationChain({ llm: this.model, memory: new BufferMemory() });
     }
 }
