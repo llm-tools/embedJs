@@ -34,6 +34,8 @@ export class LLMApplicationBuilder {
         You can say you may not have all the information but do not say that you are not a reliable source.
 
         USER: {0}`;
+
+        this.setModel(SIMPLE_MODELS.OPENAI_GPT3_TURBO);
     }
 
     async build() {

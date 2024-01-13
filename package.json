@@ -1,6 +1,6 @@
 {
     "name": "@llm-tools/embedjs",
-    "version": "0.0.42",
+    "version": "0.0.43",
     "description": "A NodeJS framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
