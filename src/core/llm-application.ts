@@ -152,12 +152,8 @@ export class LLMApplication {
         };
     }
 
-    public async query(query: string, newChat = false): Promise<string> {
-        const context = await this.getContext(query);
-        return this.model.query(context.prompt, context.supportingContext, newChat);
-    }
-
-    public async resetChainExecutor() {
-        await this.model.resetContext();
+    public async query(userQuery: string, conversationId?: string): Promise<string> {
+        const context = await this.getContext(userQuery);
+        return this.model.query(context.prompt, userQuery, context.supportingContext, conversationId);
     }
 }

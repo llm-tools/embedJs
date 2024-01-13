@@ -1,6 +1,6 @@
 {
     "name": "@llm-tools/embedjs",
-    "version": "0.0.40",
+    "version": "0.0.41",
     "description": "A NodeJS framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -46,6 +46,7 @@
     ],
     "homepage": "https://github.com/llm-tools/embedjs#readme",
     "dependencies": {
+        "@huggingface/inference": "^2.6.4",
         "@langchain/cohere": "^0.0.2",
         "@langchain/openai": "^0.0.11",
         "axios": "^1.6.5",

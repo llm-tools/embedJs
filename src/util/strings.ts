@@ -1,3 +1,5 @@
+import { ConversationHistory } from '../global/types.js';
+
 export function truncateCenterString(fullStr: string, strLen: number, separator?: string) {
     if (fullStr.length <= strLen) return fullStr;
 
@@ -25,4 +27,10 @@ export function stringFormat(template: string, ...args: any[]) {
     return template.replace(/{(\d+)}/g, function (match, number) {
         return typeof args[number] != 'undefined' ? args[number] : match;
     });
+}
+
+export function historyToString(history: ConversationHistory[]) {
+    return history.reduce((p: string, c: ConversationHistory) => {
+        return p.concat(`${c.sender}: ${c.message}`);
+    }, '');
 }

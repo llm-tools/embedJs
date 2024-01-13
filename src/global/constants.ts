@@ -1,6 +1,6 @@
 export const DEFAULT_INSERT_BATCH_SIZE = 500;
 
-export enum AVAILABLE_MODELS {
-    'OPENAI_GPT3',
+export enum SIMPLE_MODELS {
+    'OPENAI_GPT3_TURBO',
     'OPENAI_GPT4',
 }

@@ -4,9 +4,9 @@ import { LLMApplication } from './llm-application.js';
 import { BaseCache } from '../interfaces/base-cache.js';
 import { BaseEmbeddings } from '../interfaces/base-embeddings.js';
 import { AdaEmbeddings } from '../embeddings/ada-embeddings.js';
-import { AVAILABLE_MODELS } from '../global/constants.js';
 import { BaseModel } from '../interfaces/base-model.js';
-import { OpenAiModel } from '../models/openai-model.js';
+import { SIMPLE_MODELS } from '../global/constants.js';
+import { OpenAi } from '../models/openai-model.js';
 
 export class LLMApplicationBuilder {
     private searchResultCount: number;
@@ -26,8 +26,12 @@ export class LLMApplicationBuilder {
         this.embeddingModel = new AdaEmbeddings();
         this.initLoaders = true;
 
-        this.queryTemplate = `You are a helpful chat bot. Use all the provided context to answer the query at the end. Answer in full.
-        If you don't know the answer, just say that you don't know, don't try to make up an answer.
+        this.queryTemplate = `You are a helpful human like chat bot. Use all the provided context to answer the query at the end. Answer in full.
+        If you don't know the answer, just say that you don't know, don't try to make up an answer. 
+        
+        Do not use words like context or training data when responding. Never mention the word context in your response. 
+        
+        You can say you may not have all the information but do not say that you are not a reliable source.
 
         USER: {0}`;
     }
@@ -82,11 +86,11 @@ export class LLMApplicationBuilder {
         return this;
     }
 
-    setModel(model: AVAILABLE_MODELS | BaseModel) {
+    setModel(model: SIMPLE_MODELS | BaseModel) {
         if (typeof model === 'object') this.model = model;
         else {
-            if (model === AVAILABLE_MODELS.OPENAI_GPT3) this.model = new OpenAiModel(this.temperature, 'gpt-3.5-turbo');
-            else if (model === AVAILABLE_MODELS.OPENAI_GPT4) this.model = new OpenAiModel(this.temperature, 'gpt-4');
+            if (model === SIMPLE_MODELS.OPENAI_GPT3_TURBO) this.model = new OpenAi(this.temperature, 'gpt-3.5-turbo');
+            else if (model === SIMPLE_MODELS.OPENAI_GPT4) this.model = new OpenAi(this.temperature, 'gpt-4');
         }
 
         return this;

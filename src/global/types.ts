@@ -23,3 +23,8 @@ export type EmbeddedChunk<
 };
 
 export type AddLoaderReturn = { entriesAdded: number; uniqueId: string };
+
+export type ConversationHistory = {
+    message: string;
+    sender: 'HUMAN' | 'AI';
+};

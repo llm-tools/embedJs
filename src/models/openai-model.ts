@@ -1,30 +1,41 @@
-import { OpenAI } from '@langchain/openai';
-import { BufferMemory } from 'langchain/memory';
-import { ConversationChain } from 'langchain/chains';
+import createDebugMessages from 'debug';
+import { ChatOpenAI } from '@langchain/openai';
+import { HumanMessage, AIMessage, SystemMessage } from '@langchain/core/messages';
 
-import { Chunk } from '../global/types.js';
 import { BaseModel } from '../interfaces/base-model.js';
+import { Chunk, ConversationHistory } from '../global/types.js';
 
-export class OpenAiModel extends BaseModel {
-    private readonly model: OpenAI;
-    private executor: ConversationChain;
+export class OpenAi extends BaseModel {
+    private readonly debug = createDebugMessages('embedjs:model:BaseModel');
+    private readonly model: ChatOpenAI;
 
     constructor(temperature: number, modelName: string) {
         super(temperature);
-        this.model = new OpenAI({ temperature, modelName });
+        this.model = new ChatOpenAI({ temperature, modelName });
     }
 
-    override async runQuery(prompt: string, supportingContext: Chunk[]): Promise<string> {
-        if (this.executor === undefined) await this.resetContext();
+    override async runQuery(
+        prompt: string,
+        _baseQuery: string,
+        supportingContext: Chunk[],
+        pastConversations: ConversationHistory[],
+    ): Promise<string> {
+        const pastMessages = pastConversations.map((c) => {
+            if (c.sender === 'AI')
+                return new AIMessage({
+                    content: c.message,
+                });
 
-        const result = await this.executor.call({
-            input: `${prompt} \nSupporting documents:\n${JSON.stringify(supportingContext)}`,
+            return new HumanMessage({
+                content: c.message,
+            });
         });
 
-        return result.response;
-    }
+        const finalPrompt = `${prompt} \nSupporting context:\n${JSON.stringify(supportingContext.map((s) => s.pageContent).join(','))}`;
+        this.debug('Executing with finalPrompt -', finalPrompt);
+        pastMessages.push(new SystemMessage(finalPrompt));
 
-    async resetContext(): Promise<void> {
-        this.executor = new ConversationChain({ llm: this.model, memory: new BufferMemory() });
+        const result = await this.model.invoke(pastMessages);
+        return result.content.toString();
     }
 }
