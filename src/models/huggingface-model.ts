@@ -26,7 +26,7 @@ export class HuggingFace extends BaseModel {
         const pastAiMessages = pastConversations.filter((c) => c.sender === 'AI').map((c) => c.message);
         const pastUserMessages = pastConversations.filter((c) => c.sender === 'HUMAN').map((c) => c.message);
 
-        const finalPrompt = `${prompt} \nSupporting context:\n${JSON.stringify(supportingContext.map((s) => s.pageContent).join(','))}`;
+        const finalPrompt = `${prompt} \nSupporting context:\n${supportingContext.map((s) => s.pageContent).join(', ')}`;
         this.debug('Executing with finalPrompt -', finalPrompt);
 
         const result = await this.runtime.conversational({
@@ -38,7 +38,6 @@ export class HuggingFace extends BaseModel {
             },
             parameters: {
                 temperature: this.temperature,
-                
             },
         });
 

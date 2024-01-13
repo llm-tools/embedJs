@@ -31,7 +31,7 @@ export class OpenAi extends BaseModel {
             });
         });
 
-        const finalPrompt = `${prompt} \nSupporting context:\n${JSON.stringify(supportingContext.map((s) => s.pageContent).join(','))}`;
+        const finalPrompt = `${prompt} \nSupporting context: ${JSON.stringify(supportingContext.map((s) => s.pageContent))}`;
         this.debug('Executing with finalPrompt -', finalPrompt);
         pastMessages.push(new SystemMessage(finalPrompt));
 
