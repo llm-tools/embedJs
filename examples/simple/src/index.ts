@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
 import { LLMApplicationBuilder, PdfLoader, WebLoader, YoutubeLoader } from '../../../src/index.js';
-import { HNSWDb } from '../../../src/databases/hnswlib-db.js';
+import { HNSWDb } from '../../../src/vectorDb/hnswlib-db.js';
 
 const llmApplication = await new LLMApplicationBuilder()
     .setSearchResultCount(30)

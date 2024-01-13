@@ -5,11 +5,7 @@ import createDebugMessages from 'debug';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { YoutubeLoader } from './youtube-loader.js';
 
-export class YoutubeChannelLoader extends BaseLoader<{
-    type: 'YoutubeChannelLoader';
-    chunkId: number;
-    channelId: string;
-}> {
+export class YoutubeChannelLoader extends BaseLoader<{ type: 'YoutubeChannelLoader' }> {
     private readonly debug = createDebugMessages('embedjs:loader:YoutubeChannelLoader');
     private readonly channelId: string;
 
@@ -18,7 +14,7 @@ export class YoutubeChannelLoader extends BaseLoader<{
         this.channelId = channelId;
     }
 
-    async *getChunks() {
+    override async *getChunks() {
         try {
             const videos = await usetube.getChannelVideos(this.channelId);
             this.debug(`Channel '${this.channelId}' returned ${videos.length} videos`);
@@ -29,14 +25,12 @@ export class YoutubeChannelLoader extends BaseLoader<{
                 const youtubeLoader = new YoutubeLoader({ videoIdOrUrl: videoId });
 
                 for await (const chunk of youtubeLoader.getChunks()) {
-                    delete chunk.metadata.videoIdOrUrl;
-
                     yield {
                         ...chunk,
                         metadata: {
                             ...chunk.metadata,
                             type: <'YoutubeChannelLoader'>'YoutubeChannelLoader',
-                            channelId: this.channelId,
+                            source: this.channelId,
                             chunkId: i,
                         },
                     };

@@ -1,6 +1,6 @@
 {
     "name": "@llm-tools/embedjs",
-    "version": "0.0.38",
+    "version": "0.0.40",
     "description": "A NodeJS framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -78,19 +78,19 @@
         "hnswlib-node": "^1.4.2",
         "ioredis": "^5.3.2",
         "lmdb": "^2.9.2",
-        "prettier": "^3.1.1",
+        "prettier": "^3.2.1",
         "rimraf": "^5.0.5",
         "typescript": "^5.3.3",
         "vectordb": "^0.1.8"
     },
     "peerDependencies": {
-        "@pinecone-database/pinecone": "^0.1.6",
+        "@pinecone-database/pinecone": "^1.1.2",
         "@qdrant/js-client-rest": "^1.7.0",
-        "chromadb": "^1.5.3",
-        "cohere-ai": "^5.1.0",
+        "chromadb": "^1.7.3",
+        "cohere-ai": "^7.6.2",
         "hnswlib-node": "^1.4.2",
         "ioredis": "^5.3.2",
-        "lmdb": "^2.8.2",
+        "lmdb": "^2.9.2",
         "vectordb": "^0.1.8"
     },
     "peerDependenciesMeta": {

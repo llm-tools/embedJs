@@ -5,9 +5,9 @@ import axios from 'axios';
 import md5 from 'md5';
 
 import { BaseLoader } from '../interfaces/base-loader.js';
-import { cleanString } from '../global/utils.js';
+import { cleanString } from '../util/strings.js';
 
-export class WebLoader extends BaseLoader<{ type: 'WebLoader'; chunkId: number; urlId: string }> {
+export class WebLoader extends BaseLoader<{ type: 'WebLoader' }> {
     private readonly debug = createDebugMessages('embedjs:loader:WebLoader');
     private readonly url: string;
 
@@ -16,7 +16,7 @@ export class WebLoader extends BaseLoader<{ type: 'WebLoader'; chunkId: number; 
         this.url = url;
     }
 
-    async *getChunks() {
+    override async *getChunks() {
         const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 2000, chunkOverlap: 0 });
 
         try {
@@ -33,7 +33,7 @@ export class WebLoader extends BaseLoader<{ type: 'WebLoader'; chunkId: number; 
                     contentHash: md5(chunk),
                     metadata: {
                         type: <'WebLoader'>'WebLoader',
-                        urlId: this.uniqueId,
+                        source: this.url,
                         chunkId: i,
                     },
                 };

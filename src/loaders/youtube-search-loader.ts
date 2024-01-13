@@ -5,11 +5,7 @@ import createDebugMessages from 'debug';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { YoutubeChannelLoader } from './youtube-channel-loader.js';
 
-export class YoutubeSearchLoader extends BaseLoader<{
-    type: 'YoutubeSearchLoader';
-    chunkId: number;
-    searchString: string;
-}> {
+export class YoutubeSearchLoader extends BaseLoader<{ type: 'YoutubeSearchLoader' }> {
     private readonly debug = createDebugMessages('embedjs:loader:YoutubeSearchLoader');
     private readonly searchString: string;
 
@@ -18,7 +14,7 @@ export class YoutubeSearchLoader extends BaseLoader<{
         this.searchString = searchString;
     }
 
-    async *getChunks() {
+    override async *getChunks() {
         try {
             const { channels } = await usetube.searchChannel(this.searchString);
             this.debug(
@@ -36,7 +32,7 @@ export class YoutubeSearchLoader extends BaseLoader<{
                         metadata: {
                             ...chunk.metadata,
                             type: <'YoutubeSearchLoader'>'YoutubeSearchLoader',
-                            searchString: this.searchString,
+                            source: this.searchString,
                             chunkId: i,
                         },
                     };

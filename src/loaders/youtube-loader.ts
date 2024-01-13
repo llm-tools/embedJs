@@ -4,9 +4,9 @@ import createDebugMessages from 'debug';
 import md5 from 'md5';
 
 import { BaseLoader } from '../interfaces/base-loader.js';
-import { cleanString } from '../global/utils.js';
+import { cleanString } from '../util/strings.js';
 
-export class YoutubeLoader extends BaseLoader<{ type: 'YoutubeLoader'; chunkId: number; videoIdOrUrl: string }> {
+export class YoutubeLoader extends BaseLoader<{ type: 'YoutubeLoader' }> {
     private readonly debug = createDebugMessages('embedjs:loader:YoutubeLoader');
     private readonly videoIdOrUrl: string;
 
@@ -15,7 +15,7 @@ export class YoutubeLoader extends BaseLoader<{ type: 'YoutubeLoader'; chunkId: 
         this.videoIdOrUrl = videoIdOrUrl;
     }
 
-    async *getChunks() {
+    override async *getChunks() {
         const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 2000, chunkOverlap: 0 });
 
         try {
@@ -30,7 +30,7 @@ export class YoutubeLoader extends BaseLoader<{ type: 'YoutubeLoader'; chunkId: 
                         contentHash: md5(chunk),
                         metadata: {
                             type: <'YoutubeLoader'>'YoutubeLoader',
-                            videoIdOrUrl: md5(this.videoIdOrUrl),
+                            source: this.videoIdOrUrl,
                             chunkId: i,
                         },
                     };

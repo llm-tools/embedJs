@@ -1,9 +1,9 @@
 import md5 from 'md5';
 
 import { BaseLoader } from '../interfaces/base-loader.js';
-import { cleanString } from '../global/utils.js';
+import { cleanString, truncateCenterString } from '../util/strings.js';
 
-export class JsonLoader extends BaseLoader<{ type: 'JsonLoader'; chunkId: number }> {
+export class JsonLoader extends BaseLoader<{ type: 'JsonLoader' }> {
     private readonly object: Record<string, unknown> | Record<string, unknown>[];
     private readonly pickKeysForEmbedding: string[];
 
@@ -20,11 +20,12 @@ export class JsonLoader extends BaseLoader<{ type: 'JsonLoader'; chunkId: number
         this.object = object;
     }
 
-    async *getChunks() {
+    override async *getChunks() {
+        const tuncatedObjectString = truncateCenterString(JSON.stringify(this.object), 50);
         const array = Array.isArray(this.object) ? this.object : [this.object];
 
         let i = 0;
-        for(const entry of array) {
+        for (const entry of array) {
             const subset = Object.fromEntries(
                 this.pickKeysForEmbedding
                     .filter((key) => key in entry) // line can be removed to make it inclusive
@@ -42,6 +43,7 @@ export class JsonLoader extends BaseLoader<{ type: 'JsonLoader'; chunkId: number
                 contentHash: md5(s),
                 metadata: {
                     type: <'JsonLoader'>'JsonLoader',
+                    source: tuncatedObjectString,
                     chunkId: i,
                     ...entry,
                 },

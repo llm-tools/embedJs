@@ -3,7 +3,7 @@ import createDebugMessages from 'debug';
 
 import { BaseDb } from '../interfaces/base-db.js';
 import { Chunk, EmbeddedChunk } from '../global/types.js';
-import { createArrayChunks, mapAsync } from '../global/utils.js';
+import { createArrayChunks, mapAsync } from '../util/arrays.js';
 
 export class PineconeDb implements BaseDb {
     private readonly debug = createDebugMessages('embedjs:vector:PineconeDb');

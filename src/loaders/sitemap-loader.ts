@@ -5,11 +5,7 @@ import createDebugMessages from 'debug';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { WebLoader } from './web-loader.js';
 
-export class SitemapLoader extends BaseLoader<{
-    type: 'SitemapLoader';
-    chunkId: number;
-    url: string;
-}> {
+export class SitemapLoader extends BaseLoader<{ type: 'SitemapLoader' }> {
     private readonly debug = createDebugMessages('embedjs:loader:SitemapLoader');
     private readonly url: string;
 
@@ -18,7 +14,7 @@ export class SitemapLoader extends BaseLoader<{
         this.url = url;
     }
 
-    async *getChunks() {
+    override async *getChunks() {
         try {
             // @ts-ignore
             const { sites } = await new Sitemapper({ url: this.url, timeout: 15000 }).fetch();
@@ -29,14 +25,12 @@ export class SitemapLoader extends BaseLoader<{
                 const webLoader = new WebLoader({ url });
 
                 for await (const chunk of webLoader.getChunks()) {
-                    delete chunk.metadata.urlId;
-
                     yield {
                         ...chunk,
                         metadata: {
                             ...chunk.metadata,
                             type: <'SitemapLoader'>'SitemapLoader',
-                            url: this.url,
+                            source: this.url,
                             chunkId: i,
                         },
                     };

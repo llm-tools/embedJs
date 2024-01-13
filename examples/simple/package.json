@@ -10,9 +10,9 @@
     "license": "ISC",
     "dependencies": {
         "dotenv": "^16.3.1",
-        "ts-node": "^10.9.1"
+        "ts-node": "^10.9.2"
     },
     "devDependencies": {
-        "@types/node": "^20.3.2"
+        "@types/node": "^20.11.0"
     }
 }

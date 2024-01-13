@@ -50,7 +50,7 @@ export class ChromaDb implements BaseDb {
         return results.documents[0].map((result, index) => {
             return {
                 pageContent: result,
-                metadata: { id: results.ids[0][index], ...results.metadatas[0][index] },
+                metadata: { id: results.ids[0][index], ...(<{ source: string }>results.metadatas[0][index]) },
             };
         });
     }

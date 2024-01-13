@@ -5,7 +5,7 @@ import { BaseLoader } from '../interfaces/base-loader.js';
 import { AddLoaderReturn, Chunk, EmbeddedChunk } from '../global/types.js';
 import { LLMApplicationBuilder } from './llm-application-builder.js';
 import { DEFAULT_INSERT_BATCH_SIZE } from '../global/constants.js';
-import { cleanString, stringFormat } from '../global/utils.js';
+import { cleanString, stringFormat } from '../util/strings.js';
 import { BaseModel } from '../interfaces/base-model.js';
 import { BaseCache } from '../interfaces/base-cache.js';
 import { LLMEmbedding } from './llm-embedding.js';

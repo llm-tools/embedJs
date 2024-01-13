@@ -5,22 +5,22 @@ import axios from 'axios';
 import md5 from 'md5';
 
 import { BaseLoader } from '../interfaces/base-loader.js';
-import { cleanString } from '../global/utils.js';
+import { cleanString } from '../util/strings.js';
 
-export class PdfLoader extends BaseLoader<{ type: 'PdfLoader'; chunkId: number; pathOrUrl: string }> {
+export class PdfLoader extends BaseLoader<{ type: 'PdfLoader' }> {
     private readonly pathOrUrl: string;
     private readonly isUrl: boolean;
 
-    constructor({ url }: { url: string; });
-    constructor({ filePath }: { filePath: string;  });
-    constructor({ filePath, url }: { filePath?: string; url?: string;  }) {
+    constructor({ url }: { url: string });
+    constructor({ filePath }: { filePath: string });
+    constructor({ filePath, url }: { filePath?: string; url?: string }) {
         super(`PdfLoader_${md5(filePath ? `FILE_${filePath}` : `URL_${url}`)}`);
 
         this.isUrl = filePath ? false : true;
         this.pathOrUrl = filePath ?? url;
     }
 
-    async *getChunks() {
+    override async *getChunks() {
         const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 1000, chunkOverlap: 0 });
 
         let fileBuffer: Buffer;
@@ -37,7 +37,7 @@ export class PdfLoader extends BaseLoader<{ type: 'PdfLoader'; chunkId: number; 
                 contentHash: md5(chunk),
                 metadata: {
                     type: <'PdfLoader'>'PdfLoader',
-                    pathOrUrl: this.pathOrUrl,
+                    source: this.pathOrUrl,
                     chunkId: i,
                 },
             };

@@ -2,9 +2,9 @@ import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import md5 from 'md5';
 
 import { BaseLoader } from '../interfaces/base-loader.js';
-import { cleanString } from '../global/utils.js';
+import { cleanString, truncateCenterString } from '../util/strings.js';
 
-export class TextLoader extends BaseLoader<{ type: 'TextLoader'; chunkId: number; textId: string }> {
+export class TextLoader extends BaseLoader<{ type: 'TextLoader' }> {
     private readonly text: string;
 
     constructor({ text }: { text: string }) {
@@ -12,7 +12,8 @@ export class TextLoader extends BaseLoader<{ type: 'TextLoader'; chunkId: number
         this.text = text;
     }
 
-    async *getChunks() {
+    override async *getChunks() {
+        const tuncatedObjectString = truncateCenterString(this.text, 50);
         const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 300, chunkOverlap: 0 });
         const chunks = await chunker.splitText(cleanString(this.text));
 
@@ -23,6 +24,7 @@ export class TextLoader extends BaseLoader<{ type: 'TextLoader'; chunkId: number
                 contentHash: md5(chunk),
                 metadata: {
                     type: <'TextLoader'>'TextLoader',
+                    source: tuncatedObjectString,
                     textId: this.uniqueId,
                     chunkId: i,
                 },

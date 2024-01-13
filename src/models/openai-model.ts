@@ -14,7 +14,7 @@ export class OpenAiModel extends BaseModel {
         this.model = new OpenAI({ temperature, modelName });
     }
 
-    async runQuery(prompt: string, supportingContext: Chunk[]): Promise<string> {
+    override async runQuery(prompt: string, supportingContext: Chunk[]): Promise<string> {
         if (this.executor === undefined) await this.resetContext();
 
         const result = await this.executor.call({
