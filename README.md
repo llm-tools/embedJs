@@ -52,8 +52,11 @@ The library also supports caches which provide caching for embeddings, loaders a
     -   [Dry run](#get-context)
 -   [Loaders supported](#loaders-supported)
     -   [Youtube](#youtube-video)
+    -   [Youtube channels](#youtube-channel)
+    -   [Youtube search](#youtube-search)
     -   [PDF](#pdf-file)
     -   [Web page](#web-page)
+    -   [Confluence](#confluence)
     -   [Text](#text)
     -   [Custom loader](#add-a-custom-loader)
     -   [How to request more loaders](#more-loaders-coming-soon)
@@ -62,6 +65,7 @@ The library also supports caches which provide caching for embeddings, loaders a
     -   [LanceDB](#lancedb)
     -   [Chroma](#chroma)
     -   [HNSWLib](#hnswlib)
+    -   [Weaviate](#weaviate)
     -   [Own Database](#bring-your-own-database)
     -   [How to request new vector databases](#more-databases-coming-soon)
 -   [Caches](#caches)
@@ -204,6 +208,22 @@ To add any youtube video to your app, use `YoutubeLoader`.
 .addLoader(new YoutubeLoader({ videoIdOrUrl: 'w2KbwC-s7pY' }))
 ```
 
+## Youtube channel
+
+To add all videos in a youtube channel, use `YoutubeChannelLoader`.
+
+```TS
+.addLoader(new YoutubeChannelLoader({ channelId: '...' }))
+```
+
+## Youtube search
+
+To do a general youtube search and add the popular search results, use `YoutubeSearchLoader`.
+
+```TS
+.addLoader(new YoutubeSearchLoader({ searchString: '...' }))
+```
+
 ## PDF file
 
 To add a pdf file, use `PdfLoader`. You can add a local file -
@@ -233,6 +253,16 @@ To add a web page, use `WebLoader`.
 ```TS
 .addLoader(new WebLoader({ url: 'https://en.wikipedia.org/wiki/Formula_One' }))
 ```
+
+## Confluence
+
+To add a confluence space, use `ConfluenceLoader`.
+
+```TS
+.addLoader(new ConfluenceLoader({ spaceNames: ['...'] }))
+```
+
+**Note:** The confluence space name is the value you see in the url in the space overview page `/wiki/spaces/{{ space name }}/overview`.
 
 ## Text
 
@@ -331,7 +361,7 @@ In this case, the `path` property is used as a prefix to create the temporary di
 npm install chromadb
 ```
 
--   Set Chhroma database as your choice of `vectorDb`
+-   Set Chroma database as your choice of `vectorDb`
 
 ```TS
 .setVectorDb(new ChromaDb({ url: 'http://localhost:8000' }))
@@ -360,6 +390,22 @@ npm install hnswlib-node
 ```
 
 **Note:** This is a purely in-memory vector store. All values are lost when application is restarted.
+
+## Weaviate
+
+[Weaviate](https://weaviate.io/) is an open source vector store. You can deploy it locally on docker or use their managed cloud offering. Follow these steps to use Weaviate as your vector database -
+
+-   Install Weaviate package in your project
+
+```bash
+npm install weaviate-ts-client
+```
+
+-   Set Weaviate database as your choice of `vectorDb`
+
+```TS
+.setVectorDb(new WeaviateDb())
+```
 
 ## Bring your own database
 
@@ -540,14 +586,16 @@ Once done, you can pass this class to the `setEmbeddingModel` method like shown 
 
 ## More embedding models coming soon
 
-If you want us to add support for a specific embedding model, please create an [issue](https://github.com/llm-tools/embedjs/issues) and we will prioritize it. Our current priority is to add support for the [HuggingFace's Sentence Transformer](https://huggingface.co/sentence-transformers) model. All PRs are welcome.
+If you want us to add support for a specific embedding model, please create an [issue](https://github.com/llm-tools/embedjs/issues) and we will prioritize it. Our current priority is to add support for the [HuggingFace's Models](https://huggingface.co/sentence-transformers). Support for the open source models under HuggingFace are available in alpha - please set `HuggingFace` as your choice of model to test.
+
+All PRs are welcome.
 
 # Azure OpenAI
 
 In order to be able to use an OpenAI model on Azure, it first needs to be deployed. Please refer to [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/) on how to deploy a model on Azure. To run this library, you will need to deploy two models -
 
 -   text-embedding-ada
--   GPT-3.5-turbo
+-   GPT-3.5-turbo (or the 4 series)
 
 Once these models are deployed, using Azure OpenAI instead of the regular OpenAI is easy to do. Just follow these steps -
 
@@ -568,25 +616,17 @@ export OPENAI_API_KEY=<Your Azure OpenAI API key>
 
 **NOTE:** At the time of writing this, Azure OpenAI is an invite only program.
 
-# Important dependencies
-
-EmbedJS is built on top of the fantastic work being done on OpenAI and the open source community behind it. Internally it uses -
-
--   [Langchain](https://github.com/hwchase17/langchain) a fantastic LLM library
--   [OpenAI Ada embedding](https://platform.openai.com/docs/guides/embeddings) to create embeddings
--   [OpenAI ChatGPT API](https://platform.openai.com/docs/guides/gpt/chat-completions-api) as the LLM to get answers to prompts.
-
 # Projects
 
 Here's a list of projects / examples built with EmbedJs
 
-| **Project**                                                                      | **Description**               | **Author**   |
-| -------------------------------------------------------------------------------- | ----------------------------- | ------------ |
-| [nestjs-embedjs-template](https://github.com/llm-tools/nestjs-embedjs-template)  | A NestJS server side template | K V Adhityan |
-| [nextjs-chatbot-template](https://github.com/llm-tools/chat-bot-nextjs-template) | A NextJS chat bot template    | K V Adhityan |
+| **Project**                                                                      | **Description**               |
+| -------------------------------------------------------------------------------- | ----------------------------- |
+| [nestjs-embedjs-template](https://github.com/llm-tools/nestjs-embedjs-template)  | A NestJS server side template |
+| [nextjs-chatbot-template](https://github.com/llm-tools/chat-bot-nextjs-template) | A NextJS chat bot template    |
 
 # Contributors
 
 -   [K V Adhityan](https://adhityan.com/)
 
-Looking for contrbutors to add to the list above.
+Looking for contrbutors to add to the list above. Reach out to me on Linkedin if you are interested to contribute.

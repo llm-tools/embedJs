@@ -53,7 +53,6 @@ export class QdrantDb implements BaseDb {
                     payload: { pageContent: chunk.pageContent, ...chunk.metadata },
                 };
             });
-            console.log(upsertCommand);
 
             this.debug(`Inserting QDrant batch`);
             await this.client.upsert(this.projectName, {

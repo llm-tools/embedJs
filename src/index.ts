@@ -16,6 +16,7 @@ import { BaseModel } from './interfaces/base-model.js';
 import { SIMPLE_MODELS } from './global/constants.js';
 import { OpenAi } from './models/openai-model.js';
 import { HuggingFace } from './models/huggingface-model.js';
+import { ConfluenceLoader } from './loaders/confluence-loader.js';
 
 export {
     LLMApplication,
@@ -32,6 +33,7 @@ export {
     YoutubeChannelLoader,
     YoutubeSearchLoader,
     SitemapLoader,
+    ConfluenceLoader,
     BaseModel,
     SIMPLE_MODELS,
     HuggingFace,

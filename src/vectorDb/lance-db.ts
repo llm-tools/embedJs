@@ -43,7 +43,8 @@ export class LanceDb implements BaseDb {
             };
         });
 
-        return this.table.add(mapped);
+        await this.table.add(mapped);
+        return mapped.length; //TODO: check if vectorDb has addressed the issue where add returns undefined
     }
 
     async similaritySearch(query: number[], k: number): Promise<Chunk[]> {
@@ -70,7 +71,7 @@ export class LanceDb implements BaseDb {
     }
 
     async deleteKeys(keys: string[]): Promise<void> {
-        await this.table.delete(`id IS IN (${keys.map((key) => `'${key}'`).join(',')})`);
+        await this.table.delete(`id IN (${keys.map((key) => `'${key}'`).join(',')})`);
     }
 
     async reset(): Promise<void> {

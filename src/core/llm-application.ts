@@ -91,7 +91,7 @@ export class LLMApplication {
             }
 
             this.debug(`Loader previously run. Deleting previous ${chunkIds.length} keys`, uniqueId);
-            await this.vectorDb.deleteKeys(chunkIds);
+            if (chunkIds.length > 0) await this.vectorDb.deleteKeys(chunkIds);
         }
 
         let batchSize = 0,
