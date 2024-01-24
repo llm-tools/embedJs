@@ -10,7 +10,7 @@
 </a>
 </p>
 
-EmbedJS is a NodeJS framework that enables LLM powered interactions over any dataset with ease. It simplifies the process of loading a dataset, chunking it, creating embeddings and then storing onto a vector database.
+EmbedJS is a NodeJS RAG framework that enables LLM powered interactions over any dataset with ease. It simplifies the process of loading a dataset, chunking it, creating embeddings, storing onto a vector database and eventually querying it.
 
 Here's an example -
 
@@ -33,13 +33,13 @@ console.log(await llmApplication.query('Who is Adhityan?'));
 // Adhityan is a programmer, entrepreneur, and architect who is the Director of Engineering at Shift and has a presence on LinkedIn, GitHub, and Angel.co.
 ```
 
-The library comes with built in loaders for PDFs, Youtube videos, custom text and web pages. You can bring your own custom loader.
+The library comes with many built in loaders out of the box. See below for the full list. You can also easily add your own custom loader.
 
-You have the choice of vector database to store the results. The library comes with built in support for Pinecone and Lance databases. You can also add a custom database.
+You can pick from several supported vector databases to store the results. See below for the full list. It is possible to also add your custom vector database. Please do contribute back with a PR if you add support for a new data store.
 
-The library also supports caches which provide caching for embeddings, loaders and optionally queries. Chunks that are already seen are not re-processed. Similarly, entire loaders are cached and not processed if they have been already encountered. Read below for more information on this.
+The library also supports optioanl caching for embeddings and loaders. Chunks that are already seen are not re-processed. Similarly, entire loaders are cached if they have been already processed. Read below for more information on this.
 
-> I am looking for maintainers and contributors. Reach out to me on [Linkedin](https://www.linkedin.com/in/adhityan/) if you are interested or send in a PR.
+> I am looking for maintainers and contributors. Reach out to me on [Linkedin](https://www.linkedin.com/in/adhityan/) if you are interested or just send in a PR.
 
 # Contents
 
