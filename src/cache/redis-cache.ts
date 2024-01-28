@@ -28,4 +28,19 @@ export class RedisCache implements BaseCache {
     async hasLoader(loaderId: string): Promise<boolean> {
         return !!(await this.redis.get(loaderId));
     }
+
+    async loaderCustomSet<T extends Record<string, unknown>>(loaderCombinedId: string, value: T): Promise<void> {
+        await this.redis.set(loaderCombinedId, JSON.stringify(value));
+    }
+
+    async loaderCustomGet<T extends Record<string, unknown>>(loaderCombinedId: string): Promise<T> {
+        const result = await this.redis.get(loaderCombinedId);
+
+        if (!result) return null;
+        return JSON.parse(result);
+    }
+
+    async loaderCustomHas(loaderCombinedId: string): Promise<boolean> {
+        return !!(await this.redis.get(loaderCombinedId));
+    }
 }

@@ -51,10 +51,10 @@ The library also supports optioanl caching for embeddings and loaders. Chunks th
     -   [Customize the prompt](#customize-the-prompt)
     -   [Dry run](#get-context)
 -   [Loaders supported](#loaders-supported)
+    -   [PDF](#pdf-file)
     -   [Youtube](#youtube-video)
     -   [Youtube channels](#youtube-channel)
     -   [Youtube search](#youtube-search)
-    -   [PDF](#pdf-file)
     -   [Web page](#web-page)
     -   [Confluence](#confluence)
     -   [Text](#text)
@@ -69,17 +69,19 @@ The library also supports optioanl caching for embeddings and loaders. Chunks th
     -   [Own Database](#bring-your-own-database)
     -   [How to request new vector databases](#more-databases-coming-soon)
 -   [Caches](#caches)
-    -   [LMDB](#lmdb)
+    -   [Redis](#redis)
+    -   [LMDB File](#lmdb)
     -   [In memory cache](#inmemory)
     -   [Custom cache implementation](#bring-your-own-cache)
     -   [How to request new cache providers](#more-caches-coming-soon)
 -   [Embedding Models](#embedding-models)
+    -   [OpenAI v3 Small](#openai-v3-small)
+    -   [OpenAI v3 Large](#openai-v3-large)
     -   [ADA](#ada)
     -   [Cohere](#cohere)
     -   [Private embedding models](#use-custom-embedding-model)
     -   [Request support for embedding models](#more-embedding-models-coming-soon)
 -   [Usage with Azure OpenAI](#azure-openai)
--   [Dependencies](#important-dependencies)
 -   [Examples](#projects)
 -   [Author](#author)
 
@@ -491,7 +493,7 @@ You can use redis as a cache to store values during testing.
 
 ```TS
 await new LLMApplicationBuilder()
-.setCache(new RedisCache())
+.setCache(new RedisCache({ ... }))
 ```
 
 **Note:** The library internally uses `IORedis` to work with redis. `RedisCache` constructor supports all `IORedis` constructor parameters. Check [`IORedis` documentation](https://github.com/redis/ioredis) for more detials.
@@ -534,12 +536,37 @@ However in some advanced cases, you may want to change this; after all, differen
 
 The library supports the following embedding models -
 
-## Ada
+## OpenAI v3 Small
 
-The `text-embedding-ada-002	
-` is the default embedding model used by the libary. You can read more about it [here](https://openai.com/blog/new-and-improved-embedding-model). This model returns vectors with dimension 1536.
+The `text-embedding-3-small` is a new standard embedding model released by OpenAI in Jan, 2024. It is the default used by the libary. This model is cheaper and better than their older Ada model. This model returns vectors with dimension 1536.
 
 You do not have to do anything to enable it.
+
+## OpenAI v3 Large
+
+The `text-embedding-3-large` is also a new standard embedding model released by OpenAI in Jan, 2024. This model is the best embedding model provided by OpenAI as of now but is also the most expensive. This model returns vectors with dimension 3072.
+
+To set it as your model of choice -
+
+-   Set `OpenAi3LargeEmbeddings` as your embedding model on `LLMApplicationBuilder`
+
+```TS
+await new LLMApplicationBuilder()
+.setEmbeddingModel(new OpenAi3LargeEmbeddings())
+```
+
+## Ada
+
+The `text-embedding-ada-002` is a well known model from OpenAI. You can read more about it [here](https://openai.com/blog/new-and-improved-embedding-model). This model returns vectors with dimension 1536.
+
+To set it as your model of choice -
+
+-   Set `AdaEmbeddings` as your embedding model on `LLMApplicationBuilder`
+
+```TS
+await new LLMApplicationBuilder()
+.setEmbeddingModel(new AdaEmbeddings())
+```
 
 ## Cohere
 

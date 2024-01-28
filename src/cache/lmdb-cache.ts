@@ -27,4 +27,16 @@ export class LmdbCache implements BaseCache {
     async hasLoader(loaderId: string): Promise<boolean> {
         return this.database.doesExist(loaderId);
     }
+
+    async loaderCustomSet<T extends Record<string, unknown>>(loaderCombinedId: string, value: T): Promise<void> {
+        await this.database.put(loaderCombinedId, value);
+    }
+
+    async loaderCustomGet<T extends Record<string, unknown>>(loaderCombinedId: string): Promise<T> {
+        return this.database.get(loaderCombinedId);
+    }
+
+    async loaderCustomHas(loaderCombinedId: string): Promise<boolean> {
+        return this.database.doesExist(loaderCombinedId);
+    }
 }

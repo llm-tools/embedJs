@@ -21,12 +21,14 @@ export class LLMApplication {
     private readonly model: BaseModel;
 
     constructor(llmBuilder: LLMApplicationBuilder) {
+        this.cache = llmBuilder.getCache();
+        BaseLoader.setCache(this.cache);
+
         this.model = llmBuilder.getModel();
         this.loaders = llmBuilder.getLoaders();
         this.vectorDb = llmBuilder.getVectorDb();
         this.queryTemplate = llmBuilder.getQueryTemplate();
         this.searchResultCount = llmBuilder.getSearchResultCount();
-        this.cache = llmBuilder.getCache();
         this.initLoaders = llmBuilder.getLoaderInit();
 
         LLMEmbedding.init(llmBuilder.getEmbeddingModel());
