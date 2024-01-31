@@ -15,21 +15,26 @@ export class PineconeDb implements BaseDb {
 
     constructor({ projectName, namespace }: { projectName: string; namespace: string }) {
         this.client = new Pinecone({
-            apiKey: process.env.PINECONE_API_KEY,
-            environment: process.env.PINECONE_ENVIRONMENT,
+            apiKey: process.env.PINECONE_API_KEY
         });
         this.projectName = projectName;
         this.namespace = namespace;
     }
 
     async init({ dimensions }: { dimensions: number }) {
-        const list = (await this.client.listIndexes()).map((i) => i.name);
+        const list = (await this.client.listIndexes()).indexes.map((i) => i.name);
         if (list.indexOf(this.projectName) > -1) return;
 
         await this.client.createIndex({
             name: this.projectName,
             dimension: dimensions,
             metric: 'cosine',
+            spec: {
+            serverless: {
+                cloud: 'aws',
+                region: 'us-west-2',
+                },
+            },
         });
     }
 

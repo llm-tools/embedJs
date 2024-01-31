@@ -64,7 +64,7 @@
         "youtube-transcript": "^1.0.6"
     },
     "devDependencies": {
-        "@pinecone-database/pinecone": "^1.1.2",
+        "@pinecone-database/pinecone": "^2.0.1",
         "@qdrant/js-client-rest": "^1.7.0",
         "@tsconfig/recommended": "^1.0.3",
         "@types/debug": "^4.1.12",
@@ -89,7 +89,7 @@
         "weaviate-ts-client": "^2.0.0"
     },
     "peerDependencies": {
-        "@pinecone-database/pinecone": "^1.1.2",
+        "@pinecone-database/pinecone": "^2.0.0",
         "@qdrant/js-client-rest": "^1.7.0",
         "chromadb": "^1.7.3",
         "cohere-ai": "^7.6.2",
@@ -132,7 +132,7 @@
         "node": ">= 18.0.0"
     },
     "overrides": {
-        "@pinecone-database/pinecone": "^1.1.2",
+        "@pinecone-database/pinecone": "^2.0.0",
         "weaviate-ts-client": "^2.0.0",
         "hnswlib-node": "^2.1.0",
         "vectordb": "^0.4.6"
