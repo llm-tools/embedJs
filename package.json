@@ -1,6 +1,6 @@
 {
     "name": "@llm-tools/embedjs",
-    "version": "0.0.46",
+    "version": "0.0.48",
     "description": "A NodeJS RAG framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -44,18 +44,18 @@
         "access": "public"
     },
     "files": [
-        "dist/**/*"
+        "dist"
     ],
     "homepage": "https://github.com/llm-tools/embedjs#readme",
     "dependencies": {
         "@huggingface/inference": "^2.6.4",
-        "@langchain/cohere": "^0.0.2",
+        "@langchain/cohere": "^0.0.3",
         "@langchain/openai": "^0.0.13",
         "axios": "^1.6.7",
         "confluence.js": "^1.7.2",
         "debug": "^4.3.4",
         "html-to-text": "^9.0.5",
-        "langchain": "^0.1.9",
+        "langchain": "^0.1.11",
         "md5": "^2.3.0",
         "pdf-parse-fork": "^1.2.0",
         "sitemapper": "^3.2.8",
@@ -70,12 +70,12 @@
         "@types/debug": "^4.1.12",
         "@types/html-to-text": "^9.0.4",
         "@types/md5": "^2.3.5",
-        "@types/node": "^20.11.8",
+        "@types/node": "^20.11.14",
         "@types/usetube": "^2.1.2",
-        "@typescript-eslint/eslint-plugin": "^6.19.1",
-        "@typescript-eslint/parser": "^6.19.1",
+        "@typescript-eslint/eslint-plugin": "^6.20.0",
+        "@typescript-eslint/parser": "^6.20.0",
         "chromadb": "^1.8.1",
-        "cohere-ai": "^7.7.3",
+        "cohere-ai": "^7.7.4",
         "eslint": "^8.56.0",
         "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-prettier": "^5.1.3",
