@@ -82,7 +82,7 @@ The library also supports optioanl caching for embeddings and loaders. Chunks th
     -   [Private embedding models](#use-custom-embedding-model)
     -   [Request support for embedding models](#more-embedding-models-coming-soon)
 -   [Usage with Azure OpenAI](#azure-openai)
--   [Examples](#projects)
+-   [Examples](#examples)
 -   [Author](#author)
 
 # Getting started
