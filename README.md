@@ -641,16 +641,15 @@ export OPENAI_API_BASE=https://your-resource-name.openai.azure.com
 export OPENAI_API_KEY=<Your Azure OpenAI API key>
 ```
 
-**NOTE:** At the time of writing this, Azure OpenAI is an invite only program.
-
-# Projects
+# Examples
 
 Here's a list of projects / examples built with EmbedJs
 
-| **Project**                                                                      | **Description**               |
-| -------------------------------------------------------------------------------- | ----------------------------- |
-| [nestjs-embedjs-template](https://github.com/llm-tools/nestjs-embedjs-template)  | A NestJS server side template |
-| [nextjs-chatbot-template](https://github.com/llm-tools/chat-bot-nextjs-template) | A NextJS chat bot template    |
+| **Project**                                                                      | **Description**                                                         |
+| -------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| [nestjs-embedjs-template](https://github.com/llm-tools/nestjs-embedjs-template)  | A NestJS server side template                                           |
+| [nextjs-chatbot-template](https://github.com/llm-tools/chat-bot-nextjs-template) | A NextJS chat template - including a chat UI                            |
+| [slack-bot](https://github.com/llm-tools/slack-bot-template)                     | A slack bot that can answer questions based on learnt confluence spaces |
 
 # Contributors
 
