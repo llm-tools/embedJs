@@ -30,7 +30,7 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }> {
         this.confluenceBaseUrl = confluenceBaseUrl ?? process.env.CONFLUENCE_BASE_URL;
 
         this.confluence = new ConfluenceClient({
-            host: confluenceBaseUrl,
+            host: this.confluenceBaseUrl,
             authentication: {
                 basic: {
                     username: confluenceUsername ?? process.env.CONFLUENCE_USER_NAME,
