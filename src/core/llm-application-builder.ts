@@ -88,11 +88,12 @@ export class LLMApplicationBuilder {
         return this;
     }
 
-    setModel(model: SIMPLE_MODELS | BaseModel) {
+    setModel(model: string | SIMPLE_MODELS | BaseModel) {
         if (typeof model === 'object') this.model = model;
         else {
             if (model === SIMPLE_MODELS.OPENAI_GPT3_TURBO) this.model = new OpenAi(this.temperature, 'gpt-3.5-turbo');
             else if (model === SIMPLE_MODELS.OPENAI_GPT4) this.model = new OpenAi(this.temperature, 'gpt-4');
+            else this.model = new OpenAi(this.temperature, model);
         }
 
         return this;

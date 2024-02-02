@@ -632,13 +632,17 @@ Once these models are deployed, using Azure OpenAI instead of the regular OpenAI
 
 ```bash
 # Set this to `azure`
-export OPENAI_API_TYPE=azure
+OPENAI_API_TYPE=azure
 # The API version you want to use
-export OPENAI_API_VERSION=2023-03-15-preview
+AZURE_OPENAI_API_VERSION=2023-05-15
 # The base URL for your Azure OpenAI resource.  You can find this in the Azure portal under your Azure OpenAI resource.
-export OPENAI_API_BASE=https://your-resource-name.openai.azure.com
-# The API key for your Azure OpenAI resource.  You can find this in the Azure portal under your Azure OpenAI resource.
-export OPENAI_API_KEY=<Your Azure OpenAI API key>
+export AZURE_OPENAI_BASE_PATH=https://your-resource-name.openai.azure.com/openai/deployments
+# The API key1 or key2 for your Azure OpenAI resource
+export AZURE_OPENAI_API_KEY=<Your Azure OpenAI API key>
+# The deployment name you used for your embedding model
+AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME=text-embedding-ada-002
+# The deployment name you used for your llm
+AZURE_OPENAI_API_DEPLOYMENT_NAME=gpt-35-turbo
 ```
 
 # Examples

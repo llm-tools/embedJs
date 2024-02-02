@@ -154,8 +154,19 @@ export class LLMApplication {
         };
     }
 
-    public async query(userQuery: string, conversationId?: string): Promise<string> {
+    public async query(
+        userQuery: string,
+        conversationId?: string,
+    ): Promise<{
+        result: string;
+        sources: string[];
+    }> {
         const context = await this.getContext(userQuery);
-        return this.model.query(context.prompt, userQuery, context.supportingContext, conversationId);
+        const sources = context.supportingContext.map((chunk) => chunk.metadata.source);
+
+        return {
+            sources,
+            result: await this.model.query(context.prompt, userQuery, context.supportingContext, conversationId),
+        };
     }
 }
