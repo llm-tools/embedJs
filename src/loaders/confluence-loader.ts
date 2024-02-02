@@ -82,7 +82,7 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }> {
                     contentHash: result.contentHash,
                     metadata: {
                         type: <'ConfluenceLoader'>'ConfluenceLoader',
-                        source: `${this.confluenceBaseUrl}${content._links.webui}`,
+                        source: `${this.confluenceBaseUrl}/wiki${content._links.webui}`,
                     },
                 };
             }

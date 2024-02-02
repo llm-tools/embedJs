@@ -162,7 +162,7 @@ export class LLMApplication {
         sources: string[];
     }> {
         const context = await this.getContext(userQuery);
-        const sources = context.supportingContext.map((chunk) => chunk.metadata.source);
+        const sources = [...new Set(context.supportingContext.map((chunk) => chunk.metadata.source))];
 
         return {
             sources,
