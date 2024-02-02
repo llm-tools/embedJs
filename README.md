@@ -57,6 +57,7 @@ The library also supports optioanl caching for embeddings and loaders. Chunks th
     -   [Youtube search](#youtube-search)
     -   [Web page](#web-page)
     -   [Confluence](#confluence)
+    -   [Sitemap](#sitemap)
     -   [Text](#text)
     -   [Custom loader](#add-a-custom-loader)
     -   [How to request more loaders](#more-loaders-coming-soon)
@@ -264,7 +265,25 @@ To add a confluence space, use `ConfluenceLoader`.
 .addLoader(new ConfluenceLoader({ spaceNames: ['...'] }))
 ```
 
+You also need to set the following environment variables -
+
+```bash
+CONFLUENCE_BASE_URL=<your space base url>
+CONFLUENCE_USER_NAME=<your email id or username>
+CONFLUENCE_API_TOKEN=<your personal or bot access token>
+```
+
 **Note:** The confluence space name is the value you see in the url in the space overview page `/wiki/spaces/{{ space name }}/overview`.
+
+## Sitemap
+
+To add a XML sitemap, use `SitemapLoader`.
+
+```TS
+.addLoader(new SitemapLoader({ url: '...' }))
+```
+
+This will load all URLs in a sitemap via the WebLoader.
 
 ## Text
 

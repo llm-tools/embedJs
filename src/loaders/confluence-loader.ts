@@ -10,6 +10,7 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }> {
     private readonly debug = createDebugMessages('embedjs:loader:ConfluenceLoader');
 
     private readonly confluence: ConfluenceClient;
+    private readonly confluenceBaseUrl: string;
     private readonly spaceNames: string[];
 
     constructor({
@@ -26,8 +27,10 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }> {
         super(`ConfluenceLoader_${md5(spaceNames.join(','))}`);
 
         this.spaceNames = spaceNames;
+        this.confluenceBaseUrl = confluenceBaseUrl ?? process.env.CONFLUENCE_BASE_URL;
+
         this.confluence = new ConfluenceClient({
-            host: confluenceBaseUrl ?? process.env.CONFLUENCE_BASE_URL,
+            host: confluenceBaseUrl,
             authentication: {
                 basic: {
                     username: confluenceUsername ?? process.env.CONFLUENCE_USER_NAME,
@@ -79,7 +82,7 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }> {
                     contentHash: result.contentHash,
                     metadata: {
                         type: <'ConfluenceLoader'>'ConfluenceLoader',
-                        source: content.title,
+                        source: `${this.confluenceBaseUrl}${content._links.webui}`,
                     },
                 };
             }
