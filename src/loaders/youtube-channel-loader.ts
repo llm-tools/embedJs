@@ -30,7 +30,7 @@ export class YoutubeChannelLoader extends BaseLoader<{ type: 'YoutubeChannelLoad
                         metadata: {
                             ...chunk.metadata,
                             type: <'YoutubeChannelLoader'>'YoutubeChannelLoader',
-                            source: this.channelId,
+                            originalSource: this.channelId,
                             chunkId: i,
                         },
                     };

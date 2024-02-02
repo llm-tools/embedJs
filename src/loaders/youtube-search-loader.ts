@@ -32,7 +32,7 @@ export class YoutubeSearchLoader extends BaseLoader<{ type: 'YoutubeSearchLoader
                         metadata: {
                             ...chunk.metadata,
                             type: <'YoutubeSearchLoader'>'YoutubeSearchLoader',
-                            source: this.searchString,
+                            originalSource: this.searchString,
                             chunkId: i,
                         },
                     };
