@@ -1,6 +1,6 @@
 {
     "name": "@llm-tools/embedjs",
-    "version": "0.0.53",
+    "version": "0.0.57",
     "description": "A NodeJS RAG framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -49,22 +49,22 @@
     "homepage": "https://github.com/llm-tools/embedjs#readme",
     "dependencies": {
         "@huggingface/inference": "^2.6.4",
-        "@langchain/cohere": "^0.0.3",
+        "@langchain/cohere": "^0.0.4",
         "@langchain/openai": "^0.0.14",
         "axios": "^1.6.7",
         "confluence.js": "^1.7.2",
         "debug": "^4.3.4",
         "html-to-text": "^9.0.5",
-        "langchain": "^0.1.12",
+        "langchain": "^0.1.13",
         "md5": "^2.3.0",
         "pdf-parse-fork": "^1.2.0",
-        "sitemapper": "^3.2.8",
-        "usetube": "^2.2.7",
+        "sitemapper": "^3.1.8",
+        "usetube": "^2.0.2",
         "uuid": "^9.0.1",
         "youtube-transcript": "^1.0.6"
     },
     "devDependencies": {
-        "@pinecone-database/pinecone": "^1.1.2",
+        "@pinecone-database/pinecone": "^2.0.1",
         "@qdrant/js-client-rest": "^1.7.0",
         "@tsconfig/recommended": "^1.0.3",
         "@types/debug": "^4.1.12",
@@ -72,8 +72,8 @@
         "@types/md5": "^2.3.5",
         "@types/node": "^20.11.16",
         "@types/usetube": "^2.1.2",
-        "@typescript-eslint/eslint-plugin": "^6.20.0",
-        "@typescript-eslint/parser": "^6.20.0",
+        "@typescript-eslint/eslint-plugin": "^6.21.0",
+        "@typescript-eslint/parser": "^6.21.0",
         "chromadb": "^1.8.1",
         "cohere-ai": "^7.7.5",
         "eslint": "^8.56.0",
@@ -82,28 +82,28 @@
         "hnswlib-node": "^2.1.0",
         "ioredis": "^5.3.2",
         "lmdb": "^2.9.2",
-        "prettier": "^3.2.4",
+        "prettier": "^3.2.5",
         "rimraf": "^5.0.5",
         "typescript": "^5.3.3",
-        "vectordb": "^0.4.7",
+        "vectordb": "^0.4.8",
         "weaviate-ts-client": "^2.0.0"
     },
     "peerDependencies": {
-        "@pinecone-database/pinecone": "^1.1.2",
+        "@pinecone-database/pinecone": "^2.0.1",
         "@qdrant/js-client-rest": "^1.7.0",
         "chromadb": "^1.8.1",
         "cohere-ai": "^7.7.5",
         "hnswlib-node": "^2.1.0",
         "ioredis": "^5.3.2",
         "lmdb": "^2.9.2",
-        "vectordb": "^0.4.7",
+        "vectordb": "^0.4.8",
         "weaviate-ts-client": "^2.0.0"
     },
     "overrides": {
-        "@pinecone-database/pinecone": "^1.1.2",
+        "@pinecone-database/pinecone": "^2.0.1",
         "weaviate-ts-client": "^2.0.0",
         "hnswlib-node": "^2.1.0",
-        "vectordb": "^0.4.7"
+        "vectordb": "^0.4.8"
     },
     "peerDependenciesMeta": {
         "@pinecone-database/pinecone": {

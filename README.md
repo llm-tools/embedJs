@@ -333,20 +333,28 @@ You can enable Pinecone storage by following these steps -
 npm install @pinecone-database/pinecone
 ```
 
--   Set the pinecone environment variables `PINECONE_API_KEY` and `PINECONE_ENVIRONMENT`. These can be obtained from the **API Keys** section on the Pinecone dashboard.
+-   Set the pinecone environment variable `PINECONE_API_KEY`. This can be obtained from the **API Keys** section on the Pinecone dashboard.
 
 ```bash
-PINECONE_API_KEY="e65a4ec0-14f7-40c5-903e-f8529127b817"
-PINECONE_ENVIRONMENT="us-west1-gcp-free"
+PINECONE_API_KEY=<your api key>
 ```
 
 -   Set the Pinecone database as your choice of `vectorDb`
 
 ```TS
-.setVectorDb(new PineconeDb({ projectName: 'test', namespace: 'dev' }))
+.setVectorDb(new PineconeDb({
+    projectName: 'test',
+    namespace: 'dev',
+    indexSpec: {
+        pod: {
+            podType: 'p1.x1',
+            environment: 'us-east1-gcp',
+        },
+    },
+}))
 ```
 
-**Note:** The `projectName` will be used to create the Pinecone index name for this application.
+**Note:** Pinecone supports serverless and pod based index deployments. You can control how you want your index created using the indexSpec attribute. This is mandatory to be provided but comes with full type specification.
 
 ## LanceDB
 
@@ -635,6 +643,21 @@ Once done, you can pass this class to the `setEmbeddingModel` method like shown 
 If you want us to add support for a specific embedding model, please create an [issue](https://github.com/llm-tools/embedjs/issues) and we will prioritize it. Our current priority is to add support for the [HuggingFace's Models](https://huggingface.co/sentence-transformers). Support for the open source models under HuggingFace are available in alpha - please set `HuggingFace` as your choice of model to test.
 
 All PRs are welcome.
+
+# Langsmith Integration
+
+Langsmith allows you to keep track of how you use LLM and embedding models. It logs histories, token uses and other metadata. Follow these three simple steps to enable -
+
+-   Sign up for an account with [Langsmith](https://smith.langchain.com/)
+-   Generate an API Key from your admin page
+-   Set the following environment keys in your project
+
+```bash
+export LANGCHAIN_TRACING_V2=true
+export LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"
+export LANGCHAIN_PROJECT="<project name>"
+export LANGCHAIN_API_KEY="<api key>"
+```
 
 # Azure OpenAI
 

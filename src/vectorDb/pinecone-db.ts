@@ -1,3 +1,4 @@
+import { CreateIndexRequestSpec } from '@pinecone-database/pinecone/dist/pinecone-generated-ts-fetch/index.js';
 import { Pinecone, PineconeRecord } from '@pinecone-database/pinecone';
 import createDebugMessages from 'debug';
 
@@ -7,28 +8,37 @@ import { createArrayChunks, mapAsync } from '../util/arrays.js';
 
 export class PineconeDb implements BaseDb {
     private readonly debug = createDebugMessages('embedjs:vector:PineconeDb');
-    private static readonly PINECONE_INSERT_CHUNK_SIZE = 500;
+    private static readonly PINECONE_INSERT_CHUNK_SIZE = 200; //Pinecone only allows inserting 2MB worth of chunks at a time; this is an approximation
 
     private readonly client: Pinecone;
     private readonly namespace: string;
     private readonly projectName: string;
+    private readonly indexSpec: CreateIndexRequestSpec;
 
-    constructor({ projectName, namespace }: { projectName: string; namespace: string }) {
-        this.client = new Pinecone({
-            apiKey: process.env.PINECONE_API_KEY,
-            environment: process.env.PINECONE_ENVIRONMENT,
-        });
+    constructor({
+        projectName,
+        namespace,
+        indexSpec,
+    }: {
+        projectName: string;
+        namespace: string;
+        indexSpec: CreateIndexRequestSpec;
+    }) {
+        this.client = new Pinecone();
+
         this.projectName = projectName;
         this.namespace = namespace;
+        this.indexSpec = indexSpec;
     }
 
     async init({ dimensions }: { dimensions: number }) {
-        const list = (await this.client.listIndexes()).map((i) => i.name);
+        const list = (await this.client.listIndexes()).indexes.map((i) => i.name);
         if (list.indexOf(this.projectName) > -1) return;
 
         await this.client.createIndex({
             name: this.projectName,
             dimension: dimensions,
+            spec: this.indexSpec,
             metric: 'cosine',
         });
     }

@@ -75,6 +75,7 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }> {
                 }
             }
 
+            if (!content.body.view.value) continue;
             const webLoader = new WebLoader({ content: content.body.view.value });
             for await (const result of await webLoader.getChunks()) {
                 yield {

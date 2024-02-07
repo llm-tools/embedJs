@@ -12,7 +12,18 @@ const llmApplication = await new LLMApplicationBuilder()
     .addLoader(new YoutubeLoader({ videoIdOrUrl: 'https://www.youtube.com/watch?v=w2KbwC-s7pY' }))
     .addLoader(new TextLoader({ text: 'The best company name for a company making colorful socks is MrSocks' }))
     .setCache(new LmdbCache({ path: path.resolve(path.dirname(__filename), '../../../cache') }))
-    .setVectorDb(new PineconeDb({ projectName: 'test', namespace: 'dev' }))
+    .setVectorDb(
+        new PineconeDb({
+            projectName: 'test',
+            namespace: 'dev',
+            indexSpec: {
+                pod: {
+                    podType: 'p1.x1',
+                    environment: 'us-east1-gcp',
+                },
+            },
+        }),
+    )
     .build();
 
 console.log(await llmApplication.query('What is paxos?'));

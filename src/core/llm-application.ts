@@ -2,7 +2,7 @@ import createDebugMessages from 'debug';
 
 import { BaseDb } from '../interfaces/base-db.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
-import { AddLoaderReturn, Chunk, EmbeddedChunk } from '../global/types.js';
+import { AddLoaderReturn, Chunk, EmbeddedChunk, LoaderChunk } from '../global/types.js';
 import { LLMApplicationBuilder } from './llm-application-builder.js';
 import { DEFAULT_INSERT_BATCH_SIZE } from '../global/constants.js';
 import { cleanString, stringFormat } from '../util/strings.js';
@@ -78,6 +78,39 @@ export class LLMApplication {
         return this.vectorDb.insertChunks(embedChunks);
     }
 
+    private async batchLoadChunks(uniqueId: string, incrementalGenerator: AsyncGenerator<LoaderChunk, void, void>) {
+        let batchSize = 0,
+            newInserts = 0,
+            formattedChunks: Chunk[] = [];
+        for await (const chunk of incrementalGenerator) {
+            batchSize++;
+
+            const formattedChunk = {
+                pageContent: chunk.pageContent,
+                metadata: {
+                    ...chunk.metadata,
+                    id: this.getChunkUniqueId(uniqueId, chunk.metadata.chunkId),
+                },
+            };
+            formattedChunks.push(formattedChunk);
+
+            if (batchSize % DEFAULT_INSERT_BATCH_SIZE === 0) {
+                newInserts += await this.batchLoadEmbeddings(uniqueId, formattedChunks);
+                formattedChunks = [];
+                batchSize = 0;
+            }
+        }
+
+        newInserts += await this.batchLoadEmbeddings(uniqueId, formattedChunks);
+        return { newInserts, formattedChunks };
+    }
+
+    private async incrementalLoader(uniqueId: string, incrementalGenerator: AsyncGenerator<LoaderChunk, void, void>) {
+        this.debug(`incrementalChunkAvailable for loader`, uniqueId);
+        const { newInserts } = await this.batchLoadChunks(uniqueId, incrementalGenerator);
+        this.debug(`${newInserts} new incrementalChunks processed`, uniqueId);
+    }
+
     public async addLoader(loader: BaseLoader): Promise<AddLoaderReturn> {
         const uniqueId = loader.getUniqueId();
         this.debug('Add loader called for', uniqueId);
@@ -96,31 +129,19 @@ export class LLMApplication {
             if (chunkIds.length > 0) await this.vectorDb.deleteKeys(chunkIds);
         }
 
-        let batchSize = 0,
-            newInserts = 0,
-            formattedChunks: Chunk[] = [];
-        for await (const chunk of chunks) {
-            batchSize++;
-
-            const formattedChunk = {
-                pageContent: chunk.pageContent,
-                metadata: {
-                    ...chunk.metadata,
-                    id: this.getChunkUniqueId(uniqueId, chunk.metadata.chunkId),
-                },
-            };
-            formattedChunks.push(formattedChunk);
-
-            if (batchSize % DEFAULT_INSERT_BATCH_SIZE === 0) {
-                newInserts += await this.batchLoadEmbeddings(uniqueId, formattedChunks);
-                formattedChunks = [];
-                batchSize = 0;
-            }
-        }
-        newInserts += await this.batchLoadEmbeddings(uniqueId, formattedChunks);
+        const { newInserts, formattedChunks } = await this.batchLoadChunks(uniqueId, chunks);
 
         if (this.cache) await this.cache.addLoader(uniqueId, formattedChunks.length);
         this.debug(`Add loader completed with ${newInserts} new entries for`, uniqueId);
+
+        if (loader.canIncrementallyLoad) {
+            this.debug(`Registering incremental loader`, uniqueId);
+
+            loader.on('incrementalChunkAvailable', async (incrementalGenerator) => {
+                await this.incrementalLoader(uniqueId, incrementalGenerator);
+            });
+        }
+
         return { entriesAdded: newInserts, uniqueId };
     }
 

@@ -1,4 +1,5 @@
 import createDebugMessages from 'debug';
+import { EventEmitter } from 'node:events';
 
 import { LoaderChunk } from '../global/types.js';
 import { BaseCache } from './base-cache.js';
@@ -6,7 +7,7 @@ import { BaseCache } from './base-cache.js';
 export abstract class BaseLoader<
     T extends Record<string, string | number | boolean> = Record<string, string | number | boolean>,
     M extends Record<string, unknown> = Record<string, null>,
-> {
+> extends EventEmitter {
     private static cache?: BaseCache;
 
     public static setCache(cache?: BaseCache) {
@@ -14,13 +15,20 @@ export abstract class BaseLoader<
     }
 
     protected readonly uniqueId: string;
+    private readonly _canIncrementallyLoad: boolean;
 
-    constructor(uniqueId: string) {
+    constructor(uniqueId: string, canIncrementallyLoad: boolean = false) {
+        super();
         this.uniqueId = uniqueId;
+        this._canIncrementallyLoad = canIncrementallyLoad;
         createDebugMessages('embedjs:loader:BaseLoader')(`New loader class initalized with key ${uniqueId}`);
     }
 
     async init() {}
+
+    public get canIncrementallyLoad() {
+        return this._canIncrementallyLoad;
+    }
 
     getUniqueId(): string {
         return this.uniqueId;
@@ -43,6 +51,10 @@ export abstract class BaseLoader<
     protected async checkInCache(key: string) {
         if (!BaseLoader.cache) return false;
         return BaseLoader.cache.loaderCustomHas(this.getCustomCacheKey(key));
+    }
+
+    protected async loadIncrementalChunk(incrementalGenerator: AsyncGenerator<LoaderChunk<T>, void, void>) {
+        this.emit('incrementalChunkAvailable', incrementalGenerator);
     }
 
     abstract getChunks(): AsyncGenerator<LoaderChunk<T>, void, void>;
