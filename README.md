@@ -64,12 +64,14 @@ The library also supports optioanl caching for embeddings and loaders. Chunks th
     -   [OpenAI](#openai)
     -   [Mistral](#mistral)
     -   [Azure OpenAI](#azure-openai)
+    -   [Bring your own LLMs](#use-custom-llm-model)
+    -   [Request support for new LLMs](#more-llms-coming-soon)
 -   [Embedding Models](#embedding-models)
     -   [OpenAI v3 Small](#openai-v3-small)
     -   [OpenAI v3 Large](#openai-v3-large)
     -   [ADA](#ada)
     -   [Cohere](#cohere)
-    -   [Private embedding models](#use-custom-embedding-model)
+    -   [Custom embedding models](#use-custom-embedding-model)
     -   [Request support for embedding models](#more-embedding-models-coming-soon)
 -   [Vector databases supported](#vector-databases-supported)
     -   [Pinecone](#pinecone)
@@ -402,6 +404,33 @@ AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME=text-embedding-ada-002
 AZURE_OPENAI_API_DEPLOYMENT_NAME=gpt-35-turbo
 ```
 
+## Use custom LLM model
+
+You can use a custom LLM model by implementing the `BaseModel` interface. Here's how that would look like -
+
+```TS
+class MyOwnLLMImplementation implements BaseModel {
+    override async init(): Promise<void> {} //optional to override
+
+    protected abstract runQuery(
+        system: string, //the system prompt
+        userQuery: string, //the current user query
+        supportingContext: Chunk[], //all supporting documents
+        pastConversations: ConversationHistory[], //the chat history so far
+    ): Promise<string> {
+        throw new Error("Method not implemented.");
+    }
+}
+```
+
+Once done, you can pass this class to the `setModel` method like shown in the examples above. That said, we really encourage you send in a PR to this library if you are implementing a famous or common LLM, so the community can benefit from it.
+
+## More LLMs coming soon
+
+If you want us to add support for a specific LLM, please create an [issue](https://github.com/llm-tools/embedjs/issues) and we will prioritize it. All PRs are welcome.
+
+Currently, we next plan to add support for Ollama and open source Hugging Face LLMs.
+
 # Embedding models
 
 Embedding models are LLMs that convert a string into vector better suited for processing. In most cases, the default `text-embedding-ada-002` model from OpenAI is going to be good enough. If you want to use this model, you do not have to do anything.
@@ -465,7 +494,7 @@ await new LLMApplicationBuilder()
 
 ## Use custom embedding model
 
-You can use your own custom embedding model by implementing the `setEmbeddingModel` interface. Here's how that would look like -
+You can use your own custom embedding model by implementing the `BaseEmbeddings` interface. Here's how that would look like -
 
 ```TS
 class MyOwnEmbeddingImplementation implements BaseEmbeddings {
