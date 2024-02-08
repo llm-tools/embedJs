@@ -44,7 +44,6 @@ export class JsonLoader extends BaseLoader<{ type: 'JsonLoader' }> {
                 metadata: {
                     type: <'JsonLoader'>'JsonLoader',
                     source: tuncatedObjectString,
-                    chunkId: i,
                     ...entry,
                 },
             };

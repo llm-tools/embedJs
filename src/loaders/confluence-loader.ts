@@ -51,7 +51,6 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }> {
                 );
 
                 for await (const result of this.getContentChunks(spaceContent['page'].results)) {
-                    result.metadata['chunkId'] = i;
                     yield result;
                     i++;
                 }
@@ -69,12 +68,6 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }> {
                 expand: ['body', 'children.page', 'body.view'],
             });
 
-            if (content.children) {
-                for await (const result of this.getContentChunks(content.children.page.results)) {
-                    yield result;
-                }
-            }
-
             if (!content.body.view.value) continue;
             const webLoader = new WebLoader({ content: content.body.view.value });
             for await (const result of await webLoader.getChunks()) {
@@ -86,6 +79,12 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }> {
                         source: `${this.confluenceBaseUrl}/wiki${content._links.webui}`,
                     },
                 };
+            }
+
+            if (content.children) {
+                for await (const result of this.getContentChunks(content.children.page.results)) {
+                    yield result;
+                }
             }
         }
     }

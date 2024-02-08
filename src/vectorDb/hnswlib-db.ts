@@ -41,7 +41,7 @@ export class HNSWDb implements BaseDb {
         return this.index.getCurrentCount();
     }
 
-    async deleteKeys(_keys: string[]): Promise<void> {
+    async deleteKeys(_uniqueLoaderId: string): Promise<void> {
         throw new Error('Not supported');
     }
 

@@ -1,4 +1,4 @@
-# EmbedJS
+# EmbedJs
 
 <p>
 <a href="https://www.npmjs.com/package/@@llm-tools/embedjs"  target="_blank">
@@ -10,35 +10,40 @@
 </a>
 </p>
 
-EmbedJS is a NodeJS RAG framework that enables LLM powered interactions over any dataset with ease. It simplifies the process of loading a dataset, chunking it, creating embeddings, storing onto a vector database and eventually querying it.
+EmbedJs is a NodeJS framework that simplifies RAG application development by efficiently processing unstructured data. It segments data, creates relevant embeddings, and stores them in a vector database for quick retrieval.
 
-Here's an example -
+Here's an example of how easy it is to get started -
 
 ```TS
 const llmApplication = await new LLMApplicationBuilder()
-    .addLoader(new PdfLoader({ filePath: path.resolve('../paxos-simple.pdf') }))
-    .addLoader(new YoutubeLoader({ videoIdOrUrl: 'https://www.youtube.com/watch?v=w2KbwC-s7pY' }))
-    .addLoader(new WebLoader({ url: 'https://adhityan.com/' }))
+    .addLoader(new YoutubeSearchLoader('Tesla cars'))
+    .addLoader(new SitemapLoader('https://tesla-info.com/sitemap.xml'))
+    .addLoader(new WebLoader({ url: 'https://en.wikipedia.org/wiki/Tesla,_Inc.' }))
     .setVectorDb(new LanceDb({ path: '.db' }))
     .build();
-
-console.log(await llmApplication.query('What is paxos?'));
-// Paxos is an algorithm for implementing a fault-tolerant distributed system. It assumes a network of processes, each of which plays the role of proposer, acceptor, and learner. The algorithm chooses a leader, which plays the roles of the distinguished proposer and learner. The algorithm is used to reach consensus on a chosen value, and is obtained by the straightforward application of consensus to the state machine approach for building a distributed system.
-
-console.log(await llmApplication.query('Why Does the M2 Mac Pro Exist?'));
-// The Mac Pro exists to provide users with access to PCI slots, as well as other unique features such as its design and performance capabilities.
-
-console.log(await llmApplication.query('Who is Adhityan?'));
-// Adhityan is a programmer, entrepreneur, and architect who is the Director of Engineering at Shift and has a presence on LinkedIn, GitHub, and Angel.co.
 ```
 
-The library comes with many built in loaders out of the box. See below for the full list. You can also easily add your own custom loader.
+That's it. Now you can ask questions -
 
-You can pick from several supported vector databases to store the results. See below for the full list. It is possible to also add your custom vector database. Please do contribute back with a PR if you add support for a new data store.
+```TS
+console.log(await llmApplication.query('Tell me about the history of Tesla?'));
+```
 
-The library also supports optioanl caching for embeddings and loaders. Chunks that are already seen are not re-processed. Similarly, entire loaders are cached if they have been already processed. Read below for more information on this.
+## Features
 
-> I am looking for maintainers and contributors. Reach out to me on [Linkedin](https://www.linkedin.com/in/adhityan/) if you are interested or just send in a PR.
+-   Supports several large language models
+
+-   Supports many vector databases including self-hosted and cloud variants.
+
+-   Load different kinds of unstructured data. Comes built in with several loaders that makes this easy.
+
+-   Supports several cache options that can greatly improve the performance of your RAG applications in production.
+
+-   EmbedJs's simple and powerful API allows both quick launch and deep customizabilty.
+
+## Quick note
+
+The author(s) are looking to add core maintainers for this opensource project. Reach out on [Linkedin](https://www.linkedin.com/in/adhityan/) if you are interested. If you want to contribute in general - create issues on GitHub or send in PRs.
 
 # Contents
 
@@ -88,8 +93,8 @@ The library also supports optioanl caching for embeddings and loaders. Chunks th
     -   [In memory cache](#inmemory)
     -   [Custom cache implementation](#bring-your-own-cache)
     -   [How to request new cache providers](#more-caches-coming-soon)
--   [Examples](#examples)
--   [Author](#author)
+-   [Sample projects](#sample-projects)
+-   [Contributors](#contributors)
 
 # Getting started
 
@@ -101,48 +106,41 @@ You can install the library via NPM or Yarn
 npm i @llm-tools/embedjs
 ```
 
-**Note:** The library uses the newer ES6 modules and `import` syntax. There is support for the older `require` syntax coming very soon.
+**Note:** The library uses the newer ES6 modules and `import` syntax.
 
 ## Usage
 
--   We use OpenAI's ChatGPT API to get answers to the queries. Make sure that you have an OpenAI account and an API key. You can create an account [here](https://platform.openai.com/account/api-keys). There is also built in support for **Azure OpenAI**, read [documentation](#azure-openai) on it at the end.
+To configure a new EmbedJs application, you need to do three steps -
 
--   Once you have your OpenAI API key, set it in an environment variable called `OPENAI_API_KEY`.
-
-```bash
-OPENAI_API_KEY="sk-<REST_OF_YOUR_KEY>"
-```
-
--   Next import and use the `LLMApplicationBuilder` to construct an `LLMApplication`. The builder has all the options to configure the application in full.
+> **1. Pick an LLM**<br/>
+> The library supports several LLMs. Activate one by allowing the instructions in the [LLM](#llms) section.
 
 ```TS
-import * as path from 'node:path';
-
-import { LLMApplicationBuilder, PdfLoader, YoutubeLoader, TextLoader } from '@llm-tools/embedjs';
-import { PineconeDb } from '@llm-tools/embedjs/vectorDb/pinecone';
-import { LmdbCache } from '@llm-tools/embedjs/cache/lmdb';
-
 const llmApplication = await new LLMApplicationBuilder()
-    .addLoader(new PdfLoader({ filePath: path.resolve('../paxos-simple.pdf') }))
-    .addLoader(new YoutubeLoader({ videoIdOrUrl: 'https://www.youtube.com/watch?v=w2KbwC-s7pY' }))
-    .addLoader(new TextLoader({ text: 'The best company name for a company making colorful socks is MrSocks' }))
-    .setCache(new LmdbCache({ path: path.resolve('./cache') }))
+    .setModel(new HuggingFace({ modelName: 'mistralai/Mixtral-8x7B-v0.1' }))
+    ...
+```
+
+> **2. Pick a Vector database**<br/>
+> The library supports several vector databases. Enable one by allowing the instructions in the [Vector Databases](#vector-databases-supported) section.
+
+```TS
     .setVectorDb(new PineconeDb({ projectName: 'test', namespace: 'dev' }))
+```
+
+> **3. Load some data**<br/>
+> The library supports several kinds of loaders. You can use zero, one or many kinds of loaders together to import custom knowledge. Read the [loaders](#loaders-supported) section to learn more about the different supported loaders.
+
+```TS
+    .addLoader(new YoutubeSearchLoader('Tesla cars'))
+    .addLoader(new SitemapLoader('https://tesla-info.com/sitemap.xml'))
     .build();
 ```
 
--   That's it! Now that you have your instance of `LLMApplication`, you can use it to query against the data set, like so -
+That's it! Now that you have your instance of `LLMApplication`, you can use it to query against the loaded data sets, like so -
 
 ```TS
-await llmApplication.query('What is paxos?');
-```
-
--   You can also add additional loaders after you have your instance of `LLMApplication` by invoking the method `addLoader`
-
-```TS
-llmApplication.addLoader(
-    new TextLoader({ text: 'This content was added at a later time as more info was available.' }),
-);
+await llmApplication.query('What is Tesla?');
 ```
 
 ## Temperature
@@ -190,7 +188,7 @@ await new LLMApplicationBuilder()
 
 ## Get context (dry run)
 
-During development, you may want to test the performance and quality of the `Loaders` you have enabled without incurring any OpenAI credits. You can do this by using the `getContext` method -
+During development, you may want to test the performance and quality of the `Loaders` you have enabled without making any LLM calls. You can do this by using the `getContext` method -
 
 ```TS
 await llmApplication.getContext('What is Steve Jobs?')
@@ -797,9 +795,9 @@ export LANGCHAIN_PROJECT="<project name>"
 export LANGCHAIN_API_KEY="<api key>"
 ```
 
-# Examples
+# Sample projects
 
-Here's a list of projects / examples built with EmbedJs
+Here's a list of projects / examples built with RagKit
 
 | **Project**                                                                      | **Description**                                                         |
 | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
@@ -809,6 +807,10 @@ Here's a list of projects / examples built with EmbedJs
 
 # Contributors
 
--   [K V Adhityan](https://adhityan.com/)
+<a href="https://github.com/llm-tools/embedjs/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=llm-tools/embedjs" />
+</a>
 
-Looking for contrbutors to add to the list above. Reach out to me on Linkedin if you are interested to contribute.
+<br />
+
+> Want to contribute? That is as easy as forking and sending in a PR!

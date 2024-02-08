@@ -45,8 +45,8 @@ export class LLMApplication {
         return LLMEmbedding.getEmbedding().embedDocuments(texts);
     }
 
-    private getChunkUniqueId(loaderUniqueId: string, chunkId: number) {
-        return `${loaderUniqueId}_${chunkId}`;
+    private getChunkUniqueId(loaderUniqueId: string, incrementId: number) {
+        return `${loaderUniqueId}_${incrementId}`;
     }
 
     public async init() {
@@ -86,9 +86,11 @@ export class LLMApplication {
     }
 
     private async batchLoadChunks(uniqueId: string, incrementalGenerator: AsyncGenerator<LoaderChunk, void, void>) {
-        let batchSize = 0,
+        let i = 0,
+            batchSize = 0,
             newInserts = 0,
             formattedChunks: Chunk[] = [];
+
         for await (const chunk of incrementalGenerator) {
             batchSize++;
 
@@ -96,7 +98,8 @@ export class LLMApplication {
                 pageContent: chunk.pageContent,
                 metadata: {
                     ...chunk.metadata,
-                    id: this.getChunkUniqueId(uniqueId, chunk.metadata.chunkId),
+                    uniqueLoaderId: uniqueId,
+                    id: this.getChunkUniqueId(uniqueId, i++),
                 },
             };
             formattedChunks.push(formattedChunk);
@@ -127,13 +130,8 @@ export class LLMApplication {
         if (this.cache && (await this.cache.hasLoader(uniqueId))) {
             const { chunkCount: previousChunkCount } = await this.cache.getLoader(uniqueId);
 
-            const chunkIds: string[] = [];
-            for (let i = 0; i < previousChunkCount; i++) {
-                chunkIds.push(this.getChunkUniqueId(uniqueId, i));
-            }
-
-            this.debug(`Loader previously run. Deleting previous ${chunkIds.length} keys`, uniqueId);
-            if (chunkIds.length > 0) await this.vectorDb.deleteKeys(chunkIds);
+            this.debug(`Loader previously run. Deleting previous ${previousChunkCount} keys`, uniqueId);
+            if (previousChunkCount > 0) await this.vectorDb.deleteKeys(uniqueId);
         }
 
         const { newInserts, formattedChunks } = await this.batchLoadChunks(uniqueId, chunks);

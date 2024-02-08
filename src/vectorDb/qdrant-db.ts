@@ -34,7 +34,7 @@ export class QdrantDb implements BaseDb {
 
         await this.client.createPayloadIndex(this.projectName, {
             wait: true,
-            field_name: 'id',
+            field_name: 'uniqueLoaderId',
             field_schema: 'text',
             ordering: 'weak',
         });
@@ -87,15 +87,15 @@ export class QdrantDb implements BaseDb {
         return (await this.client.getCollection(this.projectName)).points_count;
     }
 
-    async deleteKeys(keys: string[]): Promise<void> {
+    async deleteKeys(uniqueLoaderId: string): Promise<void> {
         await this.client.delete(this.projectName, {
             wait: true,
             filter: {
                 must: [
                     {
-                        key: 'id',
+                        key: 'uniqueLoaderId',
                         match: {
-                            any: keys,
+                            value: uniqueLoaderId,
                         },
                     },
                 ],

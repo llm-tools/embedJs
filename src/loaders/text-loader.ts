@@ -17,7 +17,6 @@ export class TextLoader extends BaseLoader<{ type: 'TextLoader' }> {
         const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 300, chunkOverlap: 0 });
         const chunks = await chunker.splitText(cleanString(this.text));
 
-        let i = 0;
         for (const chunk of chunks) {
             yield {
                 pageContent: chunk,
@@ -26,11 +25,8 @@ export class TextLoader extends BaseLoader<{ type: 'TextLoader' }> {
                     type: <'TextLoader'>'TextLoader',
                     source: tuncatedObjectString,
                     textId: this.uniqueId,
-                    chunkId: i,
                 },
             };
-
-            i++;
         }
     }
 }

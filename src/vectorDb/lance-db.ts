@@ -27,18 +27,29 @@ export class LanceDb implements BaseDb {
         const list = await client.tableNames();
         if (list.indexOf(LanceDb.STATIC_DB_NAME) > -1) this.table = await client.openTable(LanceDb.STATIC_DB_NAME);
         else {
+            //TODO: You can add a proper schema instead of a sample record now but it requires another package apache-arrow; another install on downstream as well
             this.table = await client.createTable(LanceDb.STATIC_DB_NAME, [
-                { id: 'md5', pageContent: 'sample', vector: Array(dimensions), metadata: 'json' },
+                {
+                    id: 'md5',
+                    pageContent: 'sample',
+                    vector: Array(dimensions),
+                    uniqueLoaderId: 'sample',
+                    metadata: 'sample',
+                },
             ]);
         }
     }
 
     async insertChunks(chunks: EmbeddedChunk[]): Promise<number> {
         const mapped = chunks.map((chunk) => {
+            const uniqueLoaderId = chunk.metadata.uniqueLoaderId;
+            delete chunk.metadata.uniqueLoaderId;
+
             return {
                 id: chunk.metadata.id,
                 pageContent: chunk.pageContent,
                 vector: chunk.vector,
+                uniqueLoaderId,
                 metadata: JSON.stringify(chunk.metadata),
             };
         });
@@ -57,6 +68,7 @@ export class LanceDb implements BaseDb {
                 .filter((entry) => entry.id !== 'md5')
                 .map((result) => {
                     const metadata = JSON.parse(<string>result.metadata);
+                    metadata.uniqueLoaderId = result.uniqueLoaderId;
 
                     return {
                         pageContent: <string>result.pageContent,
@@ -70,8 +82,8 @@ export class LanceDb implements BaseDb {
         return this.table.countRows();
     }
 
-    async deleteKeys(keys: string[]): Promise<void> {
-        await this.table.delete(`id IN (${keys.map((key) => `'${key}'`).join(',')})`);
+    async deleteKeys(uniqueLoaderId: string): Promise<void> {
+        await this.table.delete(`uniqueLoaderId = "${uniqueLoaderId}"`);
     }
 
     async reset(): Promise<void> {

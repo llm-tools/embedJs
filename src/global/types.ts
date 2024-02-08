@@ -1,4 +1,4 @@
-export type LoaderMetadata<T> = T & { chunkId: number; source: string };
+export type LoaderMetadata<T> = T & { source: string };
 export type LoaderChunk<
     Meta extends Record<string, string | number | boolean> = Record<string, string | number | boolean>,
 > = {
@@ -7,7 +7,7 @@ export type LoaderChunk<
     metadata: LoaderMetadata<Meta>;
 };
 
-export type Metadata<T> = T & { id: string; source: string };
+export type Metadata<T> = T & { id: string; uniqueLoaderId: string; source: string };
 export type Chunk<Meta extends Record<string, string | number | boolean> = Record<string, string | number | boolean>> =
     {
         pageContent: string;

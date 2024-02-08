@@ -50,7 +50,10 @@ export class ChromaDb implements BaseDb {
         return results.documents[0].map((result, index) => {
             return {
                 pageContent: result,
-                metadata: { id: results.ids[0][index], ...(<{ source: string }>results.metadatas[0][index]) },
+                metadata: {
+                    id: results.ids[0][index],
+                    ...(<{ source: string; uniqueLoaderId: string }>results.metadatas[0][index]),
+                },
             };
         });
     }
@@ -59,9 +62,11 @@ export class ChromaDb implements BaseDb {
         return this.collection.count();
     }
 
-    async deleteKeys(keys: string[]): Promise<void> {
+    async deleteKeys(uniqueLoaderId: string): Promise<void> {
         await this.collection.delete({
-            ids: keys,
+            where: {
+                uniqueLoaderId,
+            },
         });
     }
 

@@ -20,7 +20,6 @@ export class SitemapLoader extends BaseLoader<{ type: 'SitemapLoader' }> {
             const { sites } = await new Sitemapper({ url: this.url, timeout: 15000 }).fetch();
             this.debug(`Sitemap '${this.url}' returned ${sites.length} URLs`);
 
-            let i = 0;
             for (const url of sites) {
                 const webLoader = new WebLoader({ url });
 
@@ -31,11 +30,8 @@ export class SitemapLoader extends BaseLoader<{ type: 'SitemapLoader' }> {
                             ...chunk.metadata,
                             type: <'SitemapLoader'>'SitemapLoader',
                             originalSource: this.url,
-                            chunkId: i,
                         },
                     };
-
-                    i++;
                 }
             }
         } catch (e) {

@@ -22,7 +22,6 @@ export class YoutubeLoader extends BaseLoader<{ type: 'YoutubeLoader' }> {
             const transcripts = await YoutubeTranscript.fetchTranscript(this.videoIdOrUrl, { lang: 'en' });
             this.debug(`Transcripts (length ${transcripts.length}) obtained for video`, this.videoIdOrUrl);
 
-            let i = 0;
             for (const transcript of transcripts) {
                 for (const chunk of await chunker.splitText(cleanString(transcript.text))) {
                     yield {
@@ -31,11 +30,8 @@ export class YoutubeLoader extends BaseLoader<{ type: 'YoutubeLoader' }> {
                         metadata: {
                             type: <'YoutubeLoader'>'YoutubeLoader',
                             source: this.videoIdOrUrl,
-                            chunkId: i,
                         },
                     };
-
-                    i++;
                 }
             }
         } catch (e) {

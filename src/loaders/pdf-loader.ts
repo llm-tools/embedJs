@@ -29,7 +29,6 @@ export class PdfLoader extends BaseLoader<{ type: 'PdfLoader' }> {
             fileBuffer = Buffer.from((await axios.get(this.pathOrUrl, { responseType: 'arraybuffer' })).data, 'binary');
         const pdfParsed = await pdf(fileBuffer);
 
-        let i = 0;
         const chunks = await chunker.splitText(cleanString(pdfParsed.text));
         for (const chunk of chunks) {
             yield {
@@ -38,11 +37,8 @@ export class PdfLoader extends BaseLoader<{ type: 'PdfLoader' }> {
                 metadata: {
                     type: <'PdfLoader'>'PdfLoader',
                     source: this.pathOrUrl,
-                    chunkId: i,
                 },
             };
-
-            i++;
         }
     }
 }

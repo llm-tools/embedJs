@@ -35,7 +35,6 @@ export class WebLoader extends BaseLoader<{ type: 'WebLoader' }> {
 
             const tuncatedObjectString = this.isUrl ? undefined : truncateCenterString(this.contentOrUrl, 50);
 
-            let i = 0;
             const chunks = await chunker.splitText(cleanString(text));
             for (const chunk of chunks) {
                 yield {
@@ -44,11 +43,8 @@ export class WebLoader extends BaseLoader<{ type: 'WebLoader' }> {
                     metadata: {
                         type: <'WebLoader'>'WebLoader',
                         source: this.isUrl ? this.contentOrUrl : tuncatedObjectString,
-                        chunkId: i,
                     },
                 };
-
-                i++;
             }
         } catch (e) {
             this.debug('Could not parse input', this.contentOrUrl, e);
