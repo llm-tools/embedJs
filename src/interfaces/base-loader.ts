@@ -24,7 +24,7 @@ export abstract class BaseLoader<
         createDebugMessages('embedjs:loader:BaseLoader')(`New loader class initalized with key ${uniqueId}`);
     }
 
-    async init() {}
+    public async init(): Promise<void> {}
 
     public get canIncrementallyLoad() {
         return this._canIncrementallyLoad;

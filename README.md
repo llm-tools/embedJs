@@ -16,11 +16,10 @@ Here's an example -
 
 ```TS
 const llmApplication = await new LLMApplicationBuilder()
-    .setTemperature(0.1)
     .addLoader(new PdfLoader({ filePath: path.resolve('../paxos-simple.pdf') }))
     .addLoader(new YoutubeLoader({ videoIdOrUrl: 'https://www.youtube.com/watch?v=w2KbwC-s7pY' }))
     .addLoader(new WebLoader({ url: 'https://adhityan.com/' }))
-    .setVectorDb(new LanceDb({ path: path.resolve('/db') }))
+    .setVectorDb(new LanceDb({ path: '.db' }))
     .build();
 
 console.log(await llmApplication.query('What is paxos?'));
@@ -61,6 +60,17 @@ The library also supports optioanl caching for embeddings and loaders. Chunks th
     -   [Text](#text)
     -   [Custom loader](#add-a-custom-loader)
     -   [How to request more loaders](#more-loaders-coming-soon)
+-   [LLMS](#llms)
+    -   [OpenAI](#openai)
+    -   [Mistral](#mistral)
+    -   [Azure OpenAI](#azure-openai)
+-   [Embedding Models](#embedding-models)
+    -   [OpenAI v3 Small](#openai-v3-small)
+    -   [OpenAI v3 Large](#openai-v3-large)
+    -   [ADA](#ada)
+    -   [Cohere](#cohere)
+    -   [Private embedding models](#use-custom-embedding-model)
+    -   [Request support for embedding models](#more-embedding-models-coming-soon)
 -   [Vector databases supported](#vector-databases-supported)
     -   [Pinecone](#pinecone)
     -   [LanceDB](#lancedb)
@@ -75,14 +85,6 @@ The library also supports optioanl caching for embeddings and loaders. Chunks th
     -   [In memory cache](#inmemory)
     -   [Custom cache implementation](#bring-your-own-cache)
     -   [How to request new cache providers](#more-caches-coming-soon)
--   [Embedding Models](#embedding-models)
-    -   [OpenAI v3 Small](#openai-v3-small)
-    -   [OpenAI v3 Large](#openai-v3-large)
-    -   [ADA](#ada)
-    -   [Cohere](#cohere)
-    -   [Private embedding models](#use-custom-embedding-model)
-    -   [Request support for embedding models](#more-embedding-models-coming-soon)
--   [Usage with Azure OpenAI](#azure-openai)
 -   [Examples](#examples)
 -   [Author](#author)
 
@@ -316,6 +318,176 @@ We really encourage you send in a PR to this library if you are implementing a c
 ## More loaders coming soon
 
 If you want to add any other format, please create an [issue](https://github.com/llm-tools/embedjs/issues) and we will add it to the list of supported formats. All PRs are welcome.
+
+# LLMs
+
+It's relatively easy to switch between different LLMs using the library. We support the following LLMs today -
+
+## OpenAI
+
+To use the OpenAI LLM models, you need a API key from OpenAI. You can alternatively use Azure OpenAI to run these models. Read the [Azure OpenAI](#azure-openai) section below to learn more about this. In this section, we will cover how to use OpenAI provided LLMs.
+
+The first step is to obtain an API Key from OpenAI. You can do this by visiting their [API Portal](https://platform.openai.com/api-keys). Once you obtain a key, set it as an environment variable, like so -
+
+```bash
+OPENAI_API_KEY="<Your key>"
+```
+
+Once this is done, it is relatively easy to run OpenAI LLMs. All you need is to indicate the model type you want to run.
+
+-   For GPT 3.5 Turbo
+
+```TS
+const llmApplication = await new LLMApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT3_TURBO)
+```
+
+-   For GPT 4
+
+```TS
+const llmApplication = await new LLMApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT4)
+```
+
+-   To use a custom model name
+
+```TS
+const llmApplication = await new LLMApplicationBuilder()
+.setModel(new OpenAi({ modelName: 'gpt-4' }))
+```
+
+**Note:** GPT 3.5 Turbo is used as the default model if you do not specifiy one.
+
+## Mistral
+
+To use Mirstal's models, you will need to get an API Key from Mistral. You can do this from their [console](https://console.mistral.ai/user/api-keys/). Once you have obtained a key, set Mistral as your LLM of choice -
+
+```TS
+const llmApplication = await new LLMApplicationBuilder()
+.setModel(new Mistral({ accessToken: "<YOUR_MISTRAL_TOKEN_HERE>" }))
+```
+
+By default, the `mistral-medium` model from Mistral is used. If you want to use a different Mistral model, you can specify it via the optional parameter to the Mistral constructor, like so -
+
+```TS
+const llmApplication = await new LLMApplicationBuilder()
+.setModel(new Mistral({ accessToken: "<YOUR_MISTRAL_TOKEN_HERE>", modelName: "..." }))
+```
+
+## Azure OpenAI
+
+In order to be able to use an OpenAI model on Azure, it first needs to be deployed. Please refer to [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/) on how to deploy a model on Azure. To run this library, you will need to deploy two models -
+
+-   text-embedding-ada
+-   GPT-3.5-turbo (or the 4 series)
+
+Once these models are deployed, using Azure OpenAI instead of the regular OpenAI is easy to do. Just follow these steps -
+
+-   Remove the `OPENAI_API_KEY` environment variable if you have set it already.
+
+-   Set the following environment variables -
+
+```bash
+# Set this to `azure`
+OPENAI_API_TYPE=azure
+# The API version you want to use
+AZURE_OPENAI_API_VERSION=2023-05-15
+# The base URL for your Azure OpenAI resource.  You can find this in the Azure portal under your Azure OpenAI resource.
+export AZURE_OPENAI_BASE_PATH=https://your-resource-name.openai.azure.com/openai/deployments
+# The API key1 or key2 for your Azure OpenAI resource
+export AZURE_OPENAI_API_KEY=<Your Azure OpenAI API key>
+# The deployment name you used for your embedding model
+AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME=text-embedding-ada-002
+# The deployment name you used for your llm
+AZURE_OPENAI_API_DEPLOYMENT_NAME=gpt-35-turbo
+```
+
+# Embedding models
+
+Embedding models are LLMs that convert a string into vector better suited for processing. In most cases, the default `text-embedding-ada-002` model from OpenAI is going to be good enough. If you want to use this model, you do not have to do anything.
+
+However in some advanced cases, you may want to change this; after all, different embedding models perform differently under different curcumstances. The library allows you to do this using the method `setEmbeddingModel` while building the `LLMApplication`.
+
+The library supports the following embedding models -
+
+## OpenAI v3 Small
+
+The `text-embedding-3-small` is a new standard embedding model released by OpenAI in Jan, 2024. It is the default used by the libary. This model is cheaper and better than their older Ada model. This model returns vectors with dimension 1536.
+
+You do not have to do anything to enable it.
+
+## OpenAI v3 Large
+
+The `text-embedding-3-large` is also a new standard embedding model released by OpenAI in Jan, 2024. This model is the best embedding model provided by OpenAI as of now but is also the most expensive. This model returns vectors with dimension 3072.
+
+To set it as your model of choice -
+
+-   Set `OpenAi3LargeEmbeddings` as your embedding model on `LLMApplicationBuilder`
+
+```TS
+await new LLMApplicationBuilder()
+.setEmbeddingModel(new OpenAi3LargeEmbeddings())
+```
+
+## Ada
+
+The `text-embedding-ada-002` is a well known model from OpenAI. You can read more about it [here](https://openai.com/blog/new-and-improved-embedding-model). This model returns vectors with dimension 1536.
+
+To set it as your model of choice -
+
+-   Set `AdaEmbeddings` as your embedding model on `LLMApplicationBuilder`
+
+```TS
+await new LLMApplicationBuilder()
+.setEmbeddingModel(new AdaEmbeddings())
+```
+
+## Cohere
+
+The library supports usage of [Cohere-AI](https://cohere.com) `embed-english-v2.0` embedding model out of the box. This model returns vectors with dimension 4096.
+
+Here's what you have to do to enable it -
+
+-   Sign up for an account with Cohere-AI if you have not done so already. Once done, go to the [API Keys](https://dashboard.cohere.ai/api-keys) section and copy an API_KEY.
+
+-   Load the key you just obtained in the environment variable `COHERE_API_KEY`
+
+```bash
+COHERE_API_KEY="<YOUR_KEY>"
+```
+
+-   Set `CohereEmbeddings` as your embedding model on `LLMApplicationBuilder`
+
+```TS
+await new LLMApplicationBuilder()
+.setEmbeddingModel(new CohereEmbeddings())
+```
+
+## Use custom embedding model
+
+You can use your own custom embedding model by implementing the `setEmbeddingModel` interface. Here's how that would look like -
+
+```TS
+class MyOwnEmbeddingImplementation implements BaseEmbeddings {
+    embedDocuments(texts: string[]): Promise<number[][]> {
+        throw new Error("Method not implemented.");
+    }
+
+    embedQuery(text: string): Promise<number[]> {
+        throw new Error("Method not implemented.");
+    }
+
+    getDimensions(): number {
+        throw new Error("Method not implemented.");
+    }
+}
+```
+
+Once done, you can pass this class to the `setEmbeddingModel` method like shown in the Cohere example above. That said, we really encourage you send in a PR to this library if you are implementing a famous or common embedding provider, so the community can benefit from it.
+
+## More embedding models coming soon
+
+If you want us to add support for a specific embedding model, please create an [issue](https://github.com/llm-tools/embedjs/issues) and we will prioritize it. All PRs are welcome.
 
 # Vector databases supported
 
@@ -555,95 +727,6 @@ We really encourage you send in a PR to this library if you are implementing a f
 
 If you want to add support for any other cache providers, please create an [issue](https://github.com/llm-tools/embedjs/issues) and we will add it to the list of supported caches. All PRs are welcome.
 
-# Embedding models
-
-Embedding models are LLMs that convert a string into vector better suited for processing. In most cases, the default `text-embedding-ada-002` model from OpenAI is going to be good enough. If you want to use this model, you do not have to do anything.
-
-However in some advanced cases, you may want to change this; after all, different embedding models perform differently under different curcumstances. The library allows you to do this using the method `setEmbeddingModel` while building the `LLMApplication`.
-
-The library supports the following embedding models -
-
-## OpenAI v3 Small
-
-The `text-embedding-3-small` is a new standard embedding model released by OpenAI in Jan, 2024. It is the default used by the libary. This model is cheaper and better than their older Ada model. This model returns vectors with dimension 1536.
-
-You do not have to do anything to enable it.
-
-## OpenAI v3 Large
-
-The `text-embedding-3-large` is also a new standard embedding model released by OpenAI in Jan, 2024. This model is the best embedding model provided by OpenAI as of now but is also the most expensive. This model returns vectors with dimension 3072.
-
-To set it as your model of choice -
-
--   Set `OpenAi3LargeEmbeddings` as your embedding model on `LLMApplicationBuilder`
-
-```TS
-await new LLMApplicationBuilder()
-.setEmbeddingModel(new OpenAi3LargeEmbeddings())
-```
-
-## Ada
-
-The `text-embedding-ada-002` is a well known model from OpenAI. You can read more about it [here](https://openai.com/blog/new-and-improved-embedding-model). This model returns vectors with dimension 1536.
-
-To set it as your model of choice -
-
--   Set `AdaEmbeddings` as your embedding model on `LLMApplicationBuilder`
-
-```TS
-await new LLMApplicationBuilder()
-.setEmbeddingModel(new AdaEmbeddings())
-```
-
-## Cohere
-
-The library supports usage of [Cohere-AI](https://cohere.com) `embed-english-v2.0` embedding model out of the box. This model returns vectors with dimension 4096.
-
-Here's what you have to do to enable it -
-
--   Sign up for an account with Cohere-AI if you have not done so already. Once done, go to the [API Keys](https://dashboard.cohere.ai/api-keys) section and copy an API_KEY.
-
--   Load the key you just obtained in the environment variable `COHERE_API_KEY`
-
-```bash
-COHERE_API_KEY="<YOUR_KEY>"
-```
-
--   Set `CohereEmbeddings` as your embedding model on `LLMApplicationBuilder`
-
-```TS
-await new LLMApplicationBuilder()
-.setEmbeddingModel(new CohereEmbeddings())
-```
-
-## Use custom embedding model
-
-You can use your own custom embedding model by implementing the `setEmbeddingModel` interface. Here's how that would look like -
-
-```TS
-class MyOwnEmbeddingImplementation implements BaseEmbeddings {
-    embedDocuments(texts: string[]): Promise<number[][]> {
-        throw new Error("Method not implemented.");
-    }
-
-    embedQuery(text: string): Promise<number[]> {
-        throw new Error("Method not implemented.");
-    }
-
-    getDimensions(): number {
-        throw new Error("Method not implemented.");
-    }
-}
-```
-
-Once done, you can pass this class to the `setEmbeddingModel` method like shown in the Cohere example above. That said, we really encourage you send in a PR to this library if you are implementing a famous or common embedding provider, so the community can benefit from it.
-
-## More embedding models coming soon
-
-If you want us to add support for a specific embedding model, please create an [issue](https://github.com/llm-tools/embedjs/issues) and we will prioritize it. Our current priority is to add support for the [HuggingFace's Models](https://huggingface.co/sentence-transformers). Support for the open source models under HuggingFace are available in alpha - please set `HuggingFace` as your choice of model to test.
-
-All PRs are welcome.
-
 # Langsmith Integration
 
 Langsmith allows you to keep track of how you use LLM and embedding models. It logs histories, token uses and other metadata. Follow these three simple steps to enable -
@@ -657,34 +740,6 @@ export LANGCHAIN_TRACING_V2=true
 export LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"
 export LANGCHAIN_PROJECT="<project name>"
 export LANGCHAIN_API_KEY="<api key>"
-```
-
-# Azure OpenAI
-
-In order to be able to use an OpenAI model on Azure, it first needs to be deployed. Please refer to [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/) on how to deploy a model on Azure. To run this library, you will need to deploy two models -
-
--   text-embedding-ada
--   GPT-3.5-turbo (or the 4 series)
-
-Once these models are deployed, using Azure OpenAI instead of the regular OpenAI is easy to do. Just follow these steps -
-
--   Remove the `OPENAI_API_KEY` environment variable if you have set it already.
-
--   Set the following environment variables -
-
-```bash
-# Set this to `azure`
-OPENAI_API_TYPE=azure
-# The API version you want to use
-AZURE_OPENAI_API_VERSION=2023-05-15
-# The base URL for your Azure OpenAI resource.  You can find this in the Azure portal under your Azure OpenAI resource.
-export AZURE_OPENAI_BASE_PATH=https://your-resource-name.openai.azure.com/openai/deployments
-# The API key1 or key2 for your Azure OpenAI resource
-export AZURE_OPENAI_API_KEY=<Your Azure OpenAI API key>
-# The deployment name you used for your embedding model
-AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME=text-embedding-ada-002
-# The deployment name you used for your llm
-AZURE_OPENAI_API_DEPLOYMENT_NAME=gpt-35-turbo
 ```
 
 # Examples

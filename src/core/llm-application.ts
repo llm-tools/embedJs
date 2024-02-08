@@ -5,10 +5,10 @@ import { BaseLoader } from '../interfaces/base-loader.js';
 import { AddLoaderReturn, Chunk, EmbeddedChunk, LoaderChunk } from '../global/types.js';
 import { LLMApplicationBuilder } from './llm-application-builder.js';
 import { DEFAULT_INSERT_BATCH_SIZE } from '../global/constants.js';
-import { cleanString, stringFormat } from '../util/strings.js';
 import { BaseModel } from '../interfaces/base-model.js';
 import { BaseCache } from '../interfaces/base-cache.js';
 import { LLMEmbedding } from './llm-embedding.js';
+import { cleanString } from '../util/strings.js';
 
 export class LLMApplication {
     private readonly debug = createDebugMessages('embedjs:core');
@@ -25,9 +25,13 @@ export class LLMApplication {
         BaseLoader.setCache(this.cache);
 
         this.model = llmBuilder.getModel();
+        BaseModel.setDefaultTemperature(llmBuilder.getTemperature());
+
+        this.queryTemplate = cleanString(llmBuilder.getQueryTemplate());
+        this.debug('Using system query template -', this.queryTemplate);
+
         this.loaders = llmBuilder.getLoaders();
         this.vectorDb = llmBuilder.getVectorDb();
-        this.queryTemplate = llmBuilder.getQueryTemplate();
         this.searchResultCount = llmBuilder.getSearchResultCount();
         this.initLoaders = llmBuilder.getLoaderInit();
 
@@ -46,6 +50,9 @@ export class LLMApplication {
     }
 
     public async init() {
+        await this.model.init();
+        this.debug('Initialized LLM class');
+
         await this.vectorDb.init({ dimensions: LLMEmbedding.getEmbedding().getDimensions() });
         this.debug('Initialized vector database');
 
@@ -165,14 +172,7 @@ export class LLMApplication {
 
     public async getContext(query: string) {
         const cleanQuery = cleanString(query);
-        const contextChunks = await this.getEmbeddings(cleanQuery);
-
-        const prompt = cleanString(stringFormat(this.queryTemplate, cleanQuery));
-
-        return {
-            prompt,
-            supportingContext: contextChunks,
-        };
+        return this.getEmbeddings(cleanQuery);
     }
 
     public async query(
@@ -183,11 +183,11 @@ export class LLMApplication {
         sources: string[];
     }> {
         const context = await this.getContext(userQuery);
-        const sources = [...new Set(context.supportingContext.map((chunk) => chunk.metadata.source))];
+        const sources = [...new Set(context.map((chunk) => chunk.metadata.source))];
 
         return {
             sources,
-            result: await this.model.query(context.prompt, userQuery, context.supportingContext, conversationId),
+            result: await this.model.query(this.queryTemplate, userQuery, context, conversationId),
         };
     }
 }

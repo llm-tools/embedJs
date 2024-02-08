@@ -1,22 +1,25 @@
 import createDebugMessages from 'debug';
-import { ChatOpenAI } from '@langchain/openai';
-import { HumanMessage, AIMessage, SystemMessage } from '@langchain/core/messages';
+import { ChatMistralAI } from '@langchain/mistralai';
+import { AIMessage, HumanMessage, SystemMessage } from 'langchain/schema';
 
-import { BaseModel } from '../interfaces/base-model.js';
 import { Chunk, ConversationHistory } from '../global/types.js';
+import { BaseModel } from '../interfaces/base-model.js';
 
-export class OpenAi extends BaseModel {
-    private readonly debug = createDebugMessages('embedjs:model:OpenAi');
-    private readonly modelName: string;
-    private model: ChatOpenAI;
+export class Mistral extends BaseModel {
+    private readonly debug = createDebugMessages('embedjs:model:Mistral');
+    private model: ChatMistralAI;
 
-    constructor({ temperature, modelName }: { temperature?: number; modelName: string }) {
+    constructor({
+        temperature,
+        accessToken,
+        modelName,
+    }: {
+        temperature?: number;
+        accessToken: string;
+        modelName?: string;
+    }) {
         super(temperature);
-        this.modelName = modelName;
-    }
-
-    override async init(): Promise<void> {
-        this.model = new ChatOpenAI({ temperature: this.temperature, modelName: this.modelName });
+        this.model = new ChatMistralAI({ apiKey: accessToken, modelName: modelName ?? 'mistral-medium' });
     }
 
     override async runQuery(
@@ -40,7 +43,7 @@ export class OpenAi extends BaseModel {
         pastMessages.push(new SystemMessage(finalPrompt));
         pastMessages.push(new HumanMessage(userQuery));
 
-        this.debug('Executing openai model for prompt -', userQuery);
+        this.debug('Executing mistral model for prompt -', userQuery);
         const result = await this.model.invoke(pastMessages, {});
         return result.content.toString();
     }
