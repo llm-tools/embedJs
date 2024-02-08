@@ -44,7 +44,7 @@ export class OpenAi extends BaseModel {
         );
         pastMessages.push(new HumanMessage(`${userQuery}?`));
 
-        this.debug('Executing openai model for prompt -', userQuery);
+        this.debug('Executing openai model with prompt -', userQuery);
         const result = await this.model.invoke(pastMessages, {});
         return result.content.toString();
     }

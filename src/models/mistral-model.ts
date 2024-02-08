@@ -47,7 +47,7 @@ export class Mistral extends BaseModel {
         );
         pastMessages.push(new HumanMessage(`${userQuery}?`));
 
-        this.debug('Executing mistral model for prompt -', userQuery);
+        this.debug('Executing mistral model with prompt -', userQuery);
         const result = await this.model.invoke(pastMessages, {});
         return result.content.toString();
     }

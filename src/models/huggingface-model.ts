@@ -8,19 +8,36 @@ export class HuggingFace extends BaseModel {
     private readonly debug = createDebugMessages('embedjs:model:HuggingFace');
 
     private readonly modelName: string;
+    private readonly maxNewTokens: number;
+    private readonly endpointUrl?: string;
     private model: HuggingFaceInference;
 
-    constructor({ temperature, modelName }: { temperature?: number; modelName?: string }) {
+    constructor({
+        modelName,
+        temperature,
+        maxNewTokens,
+        endpointUrl,
+    }: {
+        modelName?: string;
+        temperature?: number;
+        maxNewTokens?: number;
+        endpointUrl?: string;
+    }) {
         super(temperature);
-        this.modelName = modelName ?? 'meta-llama/Llama-2-7b-hf';
+
+        this.endpointUrl = endpointUrl;
+        this.maxNewTokens = maxNewTokens ?? 300;
+        this.modelName = modelName ?? 'mistralai/Mixtral-8x7B-Instruct-v0.1';
     }
 
     override async init(): Promise<void> {
         this.model = new HuggingFaceInference({
             model: this.modelName,
+            maxTokens: this.maxNewTokens,
             temperature: this.temperature,
-            maxTokens: 300,
+            endpointUrl: this.endpointUrl,
             verbose: false,
+            maxRetries: 1,
         });
     }
 
@@ -45,7 +62,7 @@ export class HuggingFace extends BaseModel {
 
         const finalPrompt = pastMessages.join('\n');
         // this.debug('Final prompt being sent to HF - ', finalPrompt);
-        this.debug(`Executing hugging face '${this.model.model}' model for prompt -`, userQuery);
+        this.debug(`Executing hugging face '${this.model.model}' model with prompt -`, userQuery);
         const result = await this.model.invoke(finalPrompt, {});
         return result;
     }

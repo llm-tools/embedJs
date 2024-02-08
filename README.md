@@ -396,9 +396,9 @@ const llmApplication = await new LLMApplicationBuilder()
 .setModel(new HuggingFace({ modelName: "..." })))
 ```
 
-**Note:** Not all hugging face models are fully free to consume via their API. Since running these models takes a lot of resources, Hugging Face charges a subscription fee for a few. This is the case with Meta's `meta-llama/Llama-2-7b-hf` - which is the default model used if you do not specify a `modelName` parameter.
+**Note:** Not all hugging face models are fully free to consume via their API. Since running these models takes a lot of resources, Hugging Face charges a fee for a few of the larger ones. This is the case with Meta's `meta-llama/Llama-2-7b-hf`, for example.
 
-To use these 'not-free' models via HuggingFace, you need to subscribe to their [Pro plan](https://huggingface.co/pricing). It is possible to self host these models for free and run them via Ollama - support for which is coming soon.
+To use these 'not-free' models via HuggingFace, you need to subscribe to their [Pro plan](https://huggingface.co/pricing) or create a custom [inference endpoint](https://ui.endpoints.huggingface.co/). It is possible to self host these models for free and run them locally via Ollama - support for which is coming soon.
 
 ## Azure OpenAI
 
