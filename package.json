@@ -1,6 +1,6 @@
 {
     "name": "@llm-tools/embedjs",
-    "version": "0.0.58",
+    "version": "0.0.59",
     "description": "A NodeJS RAG framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
