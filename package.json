@@ -48,7 +48,9 @@
     ],
     "homepage": "https://github.com/llm-tools/embedjs#readme",
     "dependencies": {
+        "@huggingface/inference": "^2.6.4",
         "@langchain/cohere": "^0.0.4",
+        "@langchain/community": "^0.0.26",
         "@langchain/core": "^0.1.25",
         "@langchain/mistralai": "^0.0.7",
         "@langchain/openai": "^0.0.14",

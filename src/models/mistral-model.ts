@@ -1,6 +1,6 @@
 import createDebugMessages from 'debug';
 import { ChatMistralAI } from '@langchain/mistralai';
-import { AIMessage, HumanMessage, SystemMessage } from 'langchain/schema';
+import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages';
 
 import { Chunk, ConversationHistory } from '../global/types.js';
 import { BaseModel } from '../interfaces/base-model.js';
@@ -28,20 +28,24 @@ export class Mistral extends BaseModel {
         supportingContext: Chunk[],
         pastConversations: ConversationHistory[],
     ): Promise<string> {
-        const pastMessages = pastConversations.map((c) => {
-            if (c.sender === 'AI')
-                return new AIMessage({
+        const pastMessages: (AIMessage | SystemMessage | HumanMessage)[] = [new SystemMessage(system)];
+        pastMessages.push(
+            new SystemMessage(`Supporting context: ${supportingContext.map((s) => s.pageContent).join('; ')}`),
+        );
+
+        pastMessages.push.apply(
+            pastConversations.map((c) => {
+                if (c.sender === 'AI')
+                    return new AIMessage({
+                        content: c.message,
+                    });
+
+                return new HumanMessage({
                     content: c.message,
                 });
-
-            return new HumanMessage({
-                content: c.message,
-            });
-        });
-
-        const finalPrompt = `${system} \nSupporting context: ${JSON.stringify(supportingContext.map((s) => s.pageContent))}`;
-        pastMessages.push(new SystemMessage(finalPrompt));
-        pastMessages.push(new HumanMessage(userQuery));
+            }),
+        );
+        pastMessages.push(new HumanMessage(`${userQuery}?`));
 
         this.debug('Executing mistral model for prompt -', userQuery);
         const result = await this.model.invoke(pastMessages, {});

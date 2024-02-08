@@ -21,6 +21,7 @@ import { CohereEmbeddings } from './embeddings/cohere-embeddings.js';
 import { OpenAi3LargeEmbeddings } from './embeddings/openai-3large-embeddings.js';
 import { OpenAi3SmallEmbeddings } from './embeddings/openai-3small-embeddings.js';
 import { Mistral } from './models/mistral-model.js';
+import { HuggingFace } from './models/huggingface-model.js';
 
 export {
     LLMApplication,
@@ -46,4 +47,5 @@ export {
     OpenAi3LargeEmbeddings,
     OpenAi3SmallEmbeddings,
     Mistral,
+    HuggingFace,
 };

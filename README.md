@@ -63,6 +63,7 @@ The library also supports optioanl caching for embeddings and loaders. Chunks th
 -   [LLMS](#llms)
     -   [OpenAI](#openai)
     -   [Mistral](#mistral)
+    -   [Hugging Face](#hugging-face)
     -   [Azure OpenAI](#azure-openai)
     -   [Bring your own LLMs](#use-custom-llm-model)
     -   [Request support for new LLMs](#more-llms-coming-soon)
@@ -376,6 +377,29 @@ const llmApplication = await new LLMApplicationBuilder()
 .setModel(new Mistral({ accessToken: "<YOUR_MISTRAL_TOKEN_HERE>", modelName: "..." }))
 ```
 
+**Note:** If you want to run Mistral open source for free, you can do so using the HuggingFace platform (read below). Just make sure to set the modelName to `mistralai/Mistral-7B-v0.1` or the version you want to run.
+
+## Hugging Face
+
+Hugging face needs no introduction. They host a variety of open source LLMs and you can use most of them for free. To run hugging face inference based LLMs with this library, you will need a free hugging face token.
+
+You can get an API Token by signing up for hugging face and generate a token from [this page](https://huggingface.co/settings/tokens). Once you get the token, set it to the environment like so -
+
+```bash
+HUGGINGFACEHUB_API_KEY="<Your hf key>"
+```
+
+That's all, now you can use any hugging face model. To do this set `HuggingFace` as your model processor of choice -
+
+```TS
+const llmApplication = await new LLMApplicationBuilder()
+.setModel(new HuggingFace({ modelName: "..." })))
+```
+
+**Note:** Not all hugging face models are fully free to consume via their API. Since running these models takes a lot of resources, Hugging Face charges a subscription fee for a few. This is the case with Meta's `meta-llama/Llama-2-7b-hf` - which is the default model used if you do not specify a `modelName` parameter.
+
+To use these 'not-free' models via HuggingFace, you need to subscribe to their [Pro plan](https://huggingface.co/pricing). It is possible to self host these models for free and run them via Ollama - support for which is coming soon.
+
 ## Azure OpenAI
 
 In order to be able to use an OpenAI model on Azure, it first needs to be deployed. Please refer to [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/) on how to deploy a model on Azure. To run this library, you will need to deploy two models -
@@ -404,6 +428,8 @@ AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME=text-embedding-ada-002
 AZURE_OPENAI_API_DEPLOYMENT_NAME=gpt-35-turbo
 ```
 
+You can now run the Azure OpenAI LLMs using the [`OpenAi` model](#openai) detailed above.
+
 ## Use custom LLM model
 
 You can use a custom LLM model by implementing the `BaseModel` interface. Here's how that would look like -
@@ -429,7 +455,7 @@ Once done, you can pass this class to the `setModel` method like shown in the ex
 
 If you want us to add support for a specific LLM, please create an [issue](https://github.com/llm-tools/embedjs/issues) and we will prioritize it. All PRs are welcome.
 
-Currently, we next plan to add support for Ollama and open source Hugging Face LLMs.
+Currently, we next plan to add support for Ollama.
 
 # Embedding models
 
