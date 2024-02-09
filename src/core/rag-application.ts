@@ -198,7 +198,7 @@ export class RAGApplication {
         sources: string[];
     }> {
         const context = await this.getContext(userQuery);
-        const sources = context.map((c) => c.metadata.source);
+        const sources = [...new Set(context.map((chunk) => chunk.metadata.source))];
 
         return {
             sources,
