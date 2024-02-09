@@ -1,5 +1,5 @@
-import { LLMApplication } from './core/llm-application.js';
-import { LLMApplicationBuilder } from './core/llm-application-builder.js';
+import { RAGApplication } from './core/rag-application.js';
+import { RAGApplicationBuilder } from './core/rag-application-builder.js';
 import { TextLoader } from './loaders/text-loader.js';
 import { YoutubeLoader } from './loaders/youtube-loader.js';
 import { PdfLoader } from './loaders/pdf-loader.js';
@@ -24,8 +24,8 @@ import { Mistral } from './models/mistral-model.js';
 import { HuggingFace } from './models/huggingface-model.js';
 
 export {
-    LLMApplication,
-    LLMApplicationBuilder,
+    RAGApplication,
+    RAGApplicationBuilder,
     TextLoader,
     YoutubeLoader,
     PdfLoader,

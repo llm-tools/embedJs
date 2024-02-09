@@ -12,22 +12,12 @@ export class HuggingFace extends BaseModel {
     private readonly endpointUrl?: string;
     private model: HuggingFaceInference;
 
-    constructor({
-        modelName,
-        temperature,
-        maxNewTokens,
-        endpointUrl,
-    }: {
-        modelName?: string;
-        temperature?: number;
-        maxNewTokens?: number;
-        endpointUrl?: string;
-    }) {
-        super(temperature);
+    constructor(params?: { modelName?: string; temperature?: number; maxNewTokens?: number; endpointUrl?: string }) {
+        super(params?.temperature);
 
-        this.endpointUrl = endpointUrl;
-        this.maxNewTokens = maxNewTokens ?? 300;
-        this.modelName = modelName ?? 'mistralai/Mixtral-8x7B-Instruct-v0.1';
+        this.endpointUrl = params?.endpointUrl;
+        this.maxNewTokens = params?.maxNewTokens ?? 300;
+        this.modelName = params?.modelName ?? 'mistralai/Mixtral-8x7B-Instruct-v0.1';
     }
 
     override async init(): Promise<void> {

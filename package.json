@@ -1,6 +1,6 @@
 {
     "name": "ragkit",
-    "version": "0.0.62",
+    "version": "0.0.63",
     "description": "A NodeJS RAG framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",

@@ -1,6 +1,6 @@
 import { BaseDb } from '../interfaces/base-db.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
-import { LLMApplication } from './llm-application.js';
+import { RAGApplication } from './rag-application.js';
 import { BaseCache } from '../interfaces/base-cache.js';
 import { BaseEmbeddings } from '../interfaces/base-embeddings.js';
 import { BaseModel } from '../interfaces/base-model.js';
@@ -8,7 +8,7 @@ import { SIMPLE_MODELS } from '../global/constants.js';
 import { OpenAi } from '../models/openai-model.js';
 import { OpenAi3SmallEmbeddings } from '../embeddings/openai-3small-embeddings.js';
 
-export class LLMApplicationBuilder {
+export class RAGApplicationBuilder {
     private searchResultCount: number;
     private loaders: BaseLoader[];
     private vectorDb: BaseDb;
@@ -35,7 +35,7 @@ export class LLMApplicationBuilder {
     }
 
     async build() {
-        const entity = new LLMApplication(this);
+        const entity = new RAGApplication(this);
         await entity.init();
         return entity;
     }

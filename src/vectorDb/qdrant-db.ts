@@ -10,29 +10,25 @@ export class QdrantDb implements BaseDb {
     private static readonly QDRANT_INSERT_CHUNK_SIZE = 500;
 
     private readonly client: QdrantClient;
-    private readonly projectName: string;
+    private readonly clusterName: string;
 
-    constructor({ url, projectName }: { url: string; projectName: string }) {
-        this.client = new QdrantClient({
-            apiKey: process.env.QDRANT_API_KEY,
-            url,
-        });
-
-        this.projectName = projectName;
+    constructor({ apiKey, url, clusterName }: { apiKey: string; url: string; clusterName: string }) {
+        this.client = new QdrantClient({ apiKey, url });
+        this.clusterName = clusterName;
     }
 
     async init({ dimensions }: { dimensions: number }) {
         const list = (await this.client.getCollections()).collections.map((c) => c.name);
-        if (list.indexOf(this.projectName) > -1) return;
+        if (list.indexOf(this.clusterName) > -1) return;
 
-        await this.client.createCollection(this.projectName, {
+        await this.client.createCollection(this.clusterName, {
             vectors: {
                 size: dimensions,
                 distance: 'Cosine',
             },
         });
 
-        await this.client.createPayloadIndex(this.projectName, {
+        await this.client.createPayloadIndex(this.clusterName, {
             wait: true,
             field_name: 'uniqueLoaderId',
             field_schema: 'text',
@@ -55,7 +51,7 @@ export class QdrantDb implements BaseDb {
             });
 
             this.debug(`Inserting QDrant batch`);
-            await this.client.upsert(this.projectName, {
+            await this.client.upsert(this.clusterName, {
                 wait: true,
                 points: upsertCommand,
             });
@@ -66,7 +62,7 @@ export class QdrantDb implements BaseDb {
     }
 
     async similaritySearch(query: number[], k: number): Promise<Chunk[]> {
-        const queryResponse = await this.client.search(this.projectName, {
+        const queryResponse = await this.client.search(this.clusterName, {
             limit: k,
             vector: query,
             with_payload: true,
@@ -84,11 +80,11 @@ export class QdrantDb implements BaseDb {
     }
 
     async getVectorCount(): Promise<number> {
-        return (await this.client.getCollection(this.projectName)).points_count;
+        return (await this.client.getCollection(this.clusterName)).points_count;
     }
 
-    async deleteKeys(uniqueLoaderId: string): Promise<void> {
-        await this.client.delete(this.projectName, {
+    async deleteKeys(uniqueLoaderId: string): Promise<boolean> {
+        await this.client.delete(this.clusterName, {
             wait: true,
             filter: {
                 must: [
@@ -101,10 +97,11 @@ export class QdrantDb implements BaseDb {
                 ],
             },
         });
+        return true;
     }
 
     async reset(): Promise<void> {
-        await this.client.delete(this.projectName, {
+        await this.client.delete(this.clusterName, {
             filter: {},
         });
     }

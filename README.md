@@ -15,9 +15,9 @@ EmbedJs is a NodeJS framework that simplifies RAG application development by eff
 Here's an example of how easy it is to get started -
 
 ```TS
-const llmApplication = await new LLMApplicationBuilder()
-    .addLoader(new YoutubeSearchLoader('Tesla cars'))
-    .addLoader(new SitemapLoader('https://tesla-info.com/sitemap.xml'))
+const ragApplication = await new RAGApplicationBuilder()
+    .addLoader(new YoutubeSearchLoader({ searchString: 'Tesla cars' }))
+    .addLoader(new SitemapLoader({ url: 'https://tesla-info.com/sitemap.xml' }))
     .addLoader(new WebLoader({ url: 'https://en.wikipedia.org/wiki/Tesla,_Inc.' }))
     .setVectorDb(new LanceDb({ path: '.db' }))
     .build();
@@ -26,7 +26,7 @@ const llmApplication = await new LLMApplicationBuilder()
 That's it. Now you can ask questions -
 
 ```TS
-console.log(await llmApplication.query('Tell me about the history of Tesla?'));
+console.log(await ragApplication.query('Tell me about the history of Tesla?'));
 ```
 
 ## Features
@@ -65,7 +65,7 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [Text](#text)
     -   [Custom loader](#add-a-custom-loader)
     -   [How to request more loaders](#more-loaders-coming-soon)
--   [LLMS](#llms)
+-   [LLMs](#llms)
     -   [OpenAI](#openai)
     -   [Mistral](#mistral)
     -   [Hugging Face](#hugging-face)
@@ -116,7 +116,7 @@ To configure a new EmbedJs application, you need to do three steps -
 > The library supports several LLMs. Activate one by allowing the instructions in the [LLM](#llms) section.
 
 ```TS
-const llmApplication = await new LLMApplicationBuilder()
+const ragApplication = await new RAGApplicationBuilder()
     .setModel(new HuggingFace({ modelName: 'mistralai/Mixtral-8x7B-v0.1' }))
     ...
 ```
@@ -132,15 +132,15 @@ const llmApplication = await new LLMApplicationBuilder()
 > The library supports several kinds of loaders. You can use zero, one or many kinds of loaders together to import custom knowledge. Read the [loaders](#loaders-supported) section to learn more about the different supported loaders.
 
 ```TS
-    .addLoader(new YoutubeSearchLoader('Tesla cars'))
-    .addLoader(new SitemapLoader('https://tesla-info.com/sitemap.xml'))
+    .addLoader(new YoutubeSearchLoader({ searchString: 'Tesla cars' }))
+    .addLoader(new SitemapLoader({ url: 'https://tesla-info.com/sitemap.xml' }))
     .build();
 ```
 
-That's it! Now that you have your instance of `LLMApplication`, you can use it to query against the loaded data sets, like so -
+That's it! Now that you have your instance of `RAGApplication`, you can use it to query against the loaded data sets, like so -
 
 ```TS
-await llmApplication.query('What is Tesla?');
+await ragApplication.query('What is Tesla?');
 ```
 
 ## Temperature
@@ -148,7 +148,7 @@ await llmApplication.query('What is Tesla?');
 The temperature is a number between 0 and 1. It governs the randomness and creativity of the LLM responses. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. You can alter it by -
 
 ```TS
-await new LLMApplicationBuilder()
+await new RAGApplicationBuilder()
 .setTemperature(0.1)
 ```
 
@@ -159,7 +159,7 @@ await new LLMApplicationBuilder()
 This is the number of documents to aim for when retrieving results from the vector database. A high number of results might mean there is more non-relevant data in the context. A low number might mean none of the relevant documents are retrieved. You need to set the number that works best for you. The parameter can be altered by -
 
 ```TS
-await new LLMApplicationBuilder()
+await new RAGApplicationBuilder()
 .setSearchResultCount(10)
 ```
 
@@ -180,18 +180,16 @@ LLM models need some care. The models are notorious for inventing responses when
 The placeholder `{0}` is replaced with the input query. In some cases, you may want to customize this prompt. This can be done with ease by -
 
 ```TS
-await new LLMApplicationBuilder()
-.QueryTemplate('My own query template {0}')
+await new RAGApplicationBuilder()
+.QueryTemplate('My own query template')
 ```
-
-**NOTE:** The library will reject any query template that does not contain the placeholder `{0}`.
 
 ## Get context (dry run)
 
 During development, you may want to test the performance and quality of the `Loaders` you have enabled without making any LLM calls. You can do this by using the `getContext` method -
 
 ```TS
-await llmApplication.getContext('What is Steve Jobs?')
+await ragApplication.getContext('What is Steve Jobs?')
 ```
 
 ## Get count of embedded chunks
@@ -199,7 +197,7 @@ await llmApplication.getContext('What is Steve Jobs?')
 You can fetch the count of embeddedings stored in your vector database at any time by calling the `getEmbeddingsCount` method -
 
 ```TS
-await llmApplication.getEmbeddingsCount()
+await ragApplication.getEmbeddingsCount()
 ```
 
 # Loaders supported
@@ -339,21 +337,21 @@ Once this is done, it is relatively easy to run OpenAI LLMs. All you need is to 
 -   For GPT 3.5 Turbo
 
 ```TS
-const llmApplication = await new LLMApplicationBuilder()
+const ragApplication = await new RAGApplicationBuilder()
 .setModel(SIMPLE_MODELS.OPENAI_GPT3_TURBO)
 ```
 
 -   For GPT 4
 
 ```TS
-const llmApplication = await new LLMApplicationBuilder()
+const ragApplication = await new RAGApplicationBuilder()
 .setModel(SIMPLE_MODELS.OPENAI_GPT4)
 ```
 
 -   To use a custom model name
 
 ```TS
-const llmApplication = await new LLMApplicationBuilder()
+const ragApplication = await new RAGApplicationBuilder()
 .setModel(new OpenAi({ modelName: 'gpt-4' }))
 ```
 
@@ -364,14 +362,14 @@ const llmApplication = await new LLMApplicationBuilder()
 To use Mirstal's models, you will need to get an API Key from Mistral. You can do this from their [console](https://console.mistral.ai/user/api-keys/). Once you have obtained a key, set Mistral as your LLM of choice -
 
 ```TS
-const llmApplication = await new LLMApplicationBuilder()
+const ragApplication = await new RAGApplicationBuilder()
 .setModel(new Mistral({ accessToken: "<YOUR_MISTRAL_TOKEN_HERE>" }))
 ```
 
 By default, the `mistral-medium` model from Mistral is used. If you want to use a different Mistral model, you can specify it via the optional parameter to the Mistral constructor, like so -
 
 ```TS
-const llmApplication = await new LLMApplicationBuilder()
+const ragApplication = await new RAGApplicationBuilder()
 .setModel(new Mistral({ accessToken: "<YOUR_MISTRAL_TOKEN_HERE>", modelName: "..." }))
 ```
 
@@ -390,7 +388,7 @@ HUGGINGFACEHUB_API_KEY="<Your hf key>"
 That's all, now you can use any hugging face model. To do this set `HuggingFace` as your model processor of choice -
 
 ```TS
-const llmApplication = await new LLMApplicationBuilder()
+const ragApplication = await new RAGApplicationBuilder()
 .setModel(new HuggingFace({ modelName: "..." })))
 ```
 
@@ -459,7 +457,7 @@ Currently, we next plan to add support for Ollama.
 
 Embedding models are LLMs that convert a string into vector better suited for processing. In most cases, the default `text-embedding-ada-002` model from OpenAI is going to be good enough. If you want to use this model, you do not have to do anything.
 
-However in some advanced cases, you may want to change this; after all, different embedding models perform differently under different curcumstances. The library allows you to do this using the method `setEmbeddingModel` while building the `LLMApplication`.
+However in some advanced cases, you may want to change this; after all, different embedding models perform differently under different curcumstances. The library allows you to do this using the method `setEmbeddingModel` while building the `RAGApplication`.
 
 The library supports the following embedding models -
 
@@ -475,10 +473,10 @@ The `text-embedding-3-large` is also a new standard embedding model released by 
 
 To set it as your model of choice -
 
--   Set `OpenAi3LargeEmbeddings` as your embedding model on `LLMApplicationBuilder`
+-   Set `OpenAi3LargeEmbeddings` as your embedding model on `RAGApplicationBuilder`
 
 ```TS
-await new LLMApplicationBuilder()
+await new RAGApplicationBuilder()
 .setEmbeddingModel(new OpenAi3LargeEmbeddings())
 ```
 
@@ -488,10 +486,10 @@ The `text-embedding-ada-002` is a well known model from OpenAI. You can read mor
 
 To set it as your model of choice -
 
--   Set `AdaEmbeddings` as your embedding model on `LLMApplicationBuilder`
+-   Set `AdaEmbeddings` as your embedding model on `RAGApplicationBuilder`
 
 ```TS
-await new LLMApplicationBuilder()
+await new RAGApplicationBuilder()
 .setEmbeddingModel(new AdaEmbeddings())
 ```
 
@@ -509,10 +507,10 @@ Here's what you have to do to enable it -
 COHERE_API_KEY="<YOUR_KEY>"
 ```
 
--   Set `CohereEmbeddings` as your embedding model on `LLMApplicationBuilder`
+-   Set `CohereEmbeddings` as your embedding model on `RAGApplicationBuilder`
 
 ```TS
-await new LLMApplicationBuilder()
+await new RAGApplicationBuilder()
 .setEmbeddingModel(new CohereEmbeddings())
 ```
 
@@ -579,7 +577,7 @@ PINECONE_API_KEY=<your api key>
 }))
 ```
 
-**Note:** Pinecone supports serverless and pod based index deployments. You can control how you want your index created using the indexSpec attribute. This is mandatory to be provided but comes with full type specification.
+**Note:** Pinecone supports serverless and pod based index deployments. You can control how you want your index created using the indexSpec attribute. This is mandatory to be provided but comes with full type specification. Read more about configuring this [here](https://github.com/pinecone-io/pinecone-ts-client/blob/main/v2-migration.md).
 
 ## LanceDB
 
@@ -658,7 +656,7 @@ npm install weaviate-ts-client
 -   Set Weaviate database as your choice of `vectorDb`
 
 ```TS
-.setVectorDb(new WeaviateDb())
+.setVectorDb(new WeaviateDb({ host: '...', apiKey: '...', className: '...' }))
 ```
 
 ## Bring your own database
@@ -701,7 +699,7 @@ If you want to add support for any other vector database, please create an [issu
 
 # Caches
 
-Caches serve to reduce re-processing embeddings, loaders and queries. There is no need to load, chunk and store a large PDF File or web page on every run. Caching smartly is built in and can be enabled out of the box simply by setting a cache processor using the method `setCache` while building the `LLMApplication`.
+Caches serve to reduce re-processing embeddings, loaders and queries. There is no need to load, chunk and store a large PDF File or web page on every run. Caching smartly is built in and can be enabled out of the box simply by setting a cache processor using the method `setCache` while building the `RAGApplication`.
 
 The library supports the following caches -
 
@@ -715,10 +713,10 @@ You can use [LMDB](https://dbdb.io/db/lmdb) to cache values locally on disk.
 npm install lmdb
 ```
 
--   Set `LmdbCache` as your cache provider on `LLMApplicationBuilder`
+-   Set `LmdbCache` as your cache provider on `RAGApplicationBuilder`
 
 ```TS
-await new LLMApplicationBuilder()
+await new RAGApplicationBuilder()
 .setCache(new LmdbCache({ path: path.resolve('./cache') }))
 ```
 
@@ -728,10 +726,10 @@ await new LLMApplicationBuilder()
 
 You can use a simple in-memory cache to store values during testing.
 
--   Set `MemoryCache` as your cache provider on `LLMApplicationBuilder`
+-   Set `MemoryCache` as your cache provider on `RAGApplicationBuilder`
 
 ```TS
-await new LLMApplicationBuilder()
+await new RAGApplicationBuilder()
 .setCache(new MemoryCache())
 ```
 
@@ -741,10 +739,10 @@ await new LLMApplicationBuilder()
 
 You can use redis as a cache to store values during testing.
 
--   Set `RedisCache` as your cache provider on `LLMApplicationBuilder`
+-   Set `RedisCache` as your cache provider on `RAGApplicationBuilder`
 
 ```TS
-await new LLMApplicationBuilder()
+await new RAGApplicationBuilder()
 .setCache(new RedisCache({ ... }))
 ```
 

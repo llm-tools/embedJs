@@ -38,9 +38,9 @@ export abstract class BaseLoader<
         return `LOADER_CUSTOM_${this.uniqueId}_${key}`;
     }
 
-    protected async saveToCache(key: string, value: M) {
-        if (!BaseLoader.cache) return;
-        await BaseLoader.cache.loaderCustomSet(this.getCustomCacheKey(key), value);
+    protected async checkInCache(key: string) {
+        if (!BaseLoader.cache) return false;
+        return BaseLoader.cache.loaderCustomHas(this.getCustomCacheKey(key));
     }
 
     protected async getFromCache(key: string) {
@@ -48,9 +48,14 @@ export abstract class BaseLoader<
         return BaseLoader.cache.loaderCustomGet(this.getCustomCacheKey(key));
     }
 
-    protected async checkInCache(key: string) {
+    protected async saveToCache(key: string, value: M) {
+        if (!BaseLoader.cache) return;
+        await BaseLoader.cache.loaderCustomSet(this.getCustomCacheKey(key), value);
+    }
+
+    protected async deleteFromCache(key: string) {
         if (!BaseLoader.cache) return false;
-        return BaseLoader.cache.loaderCustomHas(this.getCustomCacheKey(key));
+        return BaseLoader.cache.loaderCustomDelete(this.getCustomCacheKey(key));
     }
 
     protected async loadIncrementalChunk(incrementalGenerator: AsyncGenerator<LoaderChunk<T>, void, void>) {

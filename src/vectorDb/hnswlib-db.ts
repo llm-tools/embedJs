@@ -1,8 +1,11 @@
 import HNSWLib from 'hnswlib-node';
+import createDebugMessages from 'debug';
+
 import { BaseDb } from '../interfaces/base-db.js';
 import { Chunk, EmbeddedChunk, Metadata } from '../global/types.js';
 
 export class HNSWDb implements BaseDb {
+    private readonly debug = createDebugMessages('embedjs:vector:HNSWDb');
     private index: HNSWLib.HierarchicalNSW;
 
     private docCount: number;
@@ -41,11 +44,12 @@ export class HNSWDb implements BaseDb {
         return this.index.getCurrentCount();
     }
 
-    async deleteKeys(_uniqueLoaderId: string): Promise<void> {
-        throw new Error('Not supported');
+    async deleteKeys(_uniqueLoaderId: string): Promise<boolean> {
+        this.debug('deleteKeys is not supported by HNSWDb');
+        return false;
     }
 
     async reset(): Promise<void> {
-        await this.index.resizeIndex(0);
+        await this.init({ dimensions: this.index.getNumDimensions() });
     }
 }

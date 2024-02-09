@@ -32,4 +32,12 @@ export class MemoryCache implements BaseCache {
     async loaderCustomHas(loaderCombinedId: string): Promise<boolean> {
         return this.loaderCustomValues.hasOwnProperty(loaderCombinedId);
     }
+
+    async deleteLoader(loaderId: string): Promise<void> {
+        delete this.loaderList[loaderId];
+    }
+
+    async loaderCustomDelete(loaderCombinedId: string): Promise<void> {
+        delete this.loaderList[loaderCombinedId];
+    }
 }

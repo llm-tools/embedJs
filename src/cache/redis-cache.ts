@@ -43,4 +43,12 @@ export class RedisCache implements BaseCache {
     async loaderCustomHas(loaderCombinedId: string): Promise<boolean> {
         return !!(await this.redis.get(loaderCombinedId));
     }
+
+    async deleteLoader(loaderId: string): Promise<void> {
+        await this.redis.del(loaderId);
+    }
+
+    async loaderCustomDelete(loaderCombinedId: string): Promise<void> {
+        await this.redis.del(loaderCombinedId);
+    }
 }

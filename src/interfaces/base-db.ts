@@ -6,6 +6,6 @@ export interface BaseDb {
     similaritySearch(query: number[], k: number): Promise<Chunk[]>;
     getVectorCount(): Promise<number>;
 
-    deleteKeys(uniqueLoaderId: string): Promise<void>;
+    deleteKeys(uniqueLoaderId: string): Promise<boolean>;
     reset(): Promise<void>;
 }

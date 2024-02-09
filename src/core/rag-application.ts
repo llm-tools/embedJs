@@ -3,14 +3,14 @@ import createDebugMessages from 'debug';
 import { BaseDb } from '../interfaces/base-db.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { AddLoaderReturn, Chunk, EmbeddedChunk, LoaderChunk } from '../global/types.js';
-import { LLMApplicationBuilder } from './llm-application-builder.js';
+import { RAGApplicationBuilder } from './rag-application-builder.js';
 import { DEFAULT_INSERT_BATCH_SIZE } from '../global/constants.js';
 import { BaseModel } from '../interfaces/base-model.js';
 import { BaseCache } from '../interfaces/base-cache.js';
-import { LLMEmbedding } from './llm-embedding.js';
+import { RAGEmbedding } from './rag-embedding.js';
 import { cleanString } from '../util/strings.js';
 
-export class LLMApplication {
+export class RAGApplication {
     private readonly debug = createDebugMessages('embedjs:core');
     private readonly initLoaders: boolean;
     private readonly queryTemplate: string;
@@ -20,7 +20,7 @@ export class LLMApplication {
     private readonly vectorDb: BaseDb;
     private readonly model: BaseModel;
 
-    constructor(llmBuilder: LLMApplicationBuilder) {
+    constructor(llmBuilder: RAGApplicationBuilder) {
         this.cache = llmBuilder.getCache();
         BaseLoader.setCache(this.cache);
 
@@ -28,21 +28,21 @@ export class LLMApplication {
         BaseModel.setDefaultTemperature(llmBuilder.getTemperature());
 
         this.queryTemplate = cleanString(llmBuilder.getQueryTemplate());
-        this.debug('Using system query template -', this.queryTemplate);
+        this.debug(`Using system query template - "${this.queryTemplate}"`);
 
         this.loaders = llmBuilder.getLoaders();
         this.vectorDb = llmBuilder.getVectorDb();
         this.searchResultCount = llmBuilder.getSearchResultCount();
         this.initLoaders = llmBuilder.getLoaderInit();
 
-        LLMEmbedding.init(llmBuilder.getEmbeddingModel());
+        RAGEmbedding.init(llmBuilder.getEmbeddingModel());
         if (!this.model) throw new SyntaxError('Model not set');
         if (!this.vectorDb) throw new SyntaxError('VectorDb not set');
     }
 
     private async embedChunks(chunks: Pick<Chunk, 'pageContent'>[]) {
         const texts = chunks.map(({ pageContent }) => pageContent);
-        return LLMEmbedding.getEmbedding().embedDocuments(texts);
+        return RAGEmbedding.getEmbedding().embedDocuments(texts);
     }
 
     private getChunkUniqueId(loaderUniqueId: string, incrementId: number) {
@@ -53,7 +53,7 @@ export class LLMApplication {
         await this.model.init();
         this.debug('Initialized LLM class');
 
-        await this.vectorDb.init({ dimensions: LLMEmbedding.getEmbedding().getDimensions() });
+        await this.vectorDb.init({ dimensions: RAGEmbedding.getEmbedding().getDimensions() });
         this.debug('Initialized vector database');
 
         if (this.cache) {
@@ -131,11 +131,13 @@ export class LLMApplication {
             const { chunkCount: previousChunkCount } = await this.cache.getLoader(uniqueId);
 
             this.debug(`Loader previously run. Deleting previous ${previousChunkCount} keys`, uniqueId);
-            if (previousChunkCount > 0) await this.vectorDb.deleteKeys(uniqueId);
+            if (previousChunkCount > 0) {
+                const deleteResult = await this.vectorDb.deleteKeys(uniqueId);
+                if (this.cache && deleteResult) await this.cache.deleteLoader(uniqueId);
+            }
         }
 
         const { newInserts, formattedChunks } = await this.batchLoadChunks(uniqueId, chunks);
-
         if (this.cache) await this.cache.addLoader(uniqueId, formattedChunks.length);
         this.debug(`Add loader completed with ${newInserts} new entries for`, uniqueId);
 
@@ -154,23 +156,38 @@ export class LLMApplication {
         return this.vectorDb.getVectorCount();
     }
 
+    public async deleteEmbeddingsFromLoader(uniqueLoaderId: string, areYouSure: boolean = false) {
+        if (!areYouSure) {
+            console.warn('Delete embeddings from loader called without confirmation. No action taken.');
+            return false;
+        }
+
+        // if (this.cache && !(await this.cache.hasLoader(uniqueLoaderId))) return false;
+
+        const deleteResult = await this.vectorDb.deleteKeys(uniqueLoaderId);
+        if (this.cache && deleteResult) await this.cache.deleteLoader(uniqueLoaderId);
+        return deleteResult;
+    }
+
     public async deleteAllEmbeddings(areYouSure: boolean = false) {
         if (!areYouSure) {
             console.warn('Reset embeddings called without confirmation. No action taken.');
-            return;
+            return false;
         }
 
         await this.vectorDb.reset();
+        return true;
     }
 
     public async getEmbeddings(cleanQuery: string) {
-        const queryEmbedded = await LLMEmbedding.getEmbedding().embedQuery(cleanQuery);
+        const queryEmbedded = await RAGEmbedding.getEmbedding().embedQuery(cleanQuery);
         return this.vectorDb.similaritySearch(queryEmbedded, this.searchResultCount);
     }
 
     public async getContext(query: string) {
         const cleanQuery = cleanString(query);
-        return this.getEmbeddings(cleanQuery);
+        const rawContext = await this.getEmbeddings(cleanQuery);
+        return [...new Map(rawContext.map((item) => [item.pageContent, item])).values()];
     }
 
     public async query(
@@ -181,7 +198,7 @@ export class LLMApplication {
         sources: string[];
     }> {
         const context = await this.getContext(userQuery);
-        const sources = [...new Set(context.map((chunk) => chunk.metadata.source))];
+        const sources = context.map((c) => c.metadata.source);
 
         return {
             sources,

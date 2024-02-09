@@ -38,6 +38,10 @@ export class WeaviateDb implements BaseDb {
                         dataType: ['text'],
                     },
                     {
+                        name: 'uniqueLoaderId',
+                        dataType: ['text'],
+                    },
+                    {
                         name: 'source',
                         dataType: ['text'],
                     },
@@ -117,7 +121,7 @@ export class WeaviateDb implements BaseDb {
         return queryResponse.data.Aggregate[this.className][0].meta.count;
     }
 
-    async deleteKeys(uniqueLoaderId: string): Promise<void> {
+    async deleteKeys(uniqueLoaderId: string): Promise<boolean> {
         await this.client.batch
             .objectsBatchDeleter()
             .withClassName(this.className)
@@ -127,6 +131,7 @@ export class WeaviateDb implements BaseDb {
                 valueTextArray: [uniqueLoaderId],
             })
             .do();
+        return true;
     }
 
     async reset(): Promise<void> {

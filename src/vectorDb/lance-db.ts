@@ -82,8 +82,9 @@ export class LanceDb implements BaseDb {
         return this.table.countRows();
     }
 
-    async deleteKeys(uniqueLoaderId: string): Promise<void> {
-        await this.table.delete(`uniqueLoaderId = "${uniqueLoaderId}"`);
+    async deleteKeys(uniqueLoaderId: string): Promise<boolean> {
+        await this.table.delete(`\`uniqueLoaderId\` = "${uniqueLoaderId}"`);
+        return true;
     }
 
     async reset(): Promise<void> {

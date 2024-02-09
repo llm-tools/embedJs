@@ -3,21 +3,21 @@ import { Document } from 'langchain/document';
 import { Chunk } from '../global/types.js';
 import { BaseEmbeddings } from '../interfaces/base-embeddings.js';
 
-export class LLMEmbedding {
-    private static singleton: LLMEmbedding;
+export class RAGEmbedding {
+    private static singleton: RAGEmbedding;
 
     public static init(embeddingModel: BaseEmbeddings) {
         if (!this.singleton) {
-            this.singleton = new LLMEmbedding(embeddingModel);
+            this.singleton = new RAGEmbedding(embeddingModel);
         }
     }
 
     public static getInstance() {
-        return LLMEmbedding.singleton;
+        return RAGEmbedding.singleton;
     }
 
     public static getEmbedding() {
-        return LLMEmbedding.getInstance().embedding;
+        return RAGEmbedding.getInstance().embedding;
     }
 
     public static translateChunks(chunks: Chunk[]) {

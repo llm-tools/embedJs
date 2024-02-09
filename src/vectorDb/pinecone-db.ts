@@ -90,11 +90,19 @@ export class PineconeDb implements BaseDb {
         return (await index.describeIndexStats()).totalRecordCount;
     }
 
-    async deleteKeys(uniqueLoaderId: string): Promise<void> {
+    async deleteKeys(uniqueLoaderId: string): Promise<boolean> {
         const index = await this.client.Index(this.projectName).namespace(this.namespace);
-        index.deleteMany({
-            uniqueLoaderId: { $eq: uniqueLoaderId },
-        });
+
+        try {
+            await index.deleteMany({ uniqueLoaderId: { $eq: uniqueLoaderId } });
+            return true;
+        } catch (e) {
+            this.debug(
+                `Failed to delete keys for loader '${uniqueLoaderId}'. 
+Pinecone does not allow deleting by metadata filtering in serverless and free (what they call starter) instances`,
+            );
+            return false;
+        }
     }
 
     async reset(): Promise<void> {

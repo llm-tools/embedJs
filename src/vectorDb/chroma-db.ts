@@ -62,15 +62,18 @@ export class ChromaDb implements BaseDb {
         return this.collection.count();
     }
 
-    async deleteKeys(uniqueLoaderId: string): Promise<void> {
+    async deleteKeys(uniqueLoaderId: string): Promise<boolean> {
         await this.collection.delete({
             where: {
                 uniqueLoaderId,
             },
         });
+        return true;
     }
 
     async reset(): Promise<void> {
-        await this.collection.delete();
+        const client = new ChromaClient({ path: this.url });
+        await client.deleteCollection({ name: ChromaDb.STATIC_COLLECTION_NAME });
+        this.collection = await client.createCollection({ name: ChromaDb.STATIC_COLLECTION_NAME });
     }
 }
