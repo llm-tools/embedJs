@@ -2,12 +2,12 @@ import 'dotenv/config';
 import * as path from 'node:path';
 import { fileURLToPath } from 'url';
 
-import { LLMApplicationBuilder, PdfLoader, WebLoader, YoutubeLoader } from '../../../src/index.js';
+import { RAGApplicationBuilder, PdfLoader, WebLoader, YoutubeLoader } from '../../../src/index.js';
 import { CohereEmbeddings } from '../../../src/embeddings/cohere-embeddings.js';
 import { LanceDb } from '../../../src/vectorDb/lance-db.js';
 
 const __filename = fileURLToPath(import.meta.url);
-const llmApplication = await new LLMApplicationBuilder()
+const llmApplication = await new RAGApplicationBuilder()
     .setEmbeddingModel(new CohereEmbeddings())
     .addLoader(new PdfLoader({ url: 'https://lamport.azurewebsites.net/pubs/paxos-simple.pdf' }))
     .addLoader(new YoutubeLoader({ videoIdOrUrl: 'https://www.youtube.com/watch?v=w2KbwC-s7pY' }))

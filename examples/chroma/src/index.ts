@@ -1,9 +1,9 @@
 import 'dotenv/config';
 
-import { LLMApplicationBuilder, PdfLoader, WebLoader } from '../../../src/index.js';
+import { RAGApplicationBuilder, PdfLoader, WebLoader } from '../../../src/index.js';
 import { ChromaDb } from '../../../src/vectorDb/chroma-db.js';
 
-const llmApplication = await new LLMApplicationBuilder()
+const llmApplication = await new RAGApplicationBuilder()
     .setSearchResultCount(30)
     .setVectorDb(new ChromaDb({ url: 'http://localhost:8000' }))
     .addLoader(new PdfLoader({ url: 'https://lamport.azurewebsites.net/pubs/paxos-simple.pdf' }))

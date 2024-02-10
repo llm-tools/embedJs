@@ -1,9 +1,9 @@
 import 'dotenv/config';
 
-import { LLMApplicationBuilder, PdfLoader, WebLoader, YoutubeLoader } from '../../../src/index.js';
+import { RAGApplicationBuilder, PdfLoader, WebLoader, YoutubeLoader } from '../../../src/index.js';
 import { HNSWDb } from '../../../src/vectorDb/hnswlib-db.js';
 
-const llmApplication = await new LLMApplicationBuilder()
+const llmApplication = await new RAGApplicationBuilder()
     .setSearchResultCount(30)
     .addLoader(new PdfLoader({ url: 'https://lamport.azurewebsites.net/pubs/paxos-simple.pdf' }))
     .addLoader(new YoutubeLoader({ videoIdOrUrl: 'https://www.youtube.com/watch?v=w2KbwC-s7pY' }))
