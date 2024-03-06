@@ -9,6 +9,7 @@ import { BaseModel } from '../interfaces/base-model.js';
 import { BaseCache } from '../interfaces/base-cache.js';
 import { RAGEmbedding } from './rag-embedding.js';
 import { cleanString } from '../util/strings.js';
+import { OpenAi3SmallEmbeddings } from '../index.js';
 
 export class RAGApplication {
     private readonly debug = createDebugMessages('embedjs:core');
@@ -35,7 +36,7 @@ export class RAGApplication {
         this.searchResultCount = llmBuilder.getSearchResultCount();
         this.initLoaders = llmBuilder.getLoaderInit();
 
-        RAGEmbedding.init(llmBuilder.getEmbeddingModel());
+        RAGEmbedding.init(llmBuilder.getEmbeddingModel() ?? new OpenAi3SmallEmbeddings());
         if (!this.model) throw new SyntaxError('Model not set');
         if (!this.vectorDb) throw new SyntaxError('VectorDb not set');
     }
@@ -66,6 +67,7 @@ export class RAGApplication {
                 await this.addLoader(loader);
             }
         }
+        this.debug('Initial loaders added');
     }
 
     private async batchLoadEmbeddings(loaderUniqueId: string, formattedChunks: Chunk[]) {

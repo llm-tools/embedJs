@@ -7,6 +7,7 @@ export class CohereEmbeddings implements BaseEmbeddings {
 
     constructor() {
         this.model = new LangChainCohereEmbeddings({
+            model: 'embed-english-v2.0',
             maxConcurrency: 3,
             maxRetries: 5,
         });
