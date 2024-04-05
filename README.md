@@ -455,7 +455,7 @@ Currently, we next plan to add support for Ollama.
 
 # Embedding models
 
-Embedding models are LLMs that convert a string into vector better suited for processing. In most cases, the default `text-embedding-ada-002` model from OpenAI is going to be good enough. If you want to use this model, you do not have to do anything.
+Embedding models are LLMs that convert a string into vector better suited for processing. In most cases, the default `text-embedding-3-small` model from OpenAI is going to be good enough. If you want to use this model, you do not have to do anything extra.
 
 However in some advanced cases, you may want to change this; after all, different embedding models perform differently under different curcumstances. The library allows you to do this using the method `setEmbeddingModel` while building the `RAGApplication`.
 
