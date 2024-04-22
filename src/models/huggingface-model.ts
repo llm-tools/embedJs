@@ -41,6 +41,7 @@ export class HuggingFace extends BaseModel {
         pastMessages.push(`Data: ${supportingContext.map((s) => s.pageContent).join('; ')}`);
 
         pastMessages.push.apply(
+            pastMessages,
             pastConversations.map((c) => {
                 if (c.sender === 'AI') return `AI: ${c.message}`;
                 return `HUMAN: ${c.message}`;
