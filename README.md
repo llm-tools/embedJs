@@ -85,6 +85,7 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [Chroma](#chroma)
     -   [HNSWLib](#hnswlib)
     -   [Weaviate](#weaviate)
+    -   [Qdrant](#qdrant)
     -   [Own Database](#bring-your-own-database)
     -   [How to request new vector databases](#more-databases-coming-soon)
 -   [Caches](#caches)
@@ -565,6 +566,8 @@ PINECONE_API_KEY=<your api key>
 -   Set the Pinecone database as your choice of `vectorDb`
 
 ```TS
+import '@llm-tools/embedjs/vectorDb/pinecone';
+
 .setVectorDb(new PineconeDb({
     projectName: 'test',
     namespace: 'dev',
@@ -592,12 +595,16 @@ npm install vectordb
 -   Set LanceDB database as your choice of `vectorDb`
 
 ```TS
+import '@llm-tools/embedjs/vectorDb/lance';
+
 .setVectorDb(new LanceDb({ path: path.resolve('/db') }))
 ```
 
 **Note:** The `path` property will be used by LanceDB to create a directory to host all the database files. There is also support for creating temporary directories for testing -
 
 ```TS
+import '@llm-tools/embedjs/vectorDb/lance';
+
 .setVectorDb(new LanceDb({ path: 'lance-', isTemp: true }))
 ```
 
@@ -616,6 +623,8 @@ npm install chromadb
 -   Set Chroma database as your choice of `vectorDb`
 
 ```TS
+import '@llm-tools/embedjs/vectorDb/chroma';
+
 .setVectorDb(new ChromaDb({ url: 'http://localhost:8000' }))
 ```
 
@@ -638,6 +647,8 @@ npm install hnswlib-node
 -   Set HNSWLib database as your choice of `vectorDb`
 
 ```TS
+import '@llm-tools/embedjs/vectorDb/hnswlib';
+
 .setVectorDb(new HNSWDb())
 ```
 
@@ -656,7 +667,27 @@ npm install weaviate-ts-client
 -   Set Weaviate database as your choice of `vectorDb`
 
 ```TS
+import '@llm-tools/embedjs/vectorDb/weaviate';
+
 .setVectorDb(new WeaviateDb({ host: '...', apiKey: '...', className: '...' }))
+```
+
+## Qdrant
+
+[Qdrant](https://qdrant.tech/) is an Open-Source Vector Database and Vector Search Engine written in Rust. To use it -
+
+-   Install Qdrant package in your project
+
+```bash
+npm install @qdrant/js-client-rest
+```
+
+-   Set Qdrant database as your choice of `vectorDb`
+
+```TS
+import '@llm-tools/embedjs/vectorDb/qdrant';
+
+.setVectorDb(new QdrantDb({ apiKey: '...'; url: '...'; clusterName: '...' }))
 ```
 
 ## Bring your own database
