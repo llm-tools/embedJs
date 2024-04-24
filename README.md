@@ -182,7 +182,7 @@ The placeholder `{0}` is replaced with the input query. In some cases, you may w
 
 ```TS
 await new RAGApplicationBuilder()
-.QueryTemplate('My own query template')
+.setQueryTemplate('My own query template')
 ```
 
 ## Get context (dry run)
