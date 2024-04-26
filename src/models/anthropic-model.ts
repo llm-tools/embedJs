@@ -1,22 +1,22 @@
 import createDebugMessages from 'debug';
-import { ChatOpenAI } from '@langchain/openai';
+import { ChatAnthropic } from '@langchain/anthropic';
 import { HumanMessage, AIMessage, SystemMessage } from '@langchain/core/messages';
 
 import { BaseModel } from '../interfaces/base-model.js';
 import { Chunk, ConversationHistory } from '../global/types.js';
 
-export class OpenAi extends BaseModel {
-    private readonly debug = createDebugMessages('embedjs:model:OpenAi');
+export class Anthropic extends BaseModel {
+    private readonly debug = createDebugMessages('embedjs:model:Anthropic');
     private readonly modelName: string;
-    private model: ChatOpenAI;
+    private model: ChatAnthropic;
 
-    constructor({ temperature, modelName }: { temperature?: number; modelName: string }) {
-        super(temperature);
-        this.modelName = modelName;
+    constructor(params?: { temperature?: number; modelName?: string }) {
+        super(params?.temperature);
+        this.modelName = params?.modelName ?? 'claude-3-sonnet-20240229';
     }
 
     override async init(): Promise<void> {
-        this.model = new ChatOpenAI({ temperature: this.temperature, model: this.modelName });
+        this.model = new ChatAnthropic({ temperature: this.temperature, model: this.modelName });
     }
 
     override async runQuery(
@@ -25,10 +25,11 @@ export class OpenAi extends BaseModel {
         supportingContext: Chunk[],
         pastConversations: ConversationHistory[],
     ): Promise<string> {
-        const pastMessages: (AIMessage | SystemMessage | HumanMessage)[] = [new SystemMessage(system)];
-        pastMessages.push(
-            new SystemMessage(`Supporting context: ${supportingContext.map((s) => s.pageContent).join('; ')}`),
-        );
+        const pastMessages: (AIMessage | SystemMessage | HumanMessage)[] = [
+            new SystemMessage(
+                `${system}. Supporting context: ${supportingContext.map((s) => s.pageContent).join('; ')}`,
+            ),
+        ];
 
         pastMessages.push.apply(
             pastConversations.map((c) => {
@@ -44,9 +45,9 @@ export class OpenAi extends BaseModel {
         );
         pastMessages.push(new HumanMessage(`${userQuery}?`));
 
-        this.debug('Executing openai model with prompt -', userQuery);
+        this.debug('Executing anthropic model with prompt -', userQuery);
         const result = await this.model.invoke(pastMessages);
-        this.debug('OpenAI response -', result);
+        this.debug('Anthropic response -', result);
         return result.content.toString();
     }
 }

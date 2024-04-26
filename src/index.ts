@@ -22,6 +22,7 @@ import { OpenAi3LargeEmbeddings } from './embeddings/openai-3large-embeddings.js
 import { OpenAi3SmallEmbeddings } from './embeddings/openai-3small-embeddings.js';
 import { Mistral } from './models/mistral-model.js';
 import { HuggingFace } from './models/huggingface-model.js';
+import { Anthropic } from './models/anthropic-model.js';
 
 export {
     RAGApplication,
@@ -48,4 +49,5 @@ export {
     OpenAi3SmallEmbeddings,
     Mistral,
     HuggingFace,
+    Anthropic,
 };

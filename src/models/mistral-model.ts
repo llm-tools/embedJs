@@ -19,7 +19,7 @@ export class Mistral extends BaseModel {
         modelName?: string;
     }) {
         super(temperature);
-        this.model = new ChatMistralAI({ apiKey: accessToken, modelName: modelName ?? 'mistral-medium' });
+        this.model = new ChatMistralAI({ apiKey: accessToken, model: modelName ?? 'mistral-medium' });
     }
 
     override async runQuery(
@@ -49,6 +49,7 @@ export class Mistral extends BaseModel {
 
         this.debug('Executing mistral model with prompt -', userQuery);
         const result = await this.model.invoke(pastMessages);
+        this.debug('Mistral response -', result);
         return result.content.toString();
     }
 }

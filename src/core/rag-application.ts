@@ -67,7 +67,7 @@ export class RAGApplication {
                 await this.addLoader(loader);
             }
         }
-        this.debug('Initial loaders added');
+        this.debug('Initialized pre-loaders');
     }
 
     private async batchLoadEmbeddings(loaderUniqueId: string, formattedChunks: Chunk[]) {

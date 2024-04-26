@@ -67,9 +67,10 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [How to request more loaders](#more-loaders-coming-soon)
 -   [LLMs](#llms)
     -   [OpenAI](#openai)
+    -   [Azure OpenAI](#azure-openai)
     -   [Mistral](#mistral)
     -   [Hugging Face](#hugging-face)
-    -   [Azure OpenAI](#azure-openai)
+    -   [Anthropic](#anthropic)
     -   [Bring your own LLMs](#use-custom-llm-model)
     -   [Request support for new LLMs](#more-llms-coming-soon)
 -   [Embedding Models](#embedding-models)
@@ -358,6 +359,36 @@ const ragApplication = await new RAGApplicationBuilder()
 
 **Note:** GPT 3.5 Turbo is used as the default model if you do not specifiy one.
 
+## Azure OpenAI
+
+In order to be able to use an OpenAI model on Azure, it first needs to be deployed. Please refer to [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/) on how to deploy a model on Azure. To run this library, you will need to deploy two models -
+
+-   text-embedding-ada
+-   GPT-3.5-turbo (or the 4 series)
+
+Once these models are deployed, using Azure OpenAI instead of the regular OpenAI is easy to do. Just follow these steps -
+
+-   Remove the `OPENAI_API_KEY` environment variable if you have set it already.
+
+-   Set the following environment variables -
+
+```bash
+# Set this to `azure`
+OPENAI_API_TYPE=azure
+# The API version you want to use
+AZURE_OPENAI_API_VERSION=2023-05-15
+# The base URL for your Azure OpenAI resource.  You can find this in the Azure portal under your Azure OpenAI resource.
+export AZURE_OPENAI_BASE_PATH=https://your-resource-name.openai.azure.com/openai/deployments
+# The API key1 or key2 for your Azure OpenAI resource
+export AZURE_OPENAI_API_KEY=<Your Azure OpenAI API key>
+# The deployment name you used for your embedding model
+AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME=text-embedding-ada-002
+# The deployment name you used for your llm
+AZURE_OPENAI_API_DEPLOYMENT_NAME=gpt-35-turbo
+```
+
+You can all set and can now run the Azure OpenAI LLMs using the [`OpenAi` model](#openai) steps detailed above.
+
 ## Mistral
 
 To use Mirstal's models, you will need to get an API Key from Mistral. You can do this from their [console](https://console.mistral.ai/user/api-keys/). Once you have obtained a key, set Mistral as your LLM of choice -
@@ -397,35 +428,29 @@ const ragApplication = await new RAGApplicationBuilder()
 
 To use these 'not-free' models via HuggingFace, you need to subscribe to their [Pro plan](https://huggingface.co/pricing) or create a custom [inference endpoint](https://ui.endpoints.huggingface.co/). It is possible to self host these models for free and run them locally via Ollama - support for which is coming soon.
 
-## Azure OpenAI
+## Anthropic
 
-In order to be able to use an OpenAI model on Azure, it first needs to be deployed. Please refer to [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/) on how to deploy a model on Azure. To run this library, you will need to deploy two models -
-
--   text-embedding-ada
--   GPT-3.5-turbo (or the 4 series)
-
-Once these models are deployed, using Azure OpenAI instead of the regular OpenAI is easy to do. Just follow these steps -
-
--   Remove the `OPENAI_API_KEY` environment variable if you have set it already.
-
--   Set the following environment variables -
+To use Anthropic's Claude models, you will need to get an API Key from Anthropic. You can do this from their [console](https://console.anthropic.com/settings/keys). Once you obtain a key, set it in the environment variable, like so -
 
 ```bash
-# Set this to `azure`
-OPENAI_API_TYPE=azure
-# The API version you want to use
-AZURE_OPENAI_API_VERSION=2023-05-15
-# The base URL for your Azure OpenAI resource.  You can find this in the Azure portal under your Azure OpenAI resource.
-export AZURE_OPENAI_BASE_PATH=https://your-resource-name.openai.azure.com/openai/deployments
-# The API key1 or key2 for your Azure OpenAI resource
-export AZURE_OPENAI_API_KEY=<Your Azure OpenAI API key>
-# The deployment name you used for your embedding model
-AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME=text-embedding-ada-002
-# The deployment name you used for your llm
-AZURE_OPENAI_API_DEPLOYMENT_NAME=gpt-35-turbo
+ANTHROPIC_API_KEY="<Your key>"
 ```
 
-You can now run the Azure OpenAI LLMs using the [`OpenAi` model](#openai) detailed above.
+Once this is done, it is relatively easy to use Anthropic's Claude in your RAG application. Simply set Anthropic as your LLM of choice -
+
+```TS
+const ragApplication = await new RAGApplicationBuilder()
+.setModel(new Anthropic())
+```
+
+By default, the `claude-3-sonnet-20240229` model from Anthropic is used. If you want to use a different Anthropic model, you can specify it via the optional parameter to the Anthropic constructor, like so -
+
+```TS
+const ragApplication = await new RAGApplicationBuilder()
+.setModel(new Anthropic({ modelName: "..." }))
+```
+
+You can read more about the various models provided by Anthropic [here](https://docs.anthropic.com/claude/docs/models-overview).
 
 ## Use custom LLM model
 
