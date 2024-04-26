@@ -203,7 +203,7 @@ await ragApplication.getEmbeddingsCount()
 
 # Loaders supported
 
-Loaders take a specific format, process the input and create chunks of the data. Currently, the library supports the following formats -
+Loaders take a specific format, process the input and create chunks of the data. You can import all the loaders from the path `@llm-tools/embedjs`. Currently, the library supports the following formats -
 
 ## Youtube video
 
@@ -321,7 +321,7 @@ If you want to add any other format, please create an [issue](https://github.com
 
 # LLMs
 
-It's relatively easy to switch between different LLMs using the library. We support the following LLMs today -
+It's relatively easy to switch between different LLMs using the library. You can import any of the LLMs from the path `@llm-tools/embedjs`. We support the following LLMs today -
 
 ## OpenAI
 
@@ -477,6 +477,8 @@ To set it as your model of choice -
 -   Set `OpenAi3LargeEmbeddings` as your embedding model on `RAGApplicationBuilder`
 
 ```TS
+import { OpenAi3LargeEmbeddings } from '@llm-tools/embedjs';
+
 await new RAGApplicationBuilder()
 .setEmbeddingModel(new OpenAi3LargeEmbeddings())
 ```
@@ -490,6 +492,8 @@ To set it as your model of choice -
 -   Set `AdaEmbeddings` as your embedding model on `RAGApplicationBuilder`
 
 ```TS
+import { AdaEmbeddings } from '@llm-tools/embedjs';
+
 await new RAGApplicationBuilder()
 .setEmbeddingModel(new AdaEmbeddings())
 ```
@@ -511,6 +515,8 @@ COHERE_API_KEY="<YOUR_KEY>"
 -   Set `CohereEmbeddings` as your embedding model on `RAGApplicationBuilder`
 
 ```TS
+import { CohereEmbeddings } from '@llm-tools/embedjs';
+
 await new RAGApplicationBuilder()
 .setEmbeddingModel(new CohereEmbeddings())
 ```
@@ -566,7 +572,7 @@ PINECONE_API_KEY=<your api key>
 -   Set the Pinecone database as your choice of `vectorDb`
 
 ```TS
-import '@llm-tools/embedjs/vectorDb/pinecone';
+import { PineconeDb } from '@llm-tools/embedjs/vectorDb/pinecone';
 
 .setVectorDb(new PineconeDb({
     projectName: 'test',
@@ -595,7 +601,7 @@ npm install vectordb
 -   Set LanceDB database as your choice of `vectorDb`
 
 ```TS
-import '@llm-tools/embedjs/vectorDb/lance';
+import { LanceDb } from '@llm-tools/embedjs/vectorDb/lance';
 
 .setVectorDb(new LanceDb({ path: path.resolve('/db') }))
 ```
@@ -603,7 +609,7 @@ import '@llm-tools/embedjs/vectorDb/lance';
 **Note:** The `path` property will be used by LanceDB to create a directory to host all the database files. There is also support for creating temporary directories for testing -
 
 ```TS
-import '@llm-tools/embedjs/vectorDb/lance';
+import { LanceDb } from '@llm-tools/embedjs/vectorDb/lance';
 
 .setVectorDb(new LanceDb({ path: 'lance-', isTemp: true }))
 ```
@@ -623,7 +629,7 @@ npm install chromadb
 -   Set Chroma database as your choice of `vectorDb`
 
 ```TS
-import '@llm-tools/embedjs/vectorDb/chroma';
+import { ChromaDb } from '@llm-tools/embedjs/vectorDb/chroma';
 
 .setVectorDb(new ChromaDb({ url: 'http://localhost:8000' }))
 ```
@@ -647,7 +653,7 @@ npm install hnswlib-node
 -   Set HNSWLib database as your choice of `vectorDb`
 
 ```TS
-import '@llm-tools/embedjs/vectorDb/hnswlib';
+import { HNSWDb } from '@llm-tools/embedjs/vectorDb/hnswlib';
 
 .setVectorDb(new HNSWDb())
 ```
@@ -667,7 +673,7 @@ npm install weaviate-ts-client
 -   Set Weaviate database as your choice of `vectorDb`
 
 ```TS
-import '@llm-tools/embedjs/vectorDb/weaviate';
+import { WeaviateDb } from '@llm-tools/embedjs/vectorDb/weaviate';
 
 .setVectorDb(new WeaviateDb({ host: '...', apiKey: '...', className: '...' }))
 ```
@@ -685,7 +691,7 @@ npm install @qdrant/js-client-rest
 -   Set Qdrant database as your choice of `vectorDb`
 
 ```TS
-import '@llm-tools/embedjs/vectorDb/qdrant';
+import { QdrantDb } from '@llm-tools/embedjs/vectorDb/qdrant';
 
 .setVectorDb(new QdrantDb({ apiKey: '...'; url: '...'; clusterName: '...' }))
 ```
@@ -747,6 +753,8 @@ npm install lmdb
 -   Set `LmdbCache` as your cache provider on `RAGApplicationBuilder`
 
 ```TS
+import { LmdbCache } from '@llm-tools/embedjs/cache/lmdb';
+
 await new RAGApplicationBuilder()
 .setCache(new LmdbCache({ path: path.resolve('./cache') }))
 ```
@@ -760,6 +768,8 @@ You can use a simple in-memory cache to store values during testing.
 -   Set `MemoryCache` as your cache provider on `RAGApplicationBuilder`
 
 ```TS
+import { MemoryCache } from '@llm-tools/embedjs/cache/memory';
+
 await new RAGApplicationBuilder()
 .setCache(new MemoryCache())
 ```
@@ -773,6 +783,8 @@ You can use redis as a cache to store values during testing.
 -   Set `RedisCache` as your cache provider on `RAGApplicationBuilder`
 
 ```TS
+import { RedisCache } from '@llm-tools/embedjs/cache/redis';
+
 await new RAGApplicationBuilder()
 .setCache(new RedisCache({ ... }))
 ```

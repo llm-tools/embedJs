@@ -191,16 +191,6 @@
             "import": "./dist/cache/redis-cache.js",
             "require": "./dist/cache/redis-cache.cjs"
         },
-        "./embeddings/ada": {
-            "types": "./dist/embeddings/ada-embeddings.d.ts",
-            "import": "./dist/embeddings/ada-embeddings.js",
-            "require": "./dist/embeddings/ada-embeddings.cjs"
-        },
-        "./embeddings/cohere": {
-            "types": "./dist/embeddings/cohere-embeddings.d.ts",
-            "import": "./dist/embeddings/cohere-embeddings.js",
-            "require": "./dist/embeddings/cohere-embeddings.cjs"
-        },
         "./package.json": "./package.json"
     }
 }

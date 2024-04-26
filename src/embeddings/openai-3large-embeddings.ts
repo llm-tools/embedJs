@@ -5,7 +5,7 @@ export class OpenAi3LargeEmbeddings implements BaseEmbeddings {
     private model: OpenAIEmbeddings;
 
     constructor() {
-        this.model = new OpenAIEmbeddings({ modelName: 'text-embedding-3-small', maxConcurrency: 3, maxRetries: 5 });
+        this.model = new OpenAIEmbeddings({ modelName: 'text-embedding-3-large', maxConcurrency: 3, maxRetries: 5 });
     }
 
     getDimensions(): number {
