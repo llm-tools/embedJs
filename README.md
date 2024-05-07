@@ -47,56 +47,64 @@ The author(s) are looking to add core maintainers for this opensource project. R
 
 # Contents
 
--   [Getting started](#getting-started)
-    -   [Installation](#installation)
-    -   [Usage](#usage)
-    -   [Temperature](#temperature)
-    -   [Search results count](#search-results-count)
-    -   [Customize the prompt](#customize-the-prompt)
-    -   [Dry run](#get-context)
--   [Loaders supported](#loaders-supported)
-    -   [PDF](#pdf-file)
-    -   [Youtube](#youtube-video)
-    -   [Youtube channels](#youtube-channel)
-    -   [Youtube search](#youtube-search)
-    -   [Web page](#web-page)
-    -   [Confluence](#confluence)
-    -   [Sitemap](#sitemap)
-    -   [Text](#text)
-    -   [Custom loader](#add-a-custom-loader)
-    -   [How to request more loaders](#more-loaders-coming-soon)
--   [LLMs](#llms)
-    -   [OpenAI](#openai)
-    -   [Azure OpenAI](#azure-openai)
-    -   [Mistral](#mistral)
-    -   [Hugging Face](#hugging-face)
-    -   [Anthropic](#anthropic)
-    -   [Bring your own LLMs](#use-custom-llm-model)
-    -   [Request support for new LLMs](#more-llms-coming-soon)
--   [Embedding Models](#embedding-models)
-    -   [OpenAI v3 Small](#openai-v3-small)
-    -   [OpenAI v3 Large](#openai-v3-large)
-    -   [ADA](#ada)
-    -   [Cohere](#cohere)
-    -   [Custom embedding models](#use-custom-embedding-model)
-    -   [Request support for embedding models](#more-embedding-models-coming-soon)
--   [Vector databases supported](#vector-databases-supported)
-    -   [Pinecone](#pinecone)
-    -   [LanceDB](#lancedb)
-    -   [Chroma](#chroma)
-    -   [HNSWLib](#hnswlib)
-    -   [Weaviate](#weaviate)
-    -   [Qdrant](#qdrant)
-    -   [Own Database](#bring-your-own-database)
-    -   [How to request new vector databases](#more-databases-coming-soon)
--   [Caches](#caches)
-    -   [Redis](#redis)
-    -   [LMDB File](#lmdb)
-    -   [In memory cache](#inmemory)
-    -   [Custom cache implementation](#bring-your-own-cache)
-    -   [How to request new cache providers](#more-caches-coming-soon)
--   [Sample projects](#sample-projects)
--   [Contributors](#contributors)
+- [EmbedJs](#embedjs)
+  - [Features](#features)
+  - [Quick note](#quick-note)
+- [Contents](#contents)
+- [Getting started](#getting-started)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Temperature](#temperature)
+  - [Search results count](#search-results-count)
+  - [Customize the prompt](#customize-the-prompt)
+  - [Get context (dry run)](#get-context-dry-run)
+  - [Get count of embedded chunks](#get-count-of-embedded-chunks)
+- [Loaders supported](#loaders-supported)
+  - [Youtube video](#youtube-video)
+  - [Youtube channel](#youtube-channel)
+  - [Youtube search](#youtube-search)
+  - [PDF file](#pdf-file)
+  - [Web page](#web-page)
+  - [Confluence](#confluence)
+  - [Sitemap](#sitemap)
+  - [Text](#text)
+  - [Add a custom loader](#add-a-custom-loader)
+  - [More loaders coming soon](#more-loaders-coming-soon)
+- [LLMs](#llms)
+  - [OpenAI](#openai)
+  - [Azure OpenAI](#azure-openai)
+  - [Mistral](#mistral)
+  - [Hugging Face](#hugging-face)
+  - [Anthropic](#anthropic)
+  - [Ollama](#ollama)
+  - [Use custom LLM model](#use-custom-llm-model)
+  - [More LLMs coming soon](#more-llms-coming-soon)
+- [Embedding models](#embedding-models)
+  - [OpenAI v3 Small](#openai-v3-small)
+  - [OpenAI v3 Large](#openai-v3-large)
+  - [Ada](#ada)
+  - [Cohere](#cohere)
+  - [Local embeddings](#local-embeddings)
+  - [Use custom embedding model](#use-custom-embedding-model)
+  - [More embedding models coming soon](#more-embedding-models-coming-soon)
+- [Vector databases supported](#vector-databases-supported)
+  - [Pinecone](#pinecone)
+  - [LanceDB](#lancedb)
+  - [Chroma](#chroma)
+  - [HNSWLib](#hnswlib)
+  - [Weaviate](#weaviate)
+  - [Qdrant](#qdrant)
+  - [Bring your own database](#bring-your-own-database)
+  - [More databases coming soon](#more-databases-coming-soon)
+- [Caches](#caches)
+  - [LMDB](#lmdb)
+  - [InMemory](#inmemory)
+  - [Redis](#redis)
+  - [Bring your own cache](#bring-your-own-cache)
+  - [More caches coming soon](#more-caches-coming-soon)
+- [Langsmith Integration](#langsmith-integration)
+- [Sample projects](#sample-projects)
+- [Contributors](#contributors)
 
 # Getting started
 
@@ -452,6 +460,18 @@ const ragApplication = await new RAGApplicationBuilder()
 
 You can read more about the various models provided by Anthropic [here](https://docs.anthropic.com/claude/docs/models-overview).
 
+## Ollama
+
+Locally running Ollama models are supported now. Installation instructions can be found from: [https://ollama.com/](https://ollama.com/). For the first time, execute `ollama run <modelname>` and use that model in the `Ollama` constructor as a `modelName`. Default port in which Ollama runs, is '11434', but if for some reason you use somthing else, you can pass `baseUrl` as the second argument:
+
+```TS
+const ragApplication = await new RAGApplicationBuilder()
+.setModel(new Ollama({ 
+    modelName: "llama3",
+    baseUrl: 'http://localhost:11434'
+}))
+```
+
 ## Use custom LLM model
 
 You can use a custom LLM model by implementing the `BaseModel` interface. Here's how that would look like -
@@ -545,6 +565,19 @@ import { CohereEmbeddings } from '@llm-tools/embedjs';
 await new RAGApplicationBuilder()
 .setEmbeddingModel(new CohereEmbeddings())
 ```
+
+## Local embeddings
+
+Run a local server with embed API endpoint that takes 'texts' as a POST action argument, transforms value to a vector representation, and returns a JSON list. Server may utilize Sentence Transformers 'all-MiniLM-L6-v2' model, for instance. The server address with a port and a model parameter count ('384' for 'all-MiniLM-L6-v2') must be provided in the `LocalEmbeddings` constructor.
+
+```TS
+import { LocalEmbeddings } from '@llm-tools/embedjs';
+
+await new RAGApplicationBuilder()
+.setEmbeddingModel(new LocalEmbeddings("http://localhost:5000/embed", 384))
+```
+
+See `examples/ollama` for a complete example.
 
 ## Use custom embedding model
 
