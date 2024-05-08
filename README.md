@@ -71,6 +71,7 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [Mistral](#mistral)
     -   [Hugging Face](#hugging-face)
     -   [Anthropic](#anthropic)
+    -   [Vertex AI](#vertex-ai)
     -   [Bring your own LLMs](#use-custom-llm-model)
     -   [Request support for new LLMs](#more-llms-coming-soon)
 -   [Embedding Models](#embedding-models)
@@ -78,6 +79,7 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [OpenAI v3 Large](#openai-v3-large)
     -   [ADA](#ada)
     -   [Cohere](#cohere)
+    -   [Vertex AI](#vertex-ai-embedding)
     -   [Custom embedding models](#use-custom-embedding-model)
     -   [Request support for embedding models](#more-embedding-models-coming-soon)
 -   [Vector databases supported](#vector-databases-supported)
@@ -452,6 +454,36 @@ const ragApplication = await new RAGApplicationBuilder()
 
 You can read more about the various models provided by Anthropic [here](https://docs.anthropic.com/claude/docs/models-overview).
 
+
+## Vertex AI
+
+[VertexAI](https://cloud.google.com/vertex-ai?hl=en) allow you to use Gemini LLM and other models on Google Cloud Platform.
+
+Supports all Gemini LLM: [model list](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models).
+
+- Authenticate by using `gcloud` CLI:
+```
+gcloud auth application-default login
+```
+- (Alternative) Authentication using Service Account with JSON key and environment variable:
+
+```bash
+GOOGLE_APPLICATION_CREDENTIALS="<Path to credentials.json>"
+```
+
+Default model is `gemini-1.0-pro`. 
+
+Example how to set it up with Gemini 1.5 Pro Preview:
+
+```TS
+const ragApplication = await new RAGApplicationBuilder()
+    .setModel(new VertexAI({ modelName: 'gemini-1.5-pro-preview-0409'}))
+    .setEmbeddingModel(new VertexAIEmbeddings())
+```
+
+See also `/examples/vertexai` for [further documentation](/examples/vertexai/README.md) about authentication options and how to use it.
+
+
 ## Use custom LLM model
 
 You can use a custom LLM model by implementing the `BaseModel` interface. Here's how that would look like -
@@ -545,6 +577,24 @@ import { CohereEmbeddings } from '@llm-tools/embedjs';
 await new RAGApplicationBuilder()
 .setEmbeddingModel(new CohereEmbeddings())
 ```
+
+
+
+## Vertex AI Embedding
+
+Embedding model `textembedding-gecko` with 768 dimensions on [VertexAI](https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-text-embeddings).
+
+You can authenticate to Vertex AI on GCP by using gcloud CLI `gcloud auth application-default login` or by setting up environment variable `GOOGLE_APPLICATION_CREDENTIALS` with path to JSON credentials for Service Account.
+
+
+```TS
+import { VertexAIEmbeddings } from '@llm-tools/embedjs';
+
+await new RAGApplicationBuilder()
+.setEmbeddingModel(new VertexAIEmbeddings())
+```
+
+For example usage of embeddings with Gemini LLM on VertexAI check `/examples/vertexai/`.
 
 ## Use custom embedding model
 
