@@ -2,8 +2,7 @@ import 'dotenv/config';
 
 import { RAGApplicationBuilder, WebLoader, YoutubeLoader, SitemapLoader } from '../../../src/index.js';
 import { HNSWDb } from '../../../src/vectorDb/hnswlib-db.js';
-import { VertexAIEmbeddings } from '../../../src/embeddings/vertexai-embeddings.js';
-import { VertexAI } from '../../../src/models/vertexai-model.js';
+import { VertexAI,VertexAIEmbeddings } from '../../../src/index.js';
 
 const llmApplication = await new RAGApplicationBuilder()
     .setModel(new VertexAI({ modelName: 'gemini-1.5-pro-preview-0409'}))
