@@ -2,11 +2,11 @@ import 'dotenv/config';
 
 import { RAGApplicationBuilder, WebLoader, YoutubeLoader, SitemapLoader } from '../../../src/index.js';
 import { HNSWDb } from '../../../src/vectorDb/hnswlib-db.js';
-import { VertexAI,VertexAIEmbeddings } from '../../../src/index.js';
+import { VertexAI,GeckoEmbedding } from '../../../src/index.js';
 
 const llmApplication = await new RAGApplicationBuilder()
     .setModel(new VertexAI({ modelName: 'gemini-1.5-pro-preview-0409'}))
-    .setEmbeddingModel(new VertexAIEmbeddings())
+    .setEmbeddingModel(new GeckoEmbedding())
     .setSearchResultCount(30)
     .setVectorDb(new HNSWDb()).build();
 

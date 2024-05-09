@@ -5,7 +5,7 @@ Example for using Gemini LLM and Embeddings with `textembedding-gecko` on Vertex
 ```
 const llmApplication = await new RAGApplicationBuilder()
     .setModel(new VertexAI({ modelName: 'gemini-1.5-pro-preview-0409'}))
-    .setEmbeddingModel(new VertexAIEmbeddings())
+    .setEmbeddingModel(new GeckoEmbedding())
 ```
 
 List of Gemini LLM models: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models.

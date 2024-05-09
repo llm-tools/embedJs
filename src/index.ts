@@ -23,7 +23,7 @@ import { OpenAi3SmallEmbeddings } from './embeddings/openai-3small-embeddings.js
 import { Mistral } from './models/mistral-model.js';
 import { HuggingFace } from './models/huggingface-model.js';
 import { Anthropic } from './models/anthropic-model.js';
-import { VertexAIEmbeddings } from './embeddings/vertexai-embeddings.js';
+import { GeckoEmbedding  } from './embeddings/gecko-embedding.js';
 import { VertexAI } from './models/vertexai-model.js';
 
 export {
@@ -52,6 +52,6 @@ export {
     Mistral,
     HuggingFace,
     Anthropic,
-    VertexAIEmbeddings,
+    GeckoEmbedding,
     VertexAI,
 };

@@ -473,12 +473,12 @@ GOOGLE_APPLICATION_CREDENTIALS="<Path to credentials.json>"
 
 Default model is `gemini-1.0-pro`. 
 
-Example how to set it up with Gemini 1.5 Pro Preview:
+Example how to set it up with Gemini 1.5 Pro Preview and `textembedding-gecko` on VertexAI:
 
 ```TS
 const ragApplication = await new RAGApplicationBuilder()
     .setModel(new VertexAI({ modelName: 'gemini-1.5-pro-preview-0409'}))
-    .setEmbeddingModel(new VertexAIEmbeddings())
+    .setEmbeddingModel(new GeckoEmbedding())
 ```
 
 See also `/examples/vertexai` for [further documentation](/examples/vertexai/README.md) about authentication options and how to use it.
@@ -580,7 +580,7 @@ await new RAGApplicationBuilder()
 
 
 
-## Vertex AI Embeddings
+## Gecko Embedding
 
 Embedding model `textembedding-gecko` with 768 dimensions on [VertexAI](https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-text-embeddings).
 
@@ -588,10 +588,10 @@ You can authenticate to Vertex AI on GCP by using gcloud CLI `gcloud auth applic
 
 
 ```TS
-import { VertexAIEmbeddings } from '@llm-tools/embedjs';
+import { GeckoEmbedding } from '@llm-tools/embedjs';
 
 await new RAGApplicationBuilder()
-.setEmbeddingModel(new VertexAIEmbeddings())
+.setEmbeddingModel(new GeckoEmbedding())
 ```
 
 For example usage of embeddings with Gemini LLM on VertexAI check `/examples/vertexai/`.
