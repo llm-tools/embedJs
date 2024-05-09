@@ -700,7 +700,7 @@ npm install weaviate-ts-client
 ```TS
 import { WeaviateDb } from '@llm-tools/embedjs/vectorDb/weaviate';
 
-.setVectorDb(new WeaviateDb({ host: '...', apiKey: '...', className: '...' }))
+.setVectorDb(new WeaviateDb({ host: '...', apiKey: '...', className: '...', scheme: '...' }))
 ```
 
 ## Qdrant

@@ -13,9 +13,9 @@ export class WeaviateDb implements BaseDb {
     private readonly className: string;
     private readonly client: WeaviateClient;
 
-    constructor({ host, apiKey, className }: { host: string; apiKey: string; className: string }) {
+    constructor({ host, apiKey, className, scheme = 'https' }: { host: string; apiKey: string; className: string; scheme: 'http' | 'https' }) {
         // @ts-ignore
-        this.client = weaviate.client({ scheme: 'https', host, apiKey: new ApiKey(apiKey) });
+        this.client = weaviate.client({ scheme, host, apiKey: new ApiKey(apiKey) });
         this.className = toTitleCase(className); // Weaviate translates the className during create to title case and errors at other places
     }
 
