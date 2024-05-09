@@ -84,7 +84,6 @@ The author(s) are looking to add core maintainers for this opensource project. R
   - [OpenAI v3 Large](#openai-v3-large)
   - [Ada](#ada)
   - [Cohere](#cohere)
-  - [Local embeddings](#local-embeddings)
   - [Use custom embedding model](#use-custom-embedding-model)
   - [More embedding models coming soon](#more-embedding-models-coming-soon)
 - [Vector databases supported](#vector-databases-supported)
@@ -565,19 +564,6 @@ import { CohereEmbeddings } from '@llm-tools/embedjs';
 await new RAGApplicationBuilder()
 .setEmbeddingModel(new CohereEmbeddings())
 ```
-
-## Local embeddings
-
-Run a local server with embed API endpoint that takes 'texts' as a POST action argument, transforms value to a vector representation, and returns a JSON list. Server may utilize Sentence Transformers 'all-MiniLM-L6-v2' model, for instance. The server address with a port and a model parameter count ('384' for 'all-MiniLM-L6-v2') must be provided in the `LocalEmbeddings` constructor.
-
-```TS
-import { LocalEmbeddings } from '@llm-tools/embedjs';
-
-await new RAGApplicationBuilder()
-.setEmbeddingModel(new LocalEmbeddings("http://localhost:5000/embed", 384))
-```
-
-See `examples/ollama` for a complete example.
 
 ## Use custom embedding model
 

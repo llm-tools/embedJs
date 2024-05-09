@@ -1,12 +1,10 @@
-import { RAGApplicationBuilder, WebLoader, YoutubeLoader, SitemapLoader, Ollama, LocalEmbeddings } from '../../../src/index.js';
+import { RAGApplicationBuilder, WebLoader, YoutubeLoader, SitemapLoader, Ollama, AdaEmbeddings } from '../../../src/index.js';
 import { HNSWDb } from '../../../src/vectorDb/hnswlib-db.js';
 
 const modelName = process.argv[2] || 'llama3';
-const serverUrl = process.argv[3] || 'http://localhost:5000/embed';
-const dimensions = parseInt(process.argv[4], 10) || 384;
 
 const llmApplication = await new RAGApplicationBuilder()
-    .setEmbeddingModel(new LocalEmbeddings( serverUrl, dimensions ))
+    .setEmbeddingModel(new AdaEmbeddings())
     .setModel(new Ollama({
         modelName: modelName,
         baseUrl: 'http://localhost:11434'
