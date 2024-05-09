@@ -62,7 +62,6 @@
         "axios": "^1.6.8",
         "confluence.js": "^1.7.4",
         "debug": "^4.3.4",
-        "google-auth-library": "^8.9.0",
         "html-to-text": "^9.0.5",
         "langchain": "^0.1.36",
         "md5": "^2.3.0",
