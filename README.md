@@ -79,7 +79,7 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [OpenAI v3 Large](#openai-v3-large)
     -   [ADA](#ada)
     -   [Cohere](#cohere)
-    -   [Vertex AI](#vertex-ai-embeddings)
+    -   [Gecko Embedding](#gecko-embedding)
     -   [Custom embedding models](#use-custom-embedding-model)
     -   [Request support for embedding models](#more-embedding-models-coming-soon)
 -   [Vector databases supported](#vector-databases-supported)
