@@ -56,6 +56,7 @@
         "@langchain/cohere": "^0.0.8",
         "@langchain/community": "^0.0.52",
         "@langchain/core": "^0.1.60",
+        "@langchain/google-vertexai": "^0.0.14",
         "@langchain/mistralai": "^0.0.19",
         "@langchain/openai": "^0.0.28",
         "axios": "^1.6.8",
