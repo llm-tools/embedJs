@@ -25,6 +25,7 @@ import { HuggingFace } from './models/huggingface-model.js';
 import { Anthropic } from './models/anthropic-model.js';
 import { GeckoEmbedding  } from './embeddings/gecko-embedding.js';
 import { VertexAI } from './models/vertexai-model.js';
+import { Ollama } from './models/ollama-model.js';
 
 export {
     RAGApplication,
@@ -54,4 +55,5 @@ export {
     Anthropic,
     GeckoEmbedding,
     VertexAI,
+    Ollama,
 };
