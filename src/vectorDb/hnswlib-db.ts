@@ -11,14 +11,11 @@ export class HNSWDb implements BaseDb {
     private docCount: number;
     private docMap: Map<number, { pageContent: string; metadata: Metadata<Record<string, string | number | boolean>> }>;
 
-    constructor() {
-        this.docCount = 0;
-        this.docMap = new Map();
-    }
-
     async init({ dimensions }: { dimensions: number }) {
         this.index = await new HNSWLib.HierarchicalNSW('cosine', dimensions);
         this.index.initIndex(0);
+        this.docMap = new Map();
+        this.docCount = 0;
     }
 
     async insertChunks(chunks: EmbeddedChunk[]): Promise<number> {

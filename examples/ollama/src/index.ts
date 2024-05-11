@@ -1,21 +1,30 @@
-import { RAGApplicationBuilder, WebLoader, YoutubeLoader, SitemapLoader, Ollama, AdaEmbeddings } from '../../../src/index.js';
+import {
+    RAGApplicationBuilder,
+    WebLoader,
+    YoutubeLoader,
+    SitemapLoader,
+    Ollama,
+    AdaEmbeddings,
+} from '../../../src/index.js';
 import { HNSWDb } from '../../../src/vectorDb/hnswlib-db.js';
 
 const modelName = process.argv[2] || 'llama3';
 
 const llmApplication = await new RAGApplicationBuilder()
     .setEmbeddingModel(new AdaEmbeddings())
-    .setModel(new Ollama({
-        modelName: modelName,
-        baseUrl: 'http://localhost:11434'
-    }))
+    .setModel(
+        new Ollama({
+            modelName: modelName,
+            baseUrl: 'http://localhost:11434',
+        }),
+    )
     .setSearchResultCount(30)
     .setVectorDb(new HNSWDb())
     .build();
 
-llmApplication.addLoader(new YoutubeLoader({ videoIdOrUrl: 'pQiT2U5E9tI' }));
-llmApplication.addLoader(new SitemapLoader({ url: 'https://tesla-info.com/sitemap.xml' }));
-llmApplication.addLoader(new WebLoader({ url: 'https://en.wikipedia.org/wiki/Tesla,_Inc.' }));
+await llmApplication.addLoader(new YoutubeLoader({ videoIdOrUrl: 'pQiT2U5E9tI' }));
+await llmApplication.addLoader(new SitemapLoader({ url: 'https://tesla-info.com/sitemap.xml' }));
+await llmApplication.addLoader(new WebLoader({ url: 'https://en.wikipedia.org/wiki/Tesla,_Inc.' }));
 
 console.log((await llmApplication.query('Who founded Tesla?')).result);
 // The founder of Tesla is Elon Musk. He co-founded the company with JB Straubel, Martin Eberhard, Marc Tarpenning, and Ian Wright in 2003. Elon Musk is also the CEO of SpaceX and Neuralink.

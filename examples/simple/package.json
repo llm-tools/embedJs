@@ -4,7 +4,7 @@
     "type": "module",
     "private": true,
     "scripts": {
-        "start": "tsc && node dist/examples/simple/src/index.js"
+        "start": "tsc && DEBUG=embedjs:* node dist/examples/simple/src/index.js"
     },
     "author": "",
     "license": "ISC",
@@ -13,6 +13,6 @@
         "ts-node": "^10.9.2"
     },
     "devDependencies": {
-        "@types/node": "^20.11.24"
+        "@types/node": "^20.12.11"
     }
 }
