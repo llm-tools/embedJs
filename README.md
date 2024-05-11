@@ -965,12 +965,11 @@ Here's a list of projects / examples built with RagKit
 | [nextjs-chatbot-template](https://github.com/llm-tools/chat-bot-nextjs-template) | A NextJS chat template - including a chat UI                            |
 | [slack-bot](https://github.com/llm-tools/slack-bot-template)                     | A slack bot that can answer questions based on learnt confluence spaces |
 
-# Contributors
+# Contributing
+
+Contributions are welcome! Please check out the issues on the repository, and feel free to open a pull request.
+For more information, please see the [contributing guidelines](CONTRIBUTING.md).
 
 <a href="https://github.com/llm-tools/embedjs/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=llm-tools/embedJs" />
 </a>
-
-<br />
-
-> Want to contribute? That is as easy as forking and sending in a PR!
