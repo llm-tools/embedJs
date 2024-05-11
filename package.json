@@ -1,6 +1,6 @@
 {
     "name": "@llm-tools/embedjs",
-    "version": "0.0.72",
+    "version": "0.0.73",
     "description": "A NodeJS RAG framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -65,7 +65,7 @@
         "html-to-text": "^9.0.5",
         "langchain": "^0.1.37",
         "md5": "^2.3.0",
-        "pdf-parse-fork": "^1.2.0",
+        "office-text-extractor": "^3.0.3",
         "sitemapper": "^3.1.8",
         "usetube": "^2.0.2",
         "uuid": "^9.0.1",

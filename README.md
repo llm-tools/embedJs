@@ -64,6 +64,8 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [Youtube channel](#youtube-channel)
     -   [Youtube search](#youtube-search)
     -   [PDF file](#pdf-file)
+    -   [Word document](#docx-file)
+    -   [Excel document](#excel-file)
     -   [Web page](#web-page)
     -   [Confluence](#confluence)
     -   [Sitemap](#sitemap)
@@ -253,13 +255,35 @@ Or, you can add a remote file -
 .addLoader(new PdfLoader({ url: 'https://lamport.azurewebsites.net/pubs/paxos-simple.pdf' }))
 ```
 
-By default, the PdfLoader uses the hash of the filePath or the Url as the loader cache key. In some cases, like when using dynamic files with the same name, you can pass in your own custom uniqueId like so -
+**Note:** Currently there is no support for PDF forms and password protected documents
+
+## Docx file
+
+To add a docx file, use `DocxLoader`. You can add a local file -
 
 ```TS
-.addLoader(new PdfLoader({ url: '<URL>', , uniqueId: 'MY_UNIQUE_ID' }))
+.addLoader(new DocxLoader({ filePath: path.resolve('paxos.docx') }))
 ```
 
-**Note:** Currently there is no support for PDF forms and password protected documents
+Or, you can add a remote file -
+
+```TS
+.addLoader(new DocxLoader({ url: 'https://xxx' }))
+```
+
+## Excel file
+
+To add an excel xlsx file, use `ExcelLoader`. You can add a local file -
+
+```TS
+.addLoader(new ExcelLoader({ filePath: path.resolve('numbers.xlsx') }))
+```
+
+Or, you can add a remote file -
+
+```TS
+.addLoader(new ExcelLoader({ url: 'https://xxx' }))
+```
 
 ## Web page
 
@@ -944,7 +968,7 @@ Here's a list of projects / examples built with RagKit
 # Contributors
 
 <a href="https://github.com/llm-tools/embedjs/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=llm-tools/embedjs" />
+  <img src="https://contrib.rocks/image?repo=llm-tools/embedJs" />
 </a>
 
 <br />

@@ -5,6 +5,8 @@ import { YoutubeLoader } from './loaders/youtube-loader.js';
 import { PdfLoader } from './loaders/pdf-loader.js';
 import { WebLoader } from './loaders/web-loader.js';
 import { JsonLoader } from './loaders/json-loader.js';
+import { ExcelLoader } from './loaders/excel-loader.js';
+import { DocxLoader } from './loaders/docx-loader.js';
 import { BaseLoader } from './interfaces/base-loader.js';
 import { BaseDb } from './interfaces/base-db.js';
 import { BaseEmbeddings } from './interfaces/base-embeddings.js';
@@ -23,7 +25,7 @@ import { OpenAi3SmallEmbeddings } from './embeddings/openai-3small-embeddings.js
 import { Mistral } from './models/mistral-model.js';
 import { HuggingFace } from './models/huggingface-model.js';
 import { Anthropic } from './models/anthropic-model.js';
-import { GeckoEmbedding  } from './embeddings/gecko-embedding.js';
+import { GeckoEmbedding } from './embeddings/gecko-embedding.js';
 import { VertexAI } from './models/vertexai-model.js';
 import { Ollama } from './models/ollama-model.js';
 
@@ -35,6 +37,8 @@ export {
     PdfLoader,
     WebLoader,
     JsonLoader,
+    DocxLoader,
+    ExcelLoader,
     BaseCache,
     BaseDb,
     BaseLoader,
