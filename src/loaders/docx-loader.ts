@@ -9,17 +9,30 @@ export class DocxLoader extends BaseLoader<{ type: 'DocxLoader' }> {
     private readonly pathOrUrl: string;
     private readonly isUrl: boolean;
 
-    constructor({ url }: { url: string });
-    constructor({ filePath }: { filePath: string });
-    constructor({ filePath, url }: { filePath?: string; url?: string }) {
-        super(`DocxLoader_${md5(filePath ? `FILE_${filePath}` : `URL_${url}`)}`);
+    constructor({}: { url: string; chunkSize?: number; chunkOverlap?: number });
+    constructor({}: { filePath: string; chunkSize?: number; chunkOverlap?: number });
+    constructor({
+        filePath,
+        url,
+        chunkSize,
+        chunkOverlap,
+    }: {
+        filePath?: string;
+        url?: string;
+        chunkSize?: number;
+        chunkOverlap?: number;
+    }) {
+        super(`DocxLoader_${md5(filePath ? `FILE_${filePath}` : `URL_${url}`)}`, chunkSize ?? 1000, chunkOverlap ?? 0);
 
         this.isUrl = filePath ? false : true;
         this.pathOrUrl = filePath ?? url;
     }
 
     override async *getChunks() {
-        const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 1000, chunkOverlap: 0 });
+        const chunker = new RecursiveCharacterTextSplitter({
+            chunkSize: this.chunkSize,
+            chunkOverlap: this.chunkOverlap,
+        });
 
         const extractor = getTextExtractor();
         const docxParsed = await extractor.extractText({ input: this.pathOrUrl, type: this.isUrl ? 'url' : 'file' });

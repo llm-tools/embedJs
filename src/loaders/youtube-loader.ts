@@ -10,13 +10,24 @@ export class YoutubeLoader extends BaseLoader<{ type: 'YoutubeLoader' }> {
     private readonly debug = createDebugMessages('embedjs:loader:YoutubeLoader');
     private readonly videoIdOrUrl: string;
 
-    constructor({ videoIdOrUrl }: { videoIdOrUrl: string }) {
-        super(`YoutubeLoader_${md5(videoIdOrUrl)}`);
+    constructor({
+        videoIdOrUrl,
+        chunkSize,
+        chunkOverlap,
+    }: {
+        videoIdOrUrl: string;
+        chunkSize?: number;
+        chunkOverlap?: number;
+    }) {
+        super(`YoutubeLoader_${md5(videoIdOrUrl)}`, chunkSize ?? 2000, chunkOverlap ?? 0);
         this.videoIdOrUrl = videoIdOrUrl;
     }
 
     override async *getChunks() {
-        const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 2000, chunkOverlap: 0 });
+        const chunker = new RecursiveCharacterTextSplitter({
+            chunkSize: this.chunkSize,
+            chunkOverlap: this.chunkOverlap,
+        });
 
         try {
             const transcripts = await YoutubeTranscript.fetchTranscript(this.videoIdOrUrl, { lang: 'en' });
