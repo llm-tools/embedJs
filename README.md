@@ -47,65 +47,65 @@ The author(s) are looking to add core maintainers for this opensource project. R
 
 # Contents
 
-- [EmbedJs](#embedjs)
-  - [Features](#features)
-  - [Quick note](#quick-note)
-- [Contents](#contents)
-- [Getting started](#getting-started)
-  - [Installation](#installation)
-  - [Usage](#usage)
-  - [Temperature](#temperature)
-  - [Search results count](#search-results-count)
-  - [Customize the prompt](#customize-the-prompt)
-  - [Get context (dry run)](#get-context-dry-run)
-  - [Get count of embedded chunks](#get-count-of-embedded-chunks)
-- [Loaders supported](#loaders-supported)
-  - [Youtube video](#youtube-video)
-  - [Youtube channel](#youtube-channel)
-  - [Youtube search](#youtube-search)
-  - [PDF file](#pdf-file)
-  - [Web page](#web-page)
-  - [Confluence](#confluence)
-  - [Sitemap](#sitemap)
-  - [Text](#text)
-  - [Add a custom loader](#add-a-custom-loader)
-  - [More loaders coming soon](#more-loaders-coming-soon)
-- [LLMs](#llms)
-  - [OpenAI](#openai)
-  - [Azure OpenAI](#azure-openai)
-  - [Mistral](#mistral)
-  - [Hugging Face](#hugging-face)
-  - [Anthropic](#anthropic)
-  - [Vertex AI](#vertex-ai)
-  - [Ollama](#ollama)
-  - [Use custom LLM model](#use-custom-llm-model)
-  - [More LLMs coming soon](#more-llms-coming-soon)
-- [Embedding models](#embedding-models)
-  - [OpenAI v3 Small](#openai-v3-small)
-  - [OpenAI v3 Large](#openai-v3-large)
-  - [Ada](#ada)
-  - [Cohere](#cohere)
-  - [Gecko Embedding](#gecko-embedding)
-  - [Use custom embedding model](#use-custom-embedding-model)
-  - [More embedding models coming soon](#more-embedding-models-coming-soon)
-- [Vector databases supported](#vector-databases-supported)
-  - [Pinecone](#pinecone)
-  - [LanceDB](#lancedb)
-  - [Chroma](#chroma)
-  - [HNSWLib](#hnswlib)
-  - [Weaviate](#weaviate)
-  - [Qdrant](#qdrant)
-  - [Bring your own database](#bring-your-own-database)
-  - [More databases coming soon](#more-databases-coming-soon)
-- [Caches](#caches)
-  - [LMDB](#lmdb)
-  - [InMemory](#inmemory)
-  - [Redis](#redis)
-  - [Bring your own cache](#bring-your-own-cache)
-  - [More caches coming soon](#more-caches-coming-soon)
-- [Langsmith Integration](#langsmith-integration)
-- [Sample projects](#sample-projects)
-- [Contributors](#contributors)
+-   [EmbedJs](#embedjs)
+    -   [Features](#features)
+    -   [Quick note](#quick-note)
+-   [Contents](#contents)
+-   [Getting started](#getting-started)
+    -   [Installation](#installation)
+    -   [Usage](#usage)
+    -   [Temperature](#temperature)
+    -   [Search results count](#search-results-count)
+    -   [Customize the prompt](#customize-the-prompt)
+    -   [Get context (dry run)](#get-context-dry-run)
+    -   [Get count of embedded chunks](#get-count-of-embedded-chunks)
+-   [Loaders supported](#loaders-supported)
+    -   [Youtube video](#youtube-video)
+    -   [Youtube channel](#youtube-channel)
+    -   [Youtube search](#youtube-search)
+    -   [PDF file](#pdf-file)
+    -   [Web page](#web-page)
+    -   [Confluence](#confluence)
+    -   [Sitemap](#sitemap)
+    -   [Text](#text)
+    -   [Add a custom loader](#add-a-custom-loader)
+    -   [More loaders coming soon](#more-loaders-coming-soon)
+-   [LLMs](#llms)
+    -   [OpenAI](#openai)
+    -   [Azure OpenAI](#azure-openai)
+    -   [Mistral](#mistral)
+    -   [Hugging Face](#hugging-face)
+    -   [Anthropic](#anthropic)
+    -   [Vertex AI](#vertex-ai)
+    -   [Ollama](#ollama)
+    -   [Use custom LLM model](#use-custom-llm-model)
+    -   [More LLMs coming soon](#more-llms-coming-soon)
+-   [Embedding models](#embedding-models)
+    -   [OpenAI v3 Small](#openai-v3-small)
+    -   [OpenAI v3 Large](#openai-v3-large)
+    -   [Ada](#ada)
+    -   [Cohere](#cohere)
+    -   [Gecko Embedding](#gecko-embedding)
+    -   [Use custom embedding model](#use-custom-embedding-model)
+    -   [More embedding models coming soon](#more-embedding-models-coming-soon)
+-   [Vector databases supported](#vector-databases-supported)
+    -   [Pinecone](#pinecone)
+    -   [LanceDB](#lancedb)
+    -   [Chroma](#chroma)
+    -   [HNSWLib](#hnswlib)
+    -   [Weaviate](#weaviate)
+    -   [Qdrant](#qdrant)
+    -   [Bring your own database](#bring-your-own-database)
+    -   [More databases coming soon](#more-databases-coming-soon)
+-   [Caches](#caches)
+    -   [LMDB](#lmdb)
+    -   [InMemory](#inmemory)
+    -   [Redis](#redis)
+    -   [Bring your own cache](#bring-your-own-cache)
+    -   [More caches coming soon](#more-caches-coming-soon)
+-   [Langsmith Integration](#langsmith-integration)
+-   [Sample projects](#sample-projects)
+-   [Contributors](#contributors)
 
 # Getting started
 
@@ -461,26 +461,25 @@ const ragApplication = await new RAGApplicationBuilder()
 
 You can read more about the various models provided by Anthropic [here](https://docs.anthropic.com/claude/docs/models-overview).
 
-
 ## Vertex AI
 
-[VertexAI](https://cloud.google.com/vertex-ai?hl=en) allow you to use Gemini LLM and other models on Google Cloud Platform.
+You to use Gemini LLM and other models on Google Cloud Platform via [VertexAI](https://cloud.google.com/vertex-ai?hl=en). Read more about all the supported [LLMs](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models).
 
-Supports all Gemini LLM: [model list](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models).
+To get started, you need to set the right access credentials to google cloud. You have two options here -
 
-- Authenticate by using `gcloud` CLI:
+-   Authenticate by using `gcloud` CLI:
+
 ```
 gcloud auth application-default login
 ```
-- (Alternative) Authentication using Service Account with JSON key and environment variable:
+
+-   Authentication using Service Account with JSON key and environment variable:
 
 ```bash
 GOOGLE_APPLICATION_CREDENTIALS="<Path to credentials.json>"
 ```
 
-Default model is `gemini-1.0-pro`. 
-
-Example how to set it up with Gemini 1.5 Pro Preview and `textembedding-gecko` on VertexAI:
+Once done, all you need to do is set the model to `VertexAI`. Here's an example -
 
 ```TS
 const ragApplication = await new RAGApplicationBuilder()
@@ -490,18 +489,23 @@ const ragApplication = await new RAGApplicationBuilder()
 
 See also `/examples/vertexai` for [further documentation](/examples/vertexai/README.md) about authentication options and how to use it.
 
+**Note:** Default model is `gemini-1.0-pro`.
 
 ## Ollama
 
-Locally running Ollama models are supported now. Installation instructions can be found from: [https://ollama.com/](https://ollama.com/). For the first time, execute `ollama run <modelname>` and use that model in the `Ollama` constructor as a `modelName`. Default port in which Ollama runs, is '11434', but if for some reason you use something else, you can pass `baseUrl` with the port number as the second argument:
+You can also use locally running Ollama models. Installation instructions for Ollama can be found [here](https://ollama.com/).
+
+Once Ollama is installed, you can start a local LLM by executing `ollama run <modelname>`. Once this is done, you can use that in the `Ollama` constructor by passing the `modelName` parameter. Here's an example -
 
 ```TS
 const ragApplication = await new RAGApplicationBuilder()
-.setModel(new Ollama({ 
+.setModel(new Ollama({
     modelName: "llama3",
     baseUrl: 'http://localhost:11434'
 }))
 ```
+
+**Note:** Default port in which Ollama runs, is `11434`, but if for some reason you use something else, you can pass `baseUrl` with the port number as the second argument:
 
 ## Use custom LLM model
 
@@ -597,14 +601,11 @@ await new RAGApplicationBuilder()
 .setEmbeddingModel(new CohereEmbeddings())
 ```
 
-
-
 ## Gecko Embedding
 
-Embedding model `textembedding-gecko` with 768 dimensions on [VertexAI](https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-text-embeddings).
+The libaray supports the embedding model `textembedding-gecko` with 768 dimensions on [VertexAI](https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-text-embeddings).
 
-You can authenticate to Vertex AI on GCP by using gcloud CLI `gcloud auth application-default login` or by setting up environment variable `GOOGLE_APPLICATION_CREDENTIALS` with path to JSON credentials for Service Account.
-
+To use this, you can authenticate to Vertex AI on GCP. Refer [here](#vertex-ai) on how to do this. Once done, simply set `GeckoEmbedding` as your choice of embedding model, like so -
 
 ```TS
 import { GeckoEmbedding } from '@llm-tools/embedjs';
@@ -613,7 +614,7 @@ await new RAGApplicationBuilder()
 .setEmbeddingModel(new GeckoEmbedding())
 ```
 
-For example usage of embeddings with Gemini LLM on VertexAI check `/examples/vertexai/`.
+For example usage of GeckoEmbedding with Gemini LLM on VertexAI check the folder `/examples/vertexai/`.
 
 ## Use custom embedding model
 
