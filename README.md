@@ -70,6 +70,7 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [Confluence](#confluence)
     -   [Sitemap](#sitemap)
     -   [Text](#text)
+    -   [Json](#json)
     -   [Add a custom loader](#add-a-custom-loader)
     -   [More loaders coming soon](#more-loaders-coming-soon)
 -   [LLMs](#llms)
@@ -213,6 +214,16 @@ You can fetch the count of embeddedings stored in your vector database at any ti
 await ragApplication.getEmbeddingsCount()
 ```
 
+## Add new loaders later
+
+You can add new loaders at any point dynamically (even after calling the `build` function on `RAGApplicationBuilder`). To do this, simply call the `addLoader` method -
+
+```TS
+await ragApplication.addLoader(new YoutubeLoader({ videoIdOrUrl: 'pQiT2U5E9tI' }));
+```
+
+**Note:** Do not forget to await the dynamically added loaders to ensure you wait for the load to complete before making queries on it.
+
 # Loaders supported
 
 Loaders take a specific format, process the input and create chunks of the data. You can import all the loaders from the path `@llm-tools/embedjs`. Currently, the library supports the following formats -
@@ -329,7 +340,17 @@ To supply your own text, use `TextLoader`.
 .addLoader(new TextLoader({ text: 'The best company name for a company making colorful socks is MrSocks' }))
 ```
 
-**Note:** Feel free to add your custom text without worrying about duplication. The library will chuck, cache and update the vector databases.
+**Note:** Feel free to add your custom text without worrying about duplication. The library will chuck, cache and update the vector databases without duplication.
+
+## Json
+
+To add a parsed Javascript object to your embeddings, use `JsonLoader`. The library will not parse a string to JSON on its own but once this is done, it can be injested easily.
+
+```TS
+.addLoader(new JsonLoader({ object: { key: value, ... } }))
+```
+
+**Note:** if you want to restrict the keys that get added to the vectorDb in a dynamically obtained object, you can use the `pickKeysForEmbedding` optional parameter in the `JsonLoader` constructor.
 
 ## Add a custom loader
 
