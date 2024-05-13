@@ -47,52 +47,67 @@ The author(s) are looking to add core maintainers for this opensource project. R
 
 # Contents
 
+-   [EmbedJs](#embedjs)
+    -   [Features](#features)
+    -   [Quick note](#quick-note)
+-   [Contents](#contents)
 -   [Getting started](#getting-started)
     -   [Installation](#installation)
     -   [Usage](#usage)
     -   [Temperature](#temperature)
     -   [Search results count](#search-results-count)
     -   [Customize the prompt](#customize-the-prompt)
-    -   [Dry run](#get-context)
+    -   [Get context (dry run)](#get-context-dry-run)
+    -   [Get count of embedded chunks](#get-count-of-embedded-chunks)
+    -   [Dynamic loaders](#add-new-loaders-later)
 -   [Loaders supported](#loaders-supported)
-    -   [PDF](#pdf-file)
-    -   [Youtube](#youtube-video)
-    -   [Youtube channels](#youtube-channel)
+    -   [Youtube video](#youtube-video)
+    -   [Youtube channel](#youtube-channel)
     -   [Youtube search](#youtube-search)
+    -   [PDF file](#pdf-file)
+    -   [Word document](#docx-file)
+    -   [Excel document](#excel-file)
     -   [Web page](#web-page)
     -   [Confluence](#confluence)
     -   [Sitemap](#sitemap)
     -   [Text](#text)
-    -   [Custom loader](#add-a-custom-loader)
-    -   [How to request more loaders](#more-loaders-coming-soon)
+    -   [Json](#json)
+    -   [Add a custom loader](#add-a-custom-loader)
+    -   [More loaders coming soon](#more-loaders-coming-soon)
 -   [LLMs](#llms)
     -   [OpenAI](#openai)
+    -   [Azure OpenAI](#azure-openai)
     -   [Mistral](#mistral)
     -   [Hugging Face](#hugging-face)
-    -   [Azure OpenAI](#azure-openai)
-    -   [Bring your own LLMs](#use-custom-llm-model)
-    -   [Request support for new LLMs](#more-llms-coming-soon)
--   [Embedding Models](#embedding-models)
+    -   [Anthropic](#anthropic)
+    -   [Vertex AI](#vertex-ai)
+    -   [Ollama](#ollama)
+    -   [Use custom LLM model](#use-custom-llm-model)
+    -   [More LLMs coming soon](#more-llms-coming-soon)
+-   [Embedding models](#embedding-models)
     -   [OpenAI v3 Small](#openai-v3-small)
     -   [OpenAI v3 Large](#openai-v3-large)
-    -   [ADA](#ada)
+    -   [Ada](#ada)
     -   [Cohere](#cohere)
-    -   [Custom embedding models](#use-custom-embedding-model)
-    -   [Request support for embedding models](#more-embedding-models-coming-soon)
+    -   [Gecko Embedding](#gecko-embedding)
+    -   [Use custom embedding model](#use-custom-embedding-model)
+    -   [More embedding models coming soon](#more-embedding-models-coming-soon)
 -   [Vector databases supported](#vector-databases-supported)
     -   [Pinecone](#pinecone)
     -   [LanceDB](#lancedb)
     -   [Chroma](#chroma)
     -   [HNSWLib](#hnswlib)
     -   [Weaviate](#weaviate)
-    -   [Own Database](#bring-your-own-database)
-    -   [How to request new vector databases](#more-databases-coming-soon)
+    -   [Qdrant](#qdrant)
+    -   [Bring your own database](#bring-your-own-database)
+    -   [More databases coming soon](#more-databases-coming-soon)
 -   [Caches](#caches)
+    -   [LMDB](#lmdb)
+    -   [InMemory](#inmemory)
     -   [Redis](#redis)
-    -   [LMDB File](#lmdb)
-    -   [In memory cache](#inmemory)
-    -   [Custom cache implementation](#bring-your-own-cache)
-    -   [How to request new cache providers](#more-caches-coming-soon)
+    -   [Bring your own cache](#bring-your-own-cache)
+    -   [More caches coming soon](#more-caches-coming-soon)
+-   [Langsmith Integration](#langsmith-integration)
 -   [Sample projects](#sample-projects)
 -   [Contributors](#contributors)
 
@@ -181,7 +196,7 @@ The placeholder `{0}` is replaced with the input query. In some cases, you may w
 
 ```TS
 await new RAGApplicationBuilder()
-.QueryTemplate('My own query template')
+.setQueryTemplate('My own query template')
 ```
 
 ## Get context (dry run)
@@ -200,9 +215,19 @@ You can fetch the count of embeddedings stored in your vector database at any ti
 await ragApplication.getEmbeddingsCount()
 ```
 
+## Add new loaders later
+
+You can add new loaders at any point dynamically (even after calling the `build` function on `RAGApplicationBuilder`). To do this, simply call the `addLoader` method -
+
+```TS
+await ragApplication.addLoader(new YoutubeLoader({ videoIdOrUrl: 'pQiT2U5E9tI' }));
+```
+
+**Note:** Do not forget to await the dynamically added loaders to ensure you wait for the load to complete before making queries on it.
+
 # Loaders supported
 
-Loaders take a specific format, process the input and create chunks of the data. Currently, the library supports the following formats -
+Loaders take a specific format, process the input and create chunks of the data. You can import all the loaders from the path `@llm-tools/embedjs`. Currently, the library supports the following formats -
 
 ## Youtube video
 
@@ -242,13 +267,35 @@ Or, you can add a remote file -
 .addLoader(new PdfLoader({ url: 'https://lamport.azurewebsites.net/pubs/paxos-simple.pdf' }))
 ```
 
-By default, the PdfLoader uses the hash of the filePath or the Url as the loader cache key. In some cases, like when using dynamic files with the same name, you can pass in your own custom uniqueId like so -
+**Note:** Currently there is no support for PDF forms and password protected documents
+
+## Docx file
+
+To add a docx file, use `DocxLoader`. You can add a local file -
 
 ```TS
-.addLoader(new PdfLoader({ url: '<URL>', , uniqueId: 'MY_UNIQUE_ID' }))
+.addLoader(new DocxLoader({ filePath: path.resolve('paxos.docx') }))
 ```
 
-**Note:** Currently there is no support for PDF forms and password protected documents
+Or, you can add a remote file -
+
+```TS
+.addLoader(new DocxLoader({ url: 'https://xxx' }))
+```
+
+## Excel file
+
+To add an excel xlsx file, use `ExcelLoader`. You can add a local file -
+
+```TS
+.addLoader(new ExcelLoader({ filePath: path.resolve('numbers.xlsx') }))
+```
+
+Or, you can add a remote file -
+
+```TS
+.addLoader(new ExcelLoader({ url: 'https://xxx' }))
+```
 
 ## Web page
 
@@ -294,7 +341,17 @@ To supply your own text, use `TextLoader`.
 .addLoader(new TextLoader({ text: 'The best company name for a company making colorful socks is MrSocks' }))
 ```
 
-**Note:** Feel free to add your custom text without worrying about duplication. The library will chuck, cache and update the vector databases.
+**Note:** Feel free to add your custom text without worrying about duplication. The library will chuck, cache and update the vector databases without duplication.
+
+## Json
+
+To add a parsed Javascript object to your embeddings, use `JsonLoader`. The library will not parse a string to JSON on its own but once this is done, it can be injested easily.
+
+```TS
+.addLoader(new JsonLoader({ object: { key: value, ... } }))
+```
+
+**Note:** if you want to restrict the keys that get added to the vectorDb in a dynamically obtained object, you can use the `pickKeysForEmbedding` optional parameter in the `JsonLoader` constructor.
 
 ## Add a custom loader
 
@@ -320,7 +377,7 @@ If you want to add any other format, please create an [issue](https://github.com
 
 # LLMs
 
-It's relatively easy to switch between different LLMs using the library. We support the following LLMs today -
+It's relatively easy to switch between different LLMs using the library. You can import any of the LLMs from the path `@llm-tools/embedjs`. We support the following LLMs today -
 
 ## OpenAI
 
@@ -356,6 +413,36 @@ const ragApplication = await new RAGApplicationBuilder()
 ```
 
 **Note:** GPT 3.5 Turbo is used as the default model if you do not specifiy one.
+
+## Azure OpenAI
+
+In order to be able to use an OpenAI model on Azure, it first needs to be deployed. Please refer to [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/) on how to deploy a model on Azure. To run this library, you will need to deploy two models -
+
+-   text-embedding-ada
+-   GPT-3.5-turbo (or the 4 series)
+
+Once these models are deployed, using Azure OpenAI instead of the regular OpenAI is easy to do. Just follow these steps -
+
+-   Remove the `OPENAI_API_KEY` environment variable if you have set it already.
+
+-   Set the following environment variables -
+
+```bash
+# Set this to `azure`
+OPENAI_API_TYPE=azure
+# The API version you want to use
+AZURE_OPENAI_API_VERSION=2023-05-15
+# The base URL for your Azure OpenAI resource.  You can find this in the Azure portal under your Azure OpenAI resource.
+export AZURE_OPENAI_BASE_PATH=https://your-resource-name.openai.azure.com/openai/deployments
+# The API key1 or key2 for your Azure OpenAI resource
+export AZURE_OPENAI_API_KEY=<Your Azure OpenAI API key>
+# The deployment name you used for your embedding model
+AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME=text-embedding-ada-002
+# The deployment name you used for your llm
+AZURE_OPENAI_API_DEPLOYMENT_NAME=gpt-35-turbo
+```
+
+You can all set and can now run the Azure OpenAI LLMs using the [`OpenAi` model](#openai) steps detailed above.
 
 ## Mistral
 
@@ -396,35 +483,75 @@ const ragApplication = await new RAGApplicationBuilder()
 
 To use these 'not-free' models via HuggingFace, you need to subscribe to their [Pro plan](https://huggingface.co/pricing) or create a custom [inference endpoint](https://ui.endpoints.huggingface.co/). It is possible to self host these models for free and run them locally via Ollama - support for which is coming soon.
 
-## Azure OpenAI
+## Anthropic
 
-In order to be able to use an OpenAI model on Azure, it first needs to be deployed. Please refer to [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/) on how to deploy a model on Azure. To run this library, you will need to deploy two models -
-
--   text-embedding-ada
--   GPT-3.5-turbo (or the 4 series)
-
-Once these models are deployed, using Azure OpenAI instead of the regular OpenAI is easy to do. Just follow these steps -
-
--   Remove the `OPENAI_API_KEY` environment variable if you have set it already.
-
--   Set the following environment variables -
+To use Anthropic's Claude models, you will need to get an API Key from Anthropic. You can do this from their [console](https://console.anthropic.com/settings/keys). Once you obtain a key, set it in the environment variable, like so -
 
 ```bash
-# Set this to `azure`
-OPENAI_API_TYPE=azure
-# The API version you want to use
-AZURE_OPENAI_API_VERSION=2023-05-15
-# The base URL for your Azure OpenAI resource.  You can find this in the Azure portal under your Azure OpenAI resource.
-export AZURE_OPENAI_BASE_PATH=https://your-resource-name.openai.azure.com/openai/deployments
-# The API key1 or key2 for your Azure OpenAI resource
-export AZURE_OPENAI_API_KEY=<Your Azure OpenAI API key>
-# The deployment name you used for your embedding model
-AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME=text-embedding-ada-002
-# The deployment name you used for your llm
-AZURE_OPENAI_API_DEPLOYMENT_NAME=gpt-35-turbo
+ANTHROPIC_API_KEY="<Your key>"
 ```
 
-You can now run the Azure OpenAI LLMs using the [`OpenAi` model](#openai) detailed above.
+Once this is done, it is relatively easy to use Anthropic's Claude in your RAG application. Simply set Anthropic as your LLM of choice -
+
+```TS
+const ragApplication = await new RAGApplicationBuilder()
+.setModel(new Anthropic())
+```
+
+By default, the `claude-3-sonnet-20240229` model from Anthropic is used. If you want to use a different Anthropic model, you can specify it via the optional parameter to the Anthropic constructor, like so -
+
+```TS
+const ragApplication = await new RAGApplicationBuilder()
+.setModel(new Anthropic({ modelName: "..." }))
+```
+
+You can read more about the various models provided by Anthropic [here](https://docs.anthropic.com/claude/docs/models-overview).
+
+## Vertex AI
+
+You to use Gemini LLM and other models on Google Cloud Platform via [VertexAI](https://cloud.google.com/vertex-ai?hl=en). Read more about all the supported [LLMs](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models).
+
+To get started, you need to set the right access credentials to google cloud. You have two options here -
+
+-   Authenticate by using `gcloud` CLI:
+
+```
+gcloud auth application-default login
+```
+
+-   Authentication using Service Account with JSON key and environment variable:
+
+```bash
+GOOGLE_APPLICATION_CREDENTIALS="<Path to credentials.json>"
+```
+
+Once done, all you need to do is set the model to `VertexAI`. Here's an example -
+
+```TS
+const ragApplication = await new RAGApplicationBuilder()
+    .setModel(new VertexAI({ modelName: 'gemini-1.5-pro-preview-0409'}))
+    .setEmbeddingModel(new GeckoEmbedding())
+```
+
+See also `/examples/vertexai` for [further documentation](/examples/vertexai/README.md) about authentication options and how to use it.
+
+**Note:** Default model is `gemini-1.0-pro`.
+
+## Ollama
+
+You can also use locally running Ollama models. Installation instructions for Ollama can be found [here](https://ollama.com/).
+
+Once Ollama is installed, you can start a local LLM by executing `ollama run <modelname>`. Once this is done, you can use that in the `Ollama` constructor by passing the `modelName` parameter. Here's an example -
+
+```TS
+const ragApplication = await new RAGApplicationBuilder()
+.setModel(new Ollama({
+    modelName: "llama3",
+    baseUrl: 'http://localhost:11434'
+}))
+```
+
+**Note:** Default port in which Ollama runs, is `11434`, but if for some reason you use something else, you can pass `baseUrl` with the port number as the second argument:
 
 ## Use custom LLM model
 
@@ -455,7 +582,7 @@ Currently, we next plan to add support for Ollama.
 
 # Embedding models
 
-Embedding models are LLMs that convert a string into vector better suited for processing. In most cases, the default `text-embedding-ada-002` model from OpenAI is going to be good enough. If you want to use this model, you do not have to do anything.
+Embedding models are LLMs that convert a string into vector better suited for processing. In most cases, the default `text-embedding-3-small` model from OpenAI is going to be good enough. If you want to use this model, you do not have to do anything extra.
 
 However in some advanced cases, you may want to change this; after all, different embedding models perform differently under different curcumstances. The library allows you to do this using the method `setEmbeddingModel` while building the `RAGApplication`.
 
@@ -476,6 +603,8 @@ To set it as your model of choice -
 -   Set `OpenAi3LargeEmbeddings` as your embedding model on `RAGApplicationBuilder`
 
 ```TS
+import { OpenAi3LargeEmbeddings } from '@llm-tools/embedjs';
+
 await new RAGApplicationBuilder()
 .setEmbeddingModel(new OpenAi3LargeEmbeddings())
 ```
@@ -489,6 +618,8 @@ To set it as your model of choice -
 -   Set `AdaEmbeddings` as your embedding model on `RAGApplicationBuilder`
 
 ```TS
+import { AdaEmbeddings } from '@llm-tools/embedjs';
+
 await new RAGApplicationBuilder()
 .setEmbeddingModel(new AdaEmbeddings())
 ```
@@ -510,9 +641,26 @@ COHERE_API_KEY="<YOUR_KEY>"
 -   Set `CohereEmbeddings` as your embedding model on `RAGApplicationBuilder`
 
 ```TS
+import { CohereEmbeddings } from '@llm-tools/embedjs';
+
 await new RAGApplicationBuilder()
 .setEmbeddingModel(new CohereEmbeddings())
 ```
+
+## Gecko Embedding
+
+The libaray supports the embedding model `textembedding-gecko` with 768 dimensions on [VertexAI](https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-text-embeddings).
+
+To use this, you can authenticate to Vertex AI on GCP. Refer [here](#vertex-ai) on how to do this. Once done, simply set `GeckoEmbedding` as your choice of embedding model, like so -
+
+```TS
+import { GeckoEmbedding } from '@llm-tools/embedjs';
+
+await new RAGApplicationBuilder()
+.setEmbeddingModel(new GeckoEmbedding())
+```
+
+For example usage of GeckoEmbedding with Gemini LLM on VertexAI check the folder `/examples/vertexai/`.
 
 ## Use custom embedding model
 
@@ -565,6 +713,8 @@ PINECONE_API_KEY=<your api key>
 -   Set the Pinecone database as your choice of `vectorDb`
 
 ```TS
+import { PineconeDb } from '@llm-tools/embedjs/vectorDb/pinecone';
+
 .setVectorDb(new PineconeDb({
     projectName: 'test',
     namespace: 'dev',
@@ -592,12 +742,16 @@ npm install vectordb
 -   Set LanceDB database as your choice of `vectorDb`
 
 ```TS
+import { LanceDb } from '@llm-tools/embedjs/vectorDb/lance';
+
 .setVectorDb(new LanceDb({ path: path.resolve('/db') }))
 ```
 
 **Note:** The `path` property will be used by LanceDB to create a directory to host all the database files. There is also support for creating temporary directories for testing -
 
 ```TS
+import { LanceDb } from '@llm-tools/embedjs/vectorDb/lance';
+
 .setVectorDb(new LanceDb({ path: 'lance-', isTemp: true }))
 ```
 
@@ -616,6 +770,8 @@ npm install chromadb
 -   Set Chroma database as your choice of `vectorDb`
 
 ```TS
+import { ChromaDb } from '@llm-tools/embedjs/vectorDb/chroma';
+
 .setVectorDb(new ChromaDb({ url: 'http://localhost:8000' }))
 ```
 
@@ -638,6 +794,8 @@ npm install hnswlib-node
 -   Set HNSWLib database as your choice of `vectorDb`
 
 ```TS
+import { HNSWDb } from '@llm-tools/embedjs/vectorDb/hnswlib';
+
 .setVectorDb(new HNSWDb())
 ```
 
@@ -656,7 +814,27 @@ npm install weaviate-ts-client
 -   Set Weaviate database as your choice of `vectorDb`
 
 ```TS
-.setVectorDb(new WeaviateDb({ host: '...', apiKey: '...', className: '...' }))
+import { WeaviateDb } from '@llm-tools/embedjs/vectorDb/weaviate';
+
+.setVectorDb(new WeaviateDb({ host: '...', apiKey: '...', className: '...', scheme: '...' }))
+```
+
+## Qdrant
+
+[Qdrant](https://qdrant.tech/) is an Open-Source Vector Database and Vector Search Engine written in Rust. To use it -
+
+-   Install Qdrant package in your project
+
+```bash
+npm install @qdrant/js-client-rest
+```
+
+-   Set Qdrant database as your choice of `vectorDb`
+
+```TS
+import { QdrantDb } from '@llm-tools/embedjs/vectorDb/qdrant';
+
+.setVectorDb(new QdrantDb({ apiKey: '...'; url: '...'; clusterName: '...' }))
 ```
 
 ## Bring your own database
@@ -716,6 +894,8 @@ npm install lmdb
 -   Set `LmdbCache` as your cache provider on `RAGApplicationBuilder`
 
 ```TS
+import { LmdbCache } from '@llm-tools/embedjs/cache/lmdb';
+
 await new RAGApplicationBuilder()
 .setCache(new LmdbCache({ path: path.resolve('./cache') }))
 ```
@@ -729,6 +909,8 @@ You can use a simple in-memory cache to store values during testing.
 -   Set `MemoryCache` as your cache provider on `RAGApplicationBuilder`
 
 ```TS
+import { MemoryCache } from '@llm-tools/embedjs/cache/memory';
+
 await new RAGApplicationBuilder()
 .setCache(new MemoryCache())
 ```
@@ -742,6 +924,8 @@ You can use redis as a cache to store values during testing.
 -   Set `RedisCache` as your cache provider on `RAGApplicationBuilder`
 
 ```TS
+import { RedisCache } from '@llm-tools/embedjs/cache/redis';
+
 await new RAGApplicationBuilder()
 .setCache(new RedisCache({ ... }))
 ```
@@ -803,12 +987,11 @@ Here's a list of projects / examples built with RagKit
 | [nextjs-chatbot-template](https://github.com/llm-tools/chat-bot-nextjs-template) | A NextJS chat template - including a chat UI                            |
 | [slack-bot](https://github.com/llm-tools/slack-bot-template)                     | A slack bot that can answer questions based on learnt confluence spaces |
 
-# Contributors
+# Contributing
+
+Contributions are welcome! Please check out the issues on the repository, and feel free to open a pull request.
+For more information, please see the [contributing guidelines](CONTRIBUTING.md).
 
 <a href="https://github.com/llm-tools/embedjs/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=llm-tools/embedjs" />
+  <img src="https://contrib.rocks/image?repo=llm-tools/embedJs" />
 </a>
-
-<br />
-
-> Want to contribute? That is as easy as forking and sending in a PR!

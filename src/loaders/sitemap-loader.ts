@@ -9,8 +9,8 @@ export class SitemapLoader extends BaseLoader<{ type: 'SitemapLoader' }> {
     private readonly debug = createDebugMessages('embedjs:loader:SitemapLoader');
     private readonly url: string;
 
-    constructor({ url }: { url: string }) {
-        super(`SitemapLoader_${md5(url)}`);
+    constructor({ url, chunkSize, chunkOverlap }: { url: string; chunkSize?: number; chunkOverlap?: number }) {
+        super(`SitemapLoader_${md5(url)}`, chunkSize, chunkOverlap);
         this.url = url;
     }
 
@@ -21,7 +21,7 @@ export class SitemapLoader extends BaseLoader<{ type: 'SitemapLoader' }> {
             this.debug(`Sitemap '${this.url}' returned ${sites.length} URLs`);
 
             for (const url of sites) {
-                const webLoader = new WebLoader({ url });
+                const webLoader = new WebLoader({ url, chunkSize: this.chunkSize, chunkOverlap: this.chunkOverlap });
 
                 for await (const chunk of webLoader.getChunks()) {
                     yield {

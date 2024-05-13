@@ -1,11 +1,25 @@
-import 'dotenv/config';
+import {
+    RAGApplicationBuilder,
+    WebLoader,
+    YoutubeLoader,
+    SitemapLoader,
+    Ollama,
+    AdaEmbeddings,
+} from '../../../src/index.js';
+import { HNSWDb } from '../../../src/vectorDb/hnswlib-db.js';
 
-import { RAGApplicationBuilder, WebLoader, YoutubeLoader, SitemapLoader } from '../../../src/index.js';
-import { ChromaDb } from '../../../src/vectorDb/chroma-db.js';
+const modelName = process.argv[2] || 'llama3';
 
 const llmApplication = await new RAGApplicationBuilder()
+    .setEmbeddingModel(new AdaEmbeddings())
+    .setModel(
+        new Ollama({
+            modelName: modelName,
+            baseUrl: 'http://localhost:11434',
+        }),
+    )
     .setSearchResultCount(30)
-    .setVectorDb(new ChromaDb({ url: 'http://localhost:8000' }))
+    .setVectorDb(new HNSWDb())
     .build();
 
 await llmApplication.addLoader(new YoutubeLoader({ videoIdOrUrl: 'pQiT2U5E9tI' }));

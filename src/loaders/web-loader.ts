@@ -12,17 +12,30 @@ export class WebLoader extends BaseLoader<{ type: 'WebLoader' }> {
     private readonly contentOrUrl: string;
     private readonly isUrl: boolean;
 
-    constructor({ url }: { url: string });
-    constructor({ content }: { content: string });
-    constructor({ content, url }: { content?: string; url?: string }) {
-        super(`WebLoader_${md5(content ? `CONTENT_${content}` : `URL_${url}`)}`);
+    constructor({}: { url: string; chunkSize?: number; chunkOverlap?: number });
+    constructor({}: { content: string; chunkSize?: number; chunkOverlap?: number });
+    constructor({
+        content,
+        url,
+        chunkSize,
+        chunkOverlap,
+    }: {
+        content?: string;
+        url?: string;
+        chunkSize?: number;
+        chunkOverlap?: number;
+    }) {
+        super(`WebLoader_${md5(content ? `CONTENT_${content}` : `URL_${url}`)}`, chunkSize ?? 2000, chunkOverlap ?? 0);
 
         this.isUrl = content ? false : true;
         this.contentOrUrl = content ?? url;
     }
 
     override async *getChunks() {
-        const chunker = new RecursiveCharacterTextSplitter({ chunkSize: 2000, chunkOverlap: 0 });
+        const chunker = new RecursiveCharacterTextSplitter({
+            chunkSize: this.chunkSize,
+            chunkOverlap: this.chunkOverlap,
+        });
 
         try {
             const data = this.isUrl

@@ -16,11 +16,21 @@ export abstract class BaseLoader<
 
     protected readonly uniqueId: string;
     private readonly _canIncrementallyLoad: boolean;
+    protected readonly chunkOverlap: number;
+    protected readonly chunkSize: number;
 
-    constructor(uniqueId: string, canIncrementallyLoad: boolean = false) {
+    constructor(
+        uniqueId: string,
+        chunkSize: number = 100,
+        chunkOverlap: number = 0,
+        canIncrementallyLoad: boolean = false,
+    ) {
         super();
+
         this.uniqueId = uniqueId;
         this._canIncrementallyLoad = canIncrementallyLoad;
+        this.chunkOverlap = chunkOverlap;
+        this.chunkSize = chunkSize;
         createDebugMessages('embedjs:loader:BaseLoader')(`New loader class initalized with key ${uniqueId}`);
     }
 

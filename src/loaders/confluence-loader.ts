@@ -18,13 +18,17 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }> {
         confluenceBaseUrl,
         confluenceUsername,
         confluenceToken,
+        chunkSize,
+        chunkOverlap,
     }: {
         spaceNames: [string, ...string[]];
         confluenceBaseUrl?: string;
         confluenceUsername?: string;
         confluenceToken?: string;
+        chunkSize?: number;
+        chunkOverlap?: number;
     }) {
-        super(`ConfluenceLoader_${md5(spaceNames.join(','))}`);
+        super(`ConfluenceLoader_${md5(spaceNames.join(','))}`, chunkSize, chunkOverlap);
 
         this.spaceNames = spaceNames;
         this.confluenceBaseUrl = confluenceBaseUrl ?? process.env.CONFLUENCE_BASE_URL;
@@ -69,7 +73,11 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }> {
             });
 
             if (!content.body.view.value) continue;
-            const webLoader = new WebLoader({ content: content.body.view.value });
+            const webLoader = new WebLoader({
+                content: content.body.view.value,
+                chunkSize: this.chunkSize,
+                chunkOverlap: this.chunkOverlap,
+            });
             for await (const result of await webLoader.getChunks()) {
                 yield {
                     pageContent: result.pageContent,

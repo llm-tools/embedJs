@@ -9,8 +9,16 @@ export class YoutubeChannelLoader extends BaseLoader<{ type: 'YoutubeChannelLoad
     private readonly debug = createDebugMessages('embedjs:loader:YoutubeChannelLoader');
     private readonly channelId: string;
 
-    constructor({ channelId }: { channelId: string }) {
-        super(`YoutubeChannelLoader_${md5(channelId)}`);
+    constructor({
+        channelId,
+        chunkSize,
+        chunkOverlap,
+    }: {
+        channelId: string;
+        chunkSize?: number;
+        chunkOverlap?: number;
+    }) {
+        super(`YoutubeChannelLoader_${md5(channelId)}`, chunkSize, chunkOverlap);
         this.channelId = channelId;
     }
 
@@ -21,7 +29,11 @@ export class YoutubeChannelLoader extends BaseLoader<{ type: 'YoutubeChannelLoad
             const videoIds = videos.map((v) => v.id);
 
             for (const videoId of videoIds) {
-                const youtubeLoader = new YoutubeLoader({ videoIdOrUrl: videoId });
+                const youtubeLoader = new YoutubeLoader({
+                    videoIdOrUrl: videoId,
+                    chunkSize: this.chunkSize,
+                    chunkOverlap: this.chunkOverlap,
+                });
 
                 for await (const chunk of youtubeLoader.getChunks()) {
                     yield {

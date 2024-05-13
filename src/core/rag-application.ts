@@ -67,7 +67,7 @@ export class RAGApplication {
                 await this.addLoader(loader);
             }
         }
-        this.debug('Initial loaders added');
+        this.debug('Initialized pre-loaders');
     }
 
     private async batchLoadEmbeddings(loaderUniqueId: string, formattedChunks: Chunk[]) {
@@ -134,8 +134,7 @@ export class RAGApplication {
 
             this.debug(`Loader previously run. Deleting previous ${previousChunkCount} keys`, uniqueId);
             if (previousChunkCount > 0) {
-                const deleteResult = await this.vectorDb.deleteKeys(uniqueId);
-                if (this.cache && deleteResult) await this.cache.deleteLoader(uniqueId);
+                await this.deleteEmbeddingsFromLoader(uniqueId, true);
             }
         }
 

@@ -9,8 +9,16 @@ export class YoutubeSearchLoader extends BaseLoader<{ type: 'YoutubeSearchLoader
     private readonly debug = createDebugMessages('embedjs:loader:YoutubeSearchLoader');
     private readonly searchString: string;
 
-    constructor({ searchString }: { searchString: string }) {
-        super(`YoutubeSearchLoader${md5(searchString)}`);
+    constructor({
+        searchString,
+        chunkSize,
+        chunkOverlap,
+    }: {
+        searchString: string;
+        chunkSize?: number;
+        chunkOverlap?: number;
+    }) {
+        super(`YoutubeSearchLoader${md5(searchString)}`, chunkSize, chunkOverlap);
         this.searchString = searchString;
     }
 
@@ -23,7 +31,11 @@ export class YoutubeSearchLoader extends BaseLoader<{ type: 'YoutubeSearchLoader
             const channelIds = channels.map((c) => c.channel_id);
 
             for (const channelId of channelIds) {
-                const youtubeLoader = new YoutubeChannelLoader({ channelId });
+                const youtubeLoader = new YoutubeChannelLoader({
+                    channelId,
+                    chunkSize: this.chunkSize,
+                    chunkOverlap: this.chunkOverlap,
+                });
 
                 for await (const chunk of youtubeLoader.getChunks()) {
                     yield {

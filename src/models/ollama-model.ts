@@ -1,22 +1,30 @@
 import createDebugMessages from 'debug';
-import { ChatOpenAI } from '@langchain/openai';
-import { HumanMessage, AIMessage, SystemMessage } from '@langchain/core/messages';
+import { Ollama as ChatOllamaAI } from '@langchain/community/llms/ollama';
+import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages';
 
-import { BaseModel } from '../interfaces/base-model.js';
 import { Chunk, ConversationHistory } from '../global/types.js';
+import { BaseModel } from '../interfaces/base-model.js';
 
-export class OpenAi extends BaseModel {
-    private readonly debug = createDebugMessages('embedjs:model:OpenAi');
-    private readonly modelName: string;
-    private model: ChatOpenAI;
+export class Ollama extends BaseModel {
+    private readonly debug = createDebugMessages('embedjs:model:Ollama');
+    private model: ChatOllamaAI;
 
-    constructor({ temperature, modelName }: { temperature?: number; modelName: string }) {
+    constructor({
+        baseUrl,
+        temperature,
+        modelName
+    }: {
+        baseUrl?: string;
+        temperature?: number;
+        modelName?: string;
+    }) {
         super(temperature);
-        this.modelName = modelName;
-    }
-
-    override async init(): Promise<void> {
-        this.model = new ChatOpenAI({ temperature: this.temperature, model: this.modelName });
+        this.model = new ChatOllamaAI(
+            { 
+                model: modelName ?? 'llama2', 
+                baseUrl: baseUrl ?? "http://localhost:11434" 
+            }
+        );
     }
 
     override async runQuery(
@@ -44,9 +52,9 @@ export class OpenAi extends BaseModel {
         );
         pastMessages.push(new HumanMessage(`${userQuery}?`));
 
-        this.debug('Executing openai model with prompt -', userQuery);
+        this.debug(`Executing ollama model ${this.model} with prompt -`, userQuery);
         const result = await this.model.invoke(pastMessages);
-        this.debug('OpenAI response -', result);
-        return result.content.toString();
+        this.debug('Ollama response -', result);
+        return result.toString();
     }
 }

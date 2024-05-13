@@ -1,25 +1,23 @@
 import createDebugMessages from 'debug';
-import { ChatMistralAI } from '@langchain/mistralai';
+import { ChatVertexAI } from '@langchain/google-vertexai';
 import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages';
 
 import { Chunk, ConversationHistory } from '../global/types.js';
 import { BaseModel } from '../interfaces/base-model.js';
 
-export class Mistral extends BaseModel {
-    private readonly debug = createDebugMessages('embedjs:model:Mistral');
-    private model: ChatMistralAI;
+export class VertexAI extends BaseModel {
+    private readonly debug = createDebugMessages('embedjs:model:VertexAI');
+    private model: ChatVertexAI;
 
     constructor({
         temperature,
-        accessToken,
         modelName,
     }: {
         temperature?: number;
-        accessToken: string;
         modelName?: string;
     }) {
         super(temperature);
-        this.model = new ChatMistralAI({ apiKey: accessToken, model: modelName ?? 'mistral-medium' });
+        this.model = new ChatVertexAI({ model: modelName ?? 'gemini-1.0-pro' });
     }
 
     override async runQuery(
@@ -28,10 +26,9 @@ export class Mistral extends BaseModel {
         supportingContext: Chunk[],
         pastConversations: ConversationHistory[],
     ): Promise<string> {
-        const pastMessages: (AIMessage | SystemMessage | HumanMessage)[] = [new SystemMessage(system)];
-        pastMessages.push(
-            new SystemMessage(`Supporting context: ${supportingContext.map((s) => s.pageContent).join('; ')}`),
-        );
+        const systemString = system + '\n'
+            + `Supporting context: ${supportingContext.map((s) => s.pageContent).join('; ')}`;
+        const pastMessages: (AIMessage | SystemMessage | HumanMessage)[] = [new SystemMessage(systemString)];
 
         pastMessages.push.apply(
             pastConversations.map((c) => {
@@ -47,9 +44,9 @@ export class Mistral extends BaseModel {
         );
         pastMessages.push(new HumanMessage(`${userQuery}?`));
 
-        this.debug('Executing mistral model with prompt -', userQuery);
+        this.debug('Executing VertexAI model with prompt -', userQuery);
         const result = await this.model.invoke(pastMessages);
-        this.debug('Mistral response -', result);
+        this.debug('VertexAI response -', result);
         return result.content.toString();
     }
 }

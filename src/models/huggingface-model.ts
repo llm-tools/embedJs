@@ -53,7 +53,8 @@ export class HuggingFace extends BaseModel {
         const finalPrompt = pastMessages.join('\n');
         // this.debug('Final prompt being sent to HF - ', finalPrompt);
         this.debug(`Executing hugging face '${this.model.model}' model with prompt -`, userQuery);
-        const result = await this.model.invoke(finalPrompt, {});
+        const result = await this.model.invoke(finalPrompt);
+        this.debug('Hugging response -', result);
         return result;
     }
 }
