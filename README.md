@@ -67,6 +67,7 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [PDF file](#pdf-file)
     -   [Word document](#docx-file)
     -   [Excel document](#excel-file)
+    -   [Powerpoint document](#ppt-file)
     -   [Web page](#web-page)
     -   [Confluence](#confluence)
     -   [Sitemap](#sitemap)
@@ -295,6 +296,20 @@ Or, you can add a remote file -
 
 ```TS
 .addLoader(new ExcelLoader({ url: 'https://xxx' }))
+```
+
+## Powerpoint file
+
+To add an powerpoint / pptx file, use `PptLoader`. You can add a local file -
+
+```TS
+.addLoader(new PptLoader({ filePath: path.resolve('wow.pptx') }))
+```
+
+Or, you can add a remote file -
+
+```TS
+.addLoader(new PptLoader({ url: 'https://xxx' }))
 ```
 
 ## Web page
