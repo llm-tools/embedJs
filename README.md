@@ -67,7 +67,7 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [PDF file](#pdf-file)
     -   [Word document](#docx-file)
     -   [Excel document](#excel-file)
-    -   [Powerpoint document](#ppt-file)
+    -   [Powerpoint document](#powerpoint-file)
     -   [Web page](#web-page)
     -   [Confluence](#confluence)
     -   [Sitemap](#sitemap)
