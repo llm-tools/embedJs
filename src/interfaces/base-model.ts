@@ -36,6 +36,10 @@ export abstract class BaseModel {
         const result = await this.runQuery(system, userQuery, supportingContext, conversationHistory);
 
         conversationHistory.push({ message: userQuery, sender: 'HUMAN' });
+        conversationHistory.push({
+            message: `Old context: ${supportingContext.map((s) => s.pageContent).join('; ')}`,
+            sender: 'SYSTEM',
+        });
         conversationHistory.push({ message: result, sender: 'AI' });
         return result;
     }

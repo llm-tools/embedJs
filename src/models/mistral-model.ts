@@ -36,14 +36,9 @@ export class Mistral extends BaseModel {
         pastMessages.push.apply(
             pastMessages,
             pastConversations.map((c) => {
-                if (c.sender === 'AI')
-                    return new AIMessage({
-                        content: c.message,
-                    });
-
-                return new HumanMessage({
-                    content: c.message,
-                });
+                if (c.sender === 'AI') return new AIMessage({ content: c.message });
+                else if (c.sender === 'SYSTEM') return new SystemMessage({ content: c.message });
+                else return new HumanMessage({ content: c.message });
             }),
         );
         pastMessages.push(new HumanMessage(`${userQuery}?`));

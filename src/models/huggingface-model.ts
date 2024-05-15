@@ -44,7 +44,8 @@ export class HuggingFace extends BaseModel {
             pastMessages,
             pastConversations.map((c) => {
                 if (c.sender === 'AI') return `AI: ${c.message}`;
-                return `HUMAN: ${c.message}`;
+                else if (c.sender === 'SYSTEM') return `SYSTEM: ${c.message}`;
+                else return `HUMAN: ${c.message}`;
             }),
         );
 
