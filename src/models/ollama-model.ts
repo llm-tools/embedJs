@@ -9,22 +9,12 @@ export class Ollama extends BaseModel {
     private readonly debug = createDebugMessages('embedjs:model:Ollama');
     private model: ChatOllamaAI;
 
-    constructor({
-        baseUrl,
-        temperature,
-        modelName
-    }: {
-        baseUrl?: string;
-        temperature?: number;
-        modelName?: string;
-    }) {
+    constructor({ baseUrl, temperature, modelName }: { baseUrl?: string; temperature?: number; modelName?: string }) {
         super(temperature);
-        this.model = new ChatOllamaAI(
-            { 
-                model: modelName ?? 'llama2', 
-                baseUrl: baseUrl ?? "http://localhost:11434" 
-            }
-        );
+        this.model = new ChatOllamaAI({
+            model: modelName ?? 'llama2',
+            baseUrl: baseUrl ?? 'http://localhost:11434',
+        });
     }
 
     override async runQuery(
@@ -39,6 +29,7 @@ export class Ollama extends BaseModel {
         );
 
         pastMessages.push.apply(
+            pastMessages,
             pastConversations.map((c) => {
                 if (c.sender === 'AI')
                     return new AIMessage({

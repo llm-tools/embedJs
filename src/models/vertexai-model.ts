@@ -9,13 +9,7 @@ export class VertexAI extends BaseModel {
     private readonly debug = createDebugMessages('embedjs:model:VertexAI');
     private model: ChatVertexAI;
 
-    constructor({
-        temperature,
-        modelName,
-    }: {
-        temperature?: number;
-        modelName?: string;
-    }) {
+    constructor({ temperature, modelName }: { temperature?: number; modelName?: string }) {
         super(temperature);
         this.model = new ChatVertexAI({ model: modelName ?? 'gemini-1.0-pro' });
     }
@@ -26,11 +20,12 @@ export class VertexAI extends BaseModel {
         supportingContext: Chunk[],
         pastConversations: ConversationHistory[],
     ): Promise<string> {
-        const systemString = system + '\n'
-            + `Supporting context: ${supportingContext.map((s) => s.pageContent).join('; ')}`;
+        const systemString =
+            system + '\n' + `Supporting context: ${supportingContext.map((s) => s.pageContent).join('; ')}`;
         const pastMessages: (AIMessage | SystemMessage | HumanMessage)[] = [new SystemMessage(systemString)];
 
         pastMessages.push.apply(
+            pastMessages,
             pastConversations.map((c) => {
                 if (c.sender === 'AI')
                     return new AIMessage({
