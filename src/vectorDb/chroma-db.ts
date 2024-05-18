@@ -1,7 +1,7 @@
 import { ChromaClient, Collection } from 'chromadb';
 
 import { BaseDb } from '../interfaces/base-db.js';
-import { Chunk, EmbeddedChunk } from '../global/types.js';
+import { ExtractChunkData, InsertChunkData } from '../global/types.js';
 
 export class ChromaDb implements BaseDb {
     private static readonly STATIC_COLLECTION_NAME = 'vectors';
@@ -21,7 +21,7 @@ export class ChromaDb implements BaseDb {
         else this.collection = await client.createCollection({ name: ChromaDb.STATIC_COLLECTION_NAME });
     }
 
-    async insertChunks(chunks: EmbeddedChunk[]): Promise<number> {
+    async insertChunks(chunks: InsertChunkData[]): Promise<number> {
         const mapped = chunks.map((chunk) => {
             return {
                 id: chunk.metadata.id,
@@ -41,7 +41,7 @@ export class ChromaDb implements BaseDb {
         return mapped.length;
     }
 
-    async similaritySearch(query: number[], k: number): Promise<Chunk[]> {
+    async similaritySearch(query: number[], k: number): Promise<ExtractChunkData[]> {
         const results = await this.collection.query({
             nResults: k,
             queryEmbeddings: [query],
@@ -49,6 +49,7 @@ export class ChromaDb implements BaseDb {
 
         return results.documents[0].map((result, index) => {
             return {
+                score: results.distances[0][index],
                 pageContent: result,
                 metadata: {
                     id: results.ids[0][index],

@@ -20,7 +20,7 @@ export class JsonLoader extends BaseLoader<{ type: 'JsonLoader' }> {
         this.object = object;
     }
 
-    override async *getChunks() {
+    override async *getUnfilteredChunks() {
         const tuncatedObjectString = truncateCenterString(JSON.stringify(this.object), 50);
         const array = Array.isArray(this.object) ? this.object : [this.object];
 
@@ -40,7 +40,6 @@ export class JsonLoader extends BaseLoader<{ type: 'JsonLoader' }> {
 
             yield {
                 pageContent: s,
-                contentHash: md5(s),
                 metadata: {
                     type: <'JsonLoader'>'JsonLoader',
                     source: tuncatedObjectString,

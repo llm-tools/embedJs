@@ -10,11 +10,11 @@ export class SitemapLoader extends BaseLoader<{ type: 'SitemapLoader' }> {
     private readonly url: string;
 
     constructor({ url, chunkSize, chunkOverlap }: { url: string; chunkSize?: number; chunkOverlap?: number }) {
-        super(`SitemapLoader_${md5(url)}`, chunkSize, chunkOverlap);
+        super(`SitemapLoader_${md5(url)}`, chunkSize ?? 2000, chunkOverlap);
         this.url = url;
     }
 
-    override async *getChunks() {
+    override async *getUnfilteredChunks() {
         try {
             // @ts-ignore
             const { sites } = await new Sitemapper({ url: this.url, timeout: 15000 }).fetch();
@@ -23,7 +23,7 @@ export class SitemapLoader extends BaseLoader<{ type: 'SitemapLoader' }> {
             for (const url of sites) {
                 const webLoader = new WebLoader({ url, chunkSize: this.chunkSize, chunkOverlap: this.chunkOverlap });
 
-                for await (const chunk of webLoader.getChunks()) {
+                for await (const chunk of webLoader.getUnfilteredChunks()) {
                     yield {
                         ...chunk,
                         metadata: {

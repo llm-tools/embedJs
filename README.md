@@ -59,6 +59,7 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [Customize the prompt](#customize-the-prompt)
     -   [Get context (dry run)](#get-context-dry-run)
     -   [Get count of embedded chunks](#get-count-of-embedded-chunks)
+    -   [Set relevance cutoff](#)
     -   [Dynamic loaders](#add-new-loaders-later)
 -   [Loaders supported](#loaders-supported)
     -   [Youtube video](#youtube-video)
@@ -214,6 +215,14 @@ You can fetch the count of embeddedings stored in your vector database at any ti
 
 ```TS
 await ragApplication.getEmbeddingsCount()
+```
+
+## Set cut-off for relevance
+
+The library can filter the embeddings returned from a vector store that have a low relevance score to the query being asked. To do this, set the cut-off value using the `setEmbeddingRelevanceCutOff` method -
+
+```TS
+await ragApplication.setEmbeddingRelevanceCutOff(0.23)
 ```
 
 ## Add new loaders later

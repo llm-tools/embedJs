@@ -6,6 +6,12 @@ export type LoaderChunk<
     contentHash: string;
     metadata: LoaderMetadata<Meta>;
 };
+export type UnfilteredLoaderChunk<
+    Meta extends Record<string, string | number | boolean> = Record<string, string | number | boolean>,
+> = {
+    pageContent: string;
+    metadata: LoaderMetadata<Meta>;
+};
 
 export type Metadata<T> = T & { id: string; uniqueLoaderId: string; source: string };
 export type Chunk<Meta extends Record<string, string | number | boolean> = Record<string, string | number | boolean>> =
@@ -14,10 +20,18 @@ export type Chunk<Meta extends Record<string, string | number | boolean> = Recor
         metadata: Metadata<Meta>;
     };
 
-export type EmbeddedChunk<
+export type InsertChunkData<
     Meta extends Record<string, string | number | boolean> = Record<string, string | number | boolean>,
 > = {
     vector: number[];
+    pageContent: string;
+    metadata: Metadata<Meta>;
+};
+
+export type ExtractChunkData<
+    Meta extends Record<string, string | number | boolean> = Record<string, string | number | boolean>,
+> = {
+    score: number;
     pageContent: string;
     metadata: Metadata<Meta>;
 };

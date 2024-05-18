@@ -1,9 +1,9 @@
-import { Chunk, EmbeddedChunk } from '../global/types.js';
+import { ExtractChunkData, InsertChunkData } from '../global/types.js';
 
 export interface BaseDb {
     init({}: { dimensions: number }): Promise<void>;
-    insertChunks(chunks: EmbeddedChunk[]): Promise<number>;
-    similaritySearch(query: number[], k: number): Promise<Chunk[]>;
+    insertChunks(chunks: InsertChunkData[]): Promise<number>;
+    similaritySearch(query: number[], k: number): Promise<ExtractChunkData[]>;
     getVectorCount(): Promise<number>;
 
     deleteKeys(uniqueLoaderId: string): Promise<boolean>;

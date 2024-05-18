@@ -18,11 +18,11 @@ export class YoutubeChannelLoader extends BaseLoader<{ type: 'YoutubeChannelLoad
         chunkSize?: number;
         chunkOverlap?: number;
     }) {
-        super(`YoutubeChannelLoader_${md5(channelId)}`, chunkSize, chunkOverlap);
+        super(`YoutubeChannelLoader_${md5(channelId)}`, chunkSize ?? 2000, chunkOverlap);
         this.channelId = channelId;
     }
 
-    override async *getChunks() {
+    override async *getUnfilteredChunks() {
         try {
             const videos = await usetube.getChannelVideos(this.channelId);
             this.debug(`Channel '${this.channelId}' returned ${videos.length} videos`);
@@ -35,7 +35,7 @@ export class YoutubeChannelLoader extends BaseLoader<{ type: 'YoutubeChannelLoad
                     chunkOverlap: this.chunkOverlap,
                 });
 
-                for await (const chunk of youtubeLoader.getChunks()) {
+                for await (const chunk of youtubeLoader.getUnfilteredChunks()) {
                     yield {
                         ...chunk,
                         metadata: {

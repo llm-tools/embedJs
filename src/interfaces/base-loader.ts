@@ -1,7 +1,8 @@
+import md5 from 'md5';
 import createDebugMessages from 'debug';
 import { EventEmitter } from 'node:events';
 
-import { LoaderChunk } from '../global/types.js';
+import { LoaderChunk, UnfilteredLoaderChunk } from '../global/types.js';
 import { BaseCache } from './base-cache.js';
 
 export abstract class BaseLoader<
@@ -21,7 +22,7 @@ export abstract class BaseLoader<
 
     constructor(
         uniqueId: string,
-        chunkSize: number = 100,
+        chunkSize: number = 5,
         chunkOverlap: number = 0,
         canIncrementallyLoad: boolean = false,
     ) {
@@ -72,5 +73,23 @@ export abstract class BaseLoader<
         this.emit('incrementalChunkAvailable', incrementalGenerator);
     }
 
-    abstract getChunks(): AsyncGenerator<LoaderChunk<T>, void, void>;
+    public async *getChunks(): AsyncGenerator<LoaderChunk<T>, void, void> {
+        const chunks = await this.getUnfilteredChunks();
+
+        for await (const chunk of chunks) {
+            chunk.pageContent = chunk.pageContent
+                .replace(/(\r\n|\n|\r)/gm, ' ')
+                .replace(/\s\s+/g, ' ')
+                .trim();
+
+            if (chunk.pageContent.length > 0) {
+                yield {
+                    ...chunk,
+                    contentHash: md5(chunk.pageContent),
+                };
+            }
+        }
+    }
+
+    abstract getUnfilteredChunks(): AsyncGenerator<UnfilteredLoaderChunk<T>, void, void>;
 }

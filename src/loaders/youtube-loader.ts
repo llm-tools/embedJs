@@ -23,7 +23,7 @@ export class YoutubeLoader extends BaseLoader<{ type: 'YoutubeLoader' }> {
         this.videoIdOrUrl = videoIdOrUrl;
     }
 
-    override async *getChunks() {
+    override async *getUnfilteredChunks() {
         const chunker = new RecursiveCharacterTextSplitter({
             chunkSize: this.chunkSize,
             chunkOverlap: this.chunkOverlap,
@@ -37,7 +37,6 @@ export class YoutubeLoader extends BaseLoader<{ type: 'YoutubeLoader' }> {
                 for (const chunk of await chunker.splitText(cleanString(transcript.text))) {
                     yield {
                         pageContent: chunk,
-                        contentHash: md5(chunk),
                         metadata: {
                             type: <'YoutubeLoader'>'YoutubeLoader',
                             source: this.videoIdOrUrl,

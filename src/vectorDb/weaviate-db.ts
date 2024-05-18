@@ -1,9 +1,10 @@
 import createDebugMessages from 'debug';
 import weaviate, { WeaviateClient, ApiKey, generateUuid5 } from 'weaviate-ts-client';
+import similarity from 'compute-cosine-similarity';
 
-import { BaseDb } from '../interfaces/base-db.js';
-import { Chunk, EmbeddedChunk } from '../global/types.js';
 import { toTitleCase } from '../util/strings.js';
+import { BaseDb } from '../interfaces/base-db.js';
+import { ExtractChunkData, InsertChunkData } from '../global/types.js';
 
 export class WeaviateDb implements BaseDb {
     private readonly debug = createDebugMessages('embedjs:vector:WeaviateDb');
@@ -13,7 +14,17 @@ export class WeaviateDb implements BaseDb {
     private readonly className: string;
     private readonly client: WeaviateClient;
 
-    constructor({ host, apiKey, className, scheme = 'https' }: { host: string; apiKey: string; className: string; scheme: 'http' | 'https' }) {
+    constructor({
+        host,
+        apiKey,
+        className,
+        scheme = 'https',
+    }: {
+        host: string;
+        apiKey: string;
+        className: string;
+        scheme: 'http' | 'https';
+    }) {
         // @ts-ignore
         this.client = weaviate.client({ scheme, host, apiKey: new ApiKey(apiKey) });
         this.className = toTitleCase(className); // Weaviate translates the className during create to title case and errors at other places
@@ -53,7 +64,7 @@ export class WeaviateDb implements BaseDb {
             .do();
     }
 
-    async insertChunks(chunks: EmbeddedChunk[]): Promise<number> {
+    async insertChunks(chunks: InsertChunkData[]): Promise<number> {
         let processed = 0;
         const batcher = this.client.batch.objectsBatcher();
 
@@ -91,12 +102,12 @@ export class WeaviateDb implements BaseDb {
         return processed;
     }
 
-    async similaritySearch(query: number[], k: number): Promise<Chunk[]> {
+    async similaritySearch(query: number[], k: number): Promise<ExtractChunkData[]> {
         const queryResponse = await this.client.graphql
             .get()
             .withClassName(this.className)
             .withNearVector({ vector: query })
-            .withFields('uniqueLoaderId pageContent source')
+            .withFields('uniqueLoaderId pageContent source _additional { vector }')
             .withLimit(k)
             .do();
 
@@ -104,7 +115,11 @@ export class WeaviateDb implements BaseDb {
             const pageContent = match.pageContent;
             delete match.pageContent;
 
-            return <Chunk>{
+            const vector = match._additional.vector;
+            delete match._additional;
+
+            return {
+                score: similarity(query, vector),
                 pageContent,
                 metadata: match,
             };

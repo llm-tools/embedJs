@@ -31,7 +31,7 @@ export class WebLoader extends BaseLoader<{ type: 'WebLoader' }> {
         this.contentOrUrl = content ?? url;
     }
 
-    override async *getChunks() {
+    override async *getUnfilteredChunks() {
         const chunker = new RecursiveCharacterTextSplitter({
             chunkSize: this.chunkSize,
             chunkOverlap: this.chunkOverlap,
@@ -44,7 +44,8 @@ export class WebLoader extends BaseLoader<{ type: 'WebLoader' }> {
 
             const text = convert(data, {
                 wordwrap: false,
-            });
+                preserveNewlines: false,
+            }).replace(/(?:https?|ftp):\/\/[\n\S]+/g, '');
 
             const tuncatedObjectString = this.isUrl ? undefined : truncateCenterString(this.contentOrUrl, 50);
 
@@ -52,7 +53,6 @@ export class WebLoader extends BaseLoader<{ type: 'WebLoader' }> {
             for (const chunk of chunks) {
                 yield {
                     pageContent: chunk,
-                    contentHash: md5(chunk),
                     metadata: {
                         type: <'WebLoader'>'WebLoader',
                         source: this.isUrl ? this.contentOrUrl : tuncatedObjectString,

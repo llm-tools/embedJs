@@ -28,7 +28,7 @@ export class DocxLoader extends BaseLoader<{ type: 'DocxLoader' }> {
         this.pathOrUrl = filePath ?? url;
     }
 
-    override async *getChunks() {
+    override async *getUnfilteredChunks() {
         const chunker = new RecursiveCharacterTextSplitter({
             chunkSize: this.chunkSize,
             chunkOverlap: this.chunkOverlap,
@@ -41,7 +41,6 @@ export class DocxLoader extends BaseLoader<{ type: 'DocxLoader' }> {
         for (const chunk of chunks) {
             yield {
                 pageContent: chunk,
-                contentHash: md5(chunk),
                 metadata: {
                     type: <'DocxLoader'>'DocxLoader',
                     source: this.pathOrUrl,

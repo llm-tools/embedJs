@@ -2,7 +2,7 @@ import createDebugMessages from 'debug';
 
 import { BaseDb } from '../interfaces/base-db.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
-import { AddLoaderReturn, Chunk, EmbeddedChunk, LoaderChunk } from '../global/types.js';
+import { AddLoaderReturn, Chunk, InsertChunkData, LoaderChunk } from '../global/types.js';
 import { RAGApplicationBuilder } from './rag-application-builder.js';
 import { DEFAULT_INSERT_BATCH_SIZE } from '../global/constants.js';
 import { BaseModel } from '../interfaces/base-model.js';
@@ -20,6 +20,7 @@ export class RAGApplication {
     private readonly cache?: BaseCache;
     private readonly vectorDb: BaseDb;
     private readonly model: BaseModel;
+    private readonly embeddingRelevanceCutOff: number;
 
     constructor(llmBuilder: RAGApplicationBuilder) {
         this.cache = llmBuilder.getCache();
@@ -35,6 +36,7 @@ export class RAGApplication {
         this.vectorDb = llmBuilder.getVectorDb();
         this.searchResultCount = llmBuilder.getSearchResultCount();
         this.initLoaders = llmBuilder.getLoaderInit();
+        this.embeddingRelevanceCutOff = llmBuilder.getEmbeddingRelevanceCutOff();
 
         RAGEmbedding.init(llmBuilder.getEmbeddingModel() ?? new OpenAi3SmallEmbeddings());
         if (!this.model) throw new SyntaxError('Model not set');
@@ -77,7 +79,7 @@ export class RAGApplication {
         this.debug(`Batch embeddings (size ${formattedChunks.length}) obtained for loader`, loaderUniqueId);
 
         const embedChunks = formattedChunks.map((chunk, index) => {
-            return <EmbeddedChunk>{
+            return <InsertChunkData>{
                 pageContent: chunk.pageContent,
                 vector: embeddings[index],
                 metadata: chunk.metadata,
@@ -182,12 +184,19 @@ export class RAGApplication {
 
     public async getEmbeddings(cleanQuery: string) {
         const queryEmbedded = await RAGEmbedding.getEmbedding().embedQuery(cleanQuery);
-        return this.vectorDb.similaritySearch(queryEmbedded, this.searchResultCount);
+        const unfilteredResultSet = await this.vectorDb.similaritySearch(queryEmbedded, this.searchResultCount + 10);
+
+        return unfilteredResultSet
+            .filter((result) => result.score > this.embeddingRelevanceCutOff)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, this.searchResultCount);
     }
 
     public async getContext(query: string) {
         const cleanQuery = cleanString(query);
         const rawContext = await this.getEmbeddings(cleanQuery);
+        console.log(rawContext);
+
         return [...new Map(rawContext.map((item) => [item.pageContent, item])).values()];
     }
 

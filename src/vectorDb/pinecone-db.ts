@@ -3,7 +3,7 @@ import { Pinecone, PineconeRecord } from '@pinecone-database/pinecone';
 import createDebugMessages from 'debug';
 
 import { BaseDb } from '../interfaces/base-db.js';
-import { Chunk, EmbeddedChunk } from '../global/types.js';
+import { ExtractChunkData, InsertChunkData } from '../global/types.js';
 
 export class PineconeDb implements BaseDb {
     private readonly debug = createDebugMessages('embedjs:vector:PineconeDb');
@@ -42,7 +42,7 @@ export class PineconeDb implements BaseDb {
         });
     }
 
-    async insertChunks(chunks: EmbeddedChunk[]): Promise<number> {
+    async insertChunks(chunks: InsertChunkData[]): Promise<number> {
         let processed = 0;
         const index = this.client.Index(this.projectName).namespace(this.namespace);
 
@@ -65,7 +65,7 @@ export class PineconeDb implements BaseDb {
         return processed;
     }
 
-    async similaritySearch(query: number[], k: number): Promise<Chunk[]> {
+    async similaritySearch(query: number[], k: number): Promise<ExtractChunkData[]> {
         const index = this.client.Index(this.projectName).namespace(this.namespace);
         const queryResponse = await index.query({
             topK: k,
@@ -78,7 +78,8 @@ export class PineconeDb implements BaseDb {
             const pageContent = (<any>match.metadata).pageContent;
             delete (<any>match.metadata).pageContent;
 
-            return <Chunk>{
+            return <ExtractChunkData>{
+                score: match.score,
                 pageContent,
                 metadata: match.metadata,
             };

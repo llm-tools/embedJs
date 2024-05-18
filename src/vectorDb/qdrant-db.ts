@@ -3,7 +3,7 @@ import createDebugMessages from 'debug';
 import { v4 as uuid } from 'uuid';
 
 import { BaseDb } from '../interfaces/base-db.js';
-import { Chunk, EmbeddedChunk } from '../global/types.js';
+import { ExtractChunkData, InsertChunkData } from '../global/types.js';
 
 export class QdrantDb implements BaseDb {
     private readonly debug = createDebugMessages('embedjs:vector:QdrantDb');
@@ -36,7 +36,7 @@ export class QdrantDb implements BaseDb {
         });
     }
 
-    async insertChunks(chunks: EmbeddedChunk[]): Promise<number> {
+    async insertChunks(chunks: InsertChunkData[]): Promise<number> {
         let processed = 0;
 
         for (let i = 0; i < chunks.length; i += QdrantDb.QDRANT_INSERT_CHUNK_SIZE) {
@@ -61,7 +61,7 @@ export class QdrantDb implements BaseDb {
         return processed;
     }
 
-    async similaritySearch(query: number[], k: number): Promise<Chunk[]> {
+    async similaritySearch(query: number[], k: number): Promise<ExtractChunkData[]> {
         const queryResponse = await this.client.search(this.clusterName, {
             limit: k,
             vector: query,
@@ -72,7 +72,8 @@ export class QdrantDb implements BaseDb {
             const pageContent = (<any>match.payload).pageContent;
             delete (<any>match.payload).pageContent;
 
-            return <Chunk>{
+            return <ExtractChunkData>{
+                score: match.score,
                 pageContent,
                 metadata: match.payload,
             };

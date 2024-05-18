@@ -28,7 +28,7 @@ export class PptLoader extends BaseLoader<{ type: 'PptLoader' }> {
         this.pathOrUrl = filePath ?? url;
     }
 
-    override async *getChunks() {
+    override async *getUnfilteredChunks() {
         const chunker = new RecursiveCharacterTextSplitter({
             chunkSize: this.chunkSize,
             chunkOverlap: this.chunkOverlap,
@@ -41,7 +41,6 @@ export class PptLoader extends BaseLoader<{ type: 'PptLoader' }> {
         for (const chunk of chunks) {
             yield {
                 pageContent: chunk,
-                contentHash: md5(chunk),
                 metadata: {
                     type: <'PptLoader'>'PptLoader',
                     source: this.pathOrUrl,

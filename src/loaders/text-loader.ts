@@ -12,7 +12,7 @@ export class TextLoader extends BaseLoader<{ type: 'TextLoader' }> {
         this.text = text;
     }
 
-    override async *getChunks() {
+    override async *getUnfilteredChunks() {
         const tuncatedObjectString = truncateCenterString(this.text, 50);
         const chunker = new RecursiveCharacterTextSplitter({
             chunkSize: this.chunkSize,
@@ -23,7 +23,6 @@ export class TextLoader extends BaseLoader<{ type: 'TextLoader' }> {
         for (const chunk of chunks) {
             yield {
                 pageContent: chunk,
-                contentHash: md5(chunk),
                 metadata: {
                     type: <'TextLoader'>'TextLoader',
                     source: tuncatedObjectString,

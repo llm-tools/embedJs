@@ -1,9 +1,10 @@
 import * as fsOld from 'node:fs';
 import * as fs from 'node:fs/promises';
 import { Table, connect } from 'vectordb';
+import similarity from 'compute-cosine-similarity';
 
 import { BaseDb } from '../interfaces/base-db.js';
-import { Chunk, EmbeddedChunk } from '../global/types.js';
+import { ExtractChunkData, InsertChunkData } from '../global/types.js';
 
 export class LanceDb implements BaseDb {
     private static readonly STATIC_DB_NAME = 'vectors';
@@ -34,13 +35,14 @@ export class LanceDb implements BaseDb {
                     pageContent: 'sample',
                     vector: Array(dimensions),
                     uniqueLoaderId: 'sample',
+                    vectorString: 'sample',
                     metadata: 'sample',
                 },
             ]);
         }
     }
 
-    async insertChunks(chunks: EmbeddedChunk[]): Promise<number> {
+    async insertChunks(chunks: InsertChunkData[]): Promise<number> {
         const mapped = chunks.map((chunk) => {
             const uniqueLoaderId = chunk.metadata.uniqueLoaderId;
             delete chunk.metadata.uniqueLoaderId;
@@ -51,6 +53,7 @@ export class LanceDb implements BaseDb {
                 vector: chunk.vector,
                 uniqueLoaderId,
                 metadata: JSON.stringify(chunk.metadata),
+                vectorString: JSON.stringify(chunk.vector),
             };
         });
 
@@ -58,19 +61,20 @@ export class LanceDb implements BaseDb {
         return mapped.length; //TODO: check if vectorDb has addressed the issue where add returns undefined
     }
 
-    async similaritySearch(query: number[], k: number): Promise<Chunk[]> {
+    async similaritySearch(query: number[], k: number): Promise<ExtractChunkData[]> {
         const results = await this.table.search(query).limit(k).execute();
 
         return (
             results
-                //a mandatory record is required by lance during init to get schema
-                //and this record is also returned in results; we filter it out
+                //TODO: a mandatory record is used and this record is also returned in results; we filter it out
                 .filter((entry) => entry.id !== 'md5')
                 .map((result) => {
                     const metadata = JSON.parse(<string>result.metadata);
+                    const vector = JSON.parse(<string>result.vectorString);
                     metadata.uniqueLoaderId = result.uniqueLoaderId;
 
                     return {
+                        score: similarity(query, vector),
                         pageContent: <string>result.pageContent,
                         metadata,
                     };

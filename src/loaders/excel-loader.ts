@@ -28,7 +28,7 @@ export class ExcelLoader extends BaseLoader<{ type: 'ExcelLoader' }> {
         this.pathOrUrl = filePath ?? url;
     }
 
-    override async *getChunks() {
+    override async *getUnfilteredChunks() {
         const chunker = new RecursiveCharacterTextSplitter({
             chunkSize: this.chunkSize,
             chunkOverlap: this.chunkOverlap,
@@ -41,7 +41,6 @@ export class ExcelLoader extends BaseLoader<{ type: 'ExcelLoader' }> {
         for (const chunk of chunks) {
             yield {
                 pageContent: chunk,
-                contentHash: md5(chunk),
                 metadata: {
                     type: <'ExcelLoader'>'ExcelLoader',
                     source: this.pathOrUrl,
