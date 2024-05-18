@@ -59,7 +59,7 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [Customize the prompt](#customize-the-prompt)
     -   [Get context (dry run)](#get-context-dry-run)
     -   [Get count of embedded chunks](#get-count-of-embedded-chunks)
-    -   [Set relevance cutoff](#)
+    -   [Set relevance cutoff](#set-cut-off-for-relevance)
     -   [Dynamic loaders](#add-new-loaders-later)
 -   [Loaders supported](#loaders-supported)
     -   [Youtube video](#youtube-video)
