@@ -58,7 +58,9 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [Search results count](#search-results-count)
     -   [Customize the prompt](#customize-the-prompt)
     -   [Get context (dry run)](#get-context-dry-run)
+    -   [Delete loader](#delete-loader)
     -   [Get count of embedded chunks](#get-count-of-embedded-chunks)
+    -   [Remove all embeddings / reset](#remove-all-embeddings--reset)
     -   [Set relevance cutoff](#set-cut-off-for-relevance)
     -   [Dynamic loaders](#add-new-loaders-later)
 -   [Loaders supported](#loaders-supported)
@@ -209,12 +211,28 @@ During development, you may want to test the performance and quality of the `Loa
 await ragApplication.getContext('What is Steve Jobs?')
 ```
 
+## Delete loader
+
+You can remove the embeddings added from a specific loader by calling the `deleteLoader` method with the uniqueId of the loader.
+
+```TS
+await ragApplication.deleteLoader('uniqueId...', true)
+```
+
 ## Get count of embedded chunks
 
 You can fetch the count of embeddedings stored in your vector database at any time by calling the `getEmbeddingsCount` method -
 
 ```TS
 await ragApplication.getEmbeddingsCount()
+```
+
+## Remove all embeddings / reset
+
+You can remove all stored embeddings in the vectorDb using the `deleteAllEmbeddings` method -
+
+```TS
+await ragApplication.deleteAllEmbeddings(true)
 ```
 
 ## Set cut-off for relevance

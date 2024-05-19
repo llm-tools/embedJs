@@ -15,7 +15,6 @@ export class RAGApplicationBuilder {
     private queryTemplate: string;
     private cache?: BaseCache;
     private embeddingModel: BaseEmbeddings;
-    private initLoaders: boolean;
     private model: BaseModel;
     private embeddingRelevanceCutOff: number;
 
@@ -23,7 +22,6 @@ export class RAGApplicationBuilder {
         this.loaders = [];
         this.temperature = 0.1;
         this.searchResultCount = 7;
-        this.initLoaders = true;
 
         this.queryTemplate = `You are a helpful human like chat bot. Use relevant provided context and chat history to answer the query at the end. Answer in full.
         If you don't know the answer, just say that you don't know, don't try to make up an answer. 
@@ -84,11 +82,6 @@ export class RAGApplicationBuilder {
         return this;
     }
 
-    setLoaderInit(shouldDo: boolean) {
-        this.initLoaders = shouldDo;
-        return this;
-    }
-
     setModel(model: string | SIMPLE_MODELS | BaseModel) {
         if (typeof model === 'object') this.model = model;
         else {
@@ -133,10 +126,6 @@ export class RAGApplicationBuilder {
 
     getEmbeddingModel() {
         return this.embeddingModel;
-    }
-
-    getLoaderInit() {
-        return this.initLoaders;
     }
 
     getModel() {

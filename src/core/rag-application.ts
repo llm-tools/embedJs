@@ -7,13 +7,12 @@ import { RAGApplicationBuilder } from './rag-application-builder.js';
 import { DEFAULT_INSERT_BATCH_SIZE } from '../global/constants.js';
 import { BaseModel } from '../interfaces/base-model.js';
 import { BaseCache } from '../interfaces/base-cache.js';
+import { OpenAi3SmallEmbeddings } from '../index.js';
 import { RAGEmbedding } from './rag-embedding.js';
 import { cleanString } from '../util/strings.js';
-import { OpenAi3SmallEmbeddings } from '../index.js';
 
 export class RAGApplication {
     private readonly debug = createDebugMessages('embedjs:core');
-    private readonly initLoaders: boolean;
     private readonly queryTemplate: string;
     private readonly searchResultCount: number;
     private readonly loaders: BaseLoader[];
@@ -35,7 +34,6 @@ export class RAGApplication {
         this.loaders = llmBuilder.getLoaders();
         this.vectorDb = llmBuilder.getVectorDb();
         this.searchResultCount = llmBuilder.getSearchResultCount();
-        this.initLoaders = llmBuilder.getLoaderInit();
         this.embeddingRelevanceCutOff = llmBuilder.getEmbeddingRelevanceCutOff();
 
         RAGEmbedding.init(llmBuilder.getEmbeddingModel() ?? new OpenAi3SmallEmbeddings());
@@ -64,10 +62,8 @@ export class RAGApplication {
             this.debug('Initialized cache');
         }
 
-        if (this.initLoaders) {
-            for await (const loader of this.loaders) {
-                await this.addLoader(loader);
-            }
+        for await (const loader of this.loaders) {
+            await this.addLoader(loader);
         }
         this.debug('Initialized pre-loaders');
     }
@@ -136,7 +132,7 @@ export class RAGApplication {
 
             this.debug(`Loader previously run. Deleting previous ${previousChunkCount} keys`, uniqueId);
             if (previousChunkCount > 0) {
-                await this.deleteEmbeddingsFromLoader(uniqueId, true);
+                await this.deleteLoader(uniqueId, true);
             }
         }
 
@@ -152,6 +148,7 @@ export class RAGApplication {
             });
         }
 
+        this.loaders.push(loader);
         return { entriesAdded: newInserts, uniqueId };
     }
 
@@ -159,16 +156,15 @@ export class RAGApplication {
         return this.vectorDb.getVectorCount();
     }
 
-    public async deleteEmbeddingsFromLoader(uniqueLoaderId: string, areYouSure: boolean = false) {
+    public async deleteLoader(uniqueLoaderId: string, areYouSure: boolean = false) {
         if (!areYouSure) {
             console.warn('Delete embeddings from loader called without confirmation. No action taken.');
             return false;
         }
 
-        // if (this.cache && !(await this.cache.hasLoader(uniqueLoaderId))) return false;
-
         const deleteResult = await this.vectorDb.deleteKeys(uniqueLoaderId);
         if (this.cache && deleteResult) await this.cache.deleteLoader(uniqueLoaderId);
+        this.loaders.filter((x) => x.getUniqueId() != uniqueLoaderId);
         return deleteResult;
     }
 
