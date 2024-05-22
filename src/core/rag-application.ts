@@ -194,7 +194,6 @@ export class RAGApplication {
     public async getContext(query: string) {
         const cleanQuery = cleanString(query);
         const rawContext = await this.getEmbeddings(cleanQuery);
-        console.log(rawContext);
 
         return [...new Map(rawContext.map((item) => [item.pageContent, item])).values()];
     }
