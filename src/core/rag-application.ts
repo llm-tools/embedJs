@@ -10,16 +10,17 @@ import { BaseCache } from '../interfaces/base-cache.js';
 import { OpenAi3SmallEmbeddings } from '../index.js';
 import { RAGEmbedding } from './rag-embedding.js';
 import { cleanString } from '../util/strings.js';
+import { getUnique } from '../util/arrays.js';
 
 export class RAGApplication {
     private readonly debug = createDebugMessages('embedjs:core');
     private readonly queryTemplate: string;
     private readonly searchResultCount: number;
-    private readonly loaders: BaseLoader[];
     private readonly cache?: BaseCache;
     private readonly vectorDb: BaseDb;
     private readonly model: BaseModel;
     private readonly embeddingRelevanceCutOff: number;
+    private loaders: BaseLoader[];
 
     constructor(llmBuilder: RAGApplicationBuilder) {
         this.cache = llmBuilder.getCache();
@@ -62,6 +63,7 @@ export class RAGApplication {
             this.debug('Initialized cache');
         }
 
+        this.loaders = getUnique(this.loaders, 'getUniqueId');
         for await (const loader of this.loaders) {
             await this.addLoader(loader);
         }
@@ -148,6 +150,7 @@ export class RAGApplication {
             });
         }
 
+        this.loaders = this.loaders.filter((x) => x.getUniqueId() != loader.getUniqueId());
         this.loaders.push(loader);
         return { entriesAdded: newInserts, uniqueId };
     }
@@ -164,7 +167,7 @@ export class RAGApplication {
 
         const deleteResult = await this.vectorDb.deleteKeys(uniqueLoaderId);
         if (this.cache && deleteResult) await this.cache.deleteLoader(uniqueLoaderId);
-        this.loaders.filter((x) => x.getUniqueId() != uniqueLoaderId);
+        this.loaders = this.loaders.filter((x) => x.getUniqueId() != uniqueLoaderId);
         return deleteResult;
     }
 

@@ -16,3 +16,10 @@ export async function filterAsync<T>(
 export function createArrayChunks<T>(arr: T[], size: number) {
     return Array.from({ length: Math.ceil(arr.length / size) }, (_v, i) => arr.slice(i * size, i * size + size));
 }
+
+export function getUnique<T extends {}>(array: Array<T>, K: string) {
+    var seen = {};
+    return array.filter(function (item) {
+        return seen.hasOwnProperty(item[K]()) ? false : (seen[item[K]()] = true);
+    });
+}
