@@ -21,7 +21,11 @@ export class SitemapLoader extends BaseLoader<{ type: 'SitemapLoader' }> {
             this.debug(`Sitemap '${this.url}' returned ${sites.length} URLs`);
 
             for (const url of sites) {
-                const webLoader = new WebLoader({ url, chunkSize: this.chunkSize, chunkOverlap: this.chunkOverlap });
+                const webLoader = new WebLoader({
+                    urlOrContent: url,
+                    chunkSize: this.chunkSize,
+                    chunkOverlap: this.chunkOverlap,
+                });
 
                 for await (const chunk of webLoader.getUnfilteredChunks()) {
                     yield {

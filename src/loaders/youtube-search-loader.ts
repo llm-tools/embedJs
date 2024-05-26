@@ -10,16 +10,16 @@ export class YoutubeSearchLoader extends BaseLoader<{ type: 'YoutubeSearchLoader
     private readonly searchString: string;
 
     constructor({
-        searchString,
+        youtubeSearchString,
         chunkSize,
         chunkOverlap,
     }: {
-        searchString: string;
+        youtubeSearchString: string;
         chunkSize?: number;
         chunkOverlap?: number;
     }) {
-        super(`YoutubeSearchLoader${md5(searchString)}`, chunkSize ?? 2000, chunkOverlap);
-        this.searchString = searchString;
+        super(`YoutubeSearchLoader${md5(youtubeSearchString)}`, chunkSize ?? 2000, chunkOverlap);
+        this.searchString = youtubeSearchString;
     }
 
     override async *getUnfilteredChunks() {
@@ -30,9 +30,9 @@ export class YoutubeSearchLoader extends BaseLoader<{ type: 'YoutubeSearchLoader
             );
             const channelIds = channels.map((c) => c.channel_id);
 
-            for (const channelId of channelIds) {
+            for (const youtubeChannelId of channelIds) {
                 const youtubeLoader = new YoutubeChannelLoader({
-                    channelId,
+                    youtubeChannelId,
                     chunkSize: this.chunkSize,
                     chunkOverlap: this.chunkOverlap,
                 });

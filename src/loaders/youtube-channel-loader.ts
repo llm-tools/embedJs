@@ -10,16 +10,16 @@ export class YoutubeChannelLoader extends BaseLoader<{ type: 'YoutubeChannelLoad
     private readonly channelId: string;
 
     constructor({
-        channelId,
+        youtubeChannelId,
         chunkSize,
         chunkOverlap,
     }: {
-        channelId: string;
+        youtubeChannelId: string;
         chunkSize?: number;
         chunkOverlap?: number;
     }) {
-        super(`YoutubeChannelLoader_${md5(channelId)}`, chunkSize ?? 2000, chunkOverlap);
-        this.channelId = channelId;
+        super(`YoutubeChannelLoader_${md5(youtubeChannelId)}`, chunkSize ?? 2000, chunkOverlap);
+        this.channelId = youtubeChannelId;
     }
 
     override async *getUnfilteredChunks() {

@@ -3,6 +3,7 @@ import createDebugMessages from 'debug';
 import { BaseDb } from '../interfaces/base-db.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { AddLoaderReturn, Chunk, InsertChunkData, LoaderChunk } from '../global/types.js';
+import { LoaderParam, createLoader, createLoaders } from './dynamic-loader-selector.js';
 import { RAGApplicationBuilder } from './rag-application-builder.js';
 import { DEFAULT_INSERT_BATCH_SIZE } from '../global/constants.js';
 import { BaseModel } from '../interfaces/base-model.js';
@@ -20,6 +21,8 @@ export class RAGApplication {
     private readonly vectorDb: BaseDb;
     private readonly model: BaseModel;
     private readonly embeddingRelevanceCutOff: number;
+
+    private readonly rawLoaders: LoaderParam[];
     private loaders: BaseLoader[];
 
     constructor(llmBuilder: RAGApplicationBuilder) {
@@ -32,7 +35,7 @@ export class RAGApplication {
         this.queryTemplate = cleanString(llmBuilder.getQueryTemplate());
         this.debug(`Using system query template - "${this.queryTemplate}"`);
 
-        this.loaders = llmBuilder.getLoaders();
+        this.rawLoaders = llmBuilder.getLoaders();
         this.vectorDb = llmBuilder.getVectorDb();
         this.searchResultCount = llmBuilder.getSearchResultCount();
         this.embeddingRelevanceCutOff = llmBuilder.getEmbeddingRelevanceCutOff();
@@ -52,6 +55,8 @@ export class RAGApplication {
     }
 
     public async init() {
+        this.loaders = await createLoaders(this.rawLoaders);
+
         await this.model.init();
         this.debug('Initialized LLM class');
 
@@ -70,21 +75,59 @@ export class RAGApplication {
         this.debug('Initialized pre-loaders');
     }
 
-    private async batchLoadEmbeddings(loaderUniqueId: string, formattedChunks: Chunk[]) {
-        if (formattedChunks.length === 0) return 0;
+    public async addLoader(loaderParam: LoaderParam): Promise<AddLoaderReturn[]> {
+        const loaders = await createLoader(loaderParam);
+        return Promise.all(loaders.map((loader) => this._addLoader(loader)));
+    }
 
-        const embeddings = await this.embedChunks(formattedChunks);
-        this.debug(`Batch embeddings (size ${formattedChunks.length}) obtained for loader`, loaderUniqueId);
+    private async _addLoader(loader: BaseLoader): Promise<AddLoaderReturn> {
+        const uniqueId = loader.getUniqueId();
+        this.debug('Add loader called for', uniqueId);
+        await loader.init();
 
-        const embedChunks = formattedChunks.map((chunk, index) => {
-            return <InsertChunkData>{
-                pageContent: chunk.pageContent,
-                vector: embeddings[index],
-                metadata: chunk.metadata,
-            };
-        });
+        const chunks = await loader.getChunks();
+        if (this.cache && (await this.cache.hasLoader(uniqueId))) {
+            const { chunkCount: previousChunkCount } = await this.cache.getLoader(uniqueId);
 
-        return this.vectorDb.insertChunks(embedChunks);
+            this.debug(`Loader previously run. Deleting previous ${previousChunkCount} keys`, uniqueId);
+            if (previousChunkCount > 0) {
+                await this.deleteLoader(uniqueId, true);
+            }
+        }
+
+        const { newInserts, formattedChunks } = await this.batchLoadChunks(uniqueId, chunks);
+        if (this.cache) await this.cache.addLoader(uniqueId, formattedChunks.length);
+        this.debug(`Add loader completed with ${newInserts} new entries for`, uniqueId);
+
+        if (loader.canIncrementallyLoad) {
+            this.debug(`Registering incremental loader`, uniqueId);
+
+            loader.on('incrementalChunkAvailable', async (incrementalGenerator) => {
+                await this.incrementalLoader(uniqueId, incrementalGenerator);
+            });
+        }
+
+        this.loaders = this.loaders.filter((x) => x.getUniqueId() != loader.getUniqueId());
+        this.loaders.push(loader);
+        return { entriesAdded: newInserts, uniqueId };
+    }
+
+    private async incrementalLoader(uniqueId: string, incrementalGenerator: AsyncGenerator<LoaderChunk, void, void>) {
+        this.debug(`incrementalChunkAvailable for loader`, uniqueId);
+        const { newInserts } = await this.batchLoadChunks(uniqueId, incrementalGenerator);
+        this.debug(`${newInserts} new incrementalChunks processed`, uniqueId);
+    }
+
+    public async deleteLoader(uniqueLoaderId: string, areYouSure: boolean = false) {
+        if (!areYouSure) {
+            console.warn('Delete embeddings from loader called without confirmation. No action taken.');
+            return false;
+        }
+
+        const deleteResult = await this.vectorDb.deleteKeys(uniqueLoaderId);
+        if (this.cache && deleteResult) await this.cache.deleteLoader(uniqueLoaderId);
+        this.loaders = this.loaders.filter((x) => x.getUniqueId() != uniqueLoaderId);
+        return deleteResult;
     }
 
     private async batchLoadChunks(uniqueId: string, incrementalGenerator: AsyncGenerator<LoaderChunk, void, void>) {
@@ -117,58 +160,25 @@ export class RAGApplication {
         return { newInserts, formattedChunks };
     }
 
-    private async incrementalLoader(uniqueId: string, incrementalGenerator: AsyncGenerator<LoaderChunk, void, void>) {
-        this.debug(`incrementalChunkAvailable for loader`, uniqueId);
-        const { newInserts } = await this.batchLoadChunks(uniqueId, incrementalGenerator);
-        this.debug(`${newInserts} new incrementalChunks processed`, uniqueId);
-    }
+    private async batchLoadEmbeddings(loaderUniqueId: string, formattedChunks: Chunk[]) {
+        if (formattedChunks.length === 0) return 0;
 
-    public async addLoader(loader: BaseLoader): Promise<AddLoaderReturn> {
-        const uniqueId = loader.getUniqueId();
-        this.debug('Add loader called for', uniqueId);
-        await loader.init();
+        const embeddings = await this.embedChunks(formattedChunks);
+        this.debug(`Batch embeddings (size ${formattedChunks.length}) obtained for loader`, loaderUniqueId);
 
-        const chunks = await loader.getChunks();
-        if (this.cache && (await this.cache.hasLoader(uniqueId))) {
-            const { chunkCount: previousChunkCount } = await this.cache.getLoader(uniqueId);
+        const embedChunks = formattedChunks.map((chunk, index) => {
+            return <InsertChunkData>{
+                pageContent: chunk.pageContent,
+                vector: embeddings[index],
+                metadata: chunk.metadata,
+            };
+        });
 
-            this.debug(`Loader previously run. Deleting previous ${previousChunkCount} keys`, uniqueId);
-            if (previousChunkCount > 0) {
-                await this.deleteLoader(uniqueId, true);
-            }
-        }
-
-        const { newInserts, formattedChunks } = await this.batchLoadChunks(uniqueId, chunks);
-        if (this.cache) await this.cache.addLoader(uniqueId, formattedChunks.length);
-        this.debug(`Add loader completed with ${newInserts} new entries for`, uniqueId);
-
-        if (loader.canIncrementallyLoad) {
-            this.debug(`Registering incremental loader`, uniqueId);
-
-            loader.on('incrementalChunkAvailable', async (incrementalGenerator) => {
-                await this.incrementalLoader(uniqueId, incrementalGenerator);
-            });
-        }
-
-        this.loaders = this.loaders.filter((x) => x.getUniqueId() != loader.getUniqueId());
-        this.loaders.push(loader);
-        return { entriesAdded: newInserts, uniqueId };
+        return this.vectorDb.insertChunks(embedChunks);
     }
 
     public async getEmbeddingsCount(): Promise<number> {
         return this.vectorDb.getVectorCount();
-    }
-
-    public async deleteLoader(uniqueLoaderId: string, areYouSure: boolean = false) {
-        if (!areYouSure) {
-            console.warn('Delete embeddings from loader called without confirmation. No action taken.');
-            return false;
-        }
-
-        const deleteResult = await this.vectorDb.deleteKeys(uniqueLoaderId);
-        if (this.cache && deleteResult) await this.cache.deleteLoader(uniqueLoaderId);
-        this.loaders = this.loaders.filter((x) => x.getUniqueId() != uniqueLoaderId);
-        return deleteResult;
     }
 
     public async deleteAllEmbeddings(areYouSure: boolean = false) {

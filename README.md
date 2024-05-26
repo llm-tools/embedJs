@@ -16,9 +16,9 @@ Here's an example of how easy it is to get started -
 
 ```TS
 const ragApplication = await new RAGApplicationBuilder()
-    .addLoader(new YoutubeSearchLoader({ searchString: 'Tesla cars' }))
-    .addLoader(new SitemapLoader({ url: 'https://tesla-info.com/sitemap.xml' }))
-    .addLoader(new WebLoader({ url: 'https://en.wikipedia.org/wiki/Tesla,_Inc.' }))
+    .addLoader({ type: 'YoutubeChannel', youtubeSearchString: 'Tesla cars' })
+    .addLoader('https://en.wikipedia.org/wiki/Tesla,_Inc.')
+    .addLoader('https://tesla-info.com/sitemap.xml')
     .setVectorDb(new LanceDb({ path: '.db' }))
     .build();
 ```
@@ -270,7 +270,7 @@ To add any youtube video to your app, use `YoutubeLoader`.
 To add all videos in a youtube channel, use `YoutubeChannelLoader`.
 
 ```TS
-.addLoader(new YoutubeChannelLoader({ channelId: '...' }))
+.addLoader(new YoutubeChannelLoader({ youtubeChannelId: '...' }))
 ```
 
 ## Youtube search
@@ -278,7 +278,7 @@ To add all videos in a youtube channel, use `YoutubeChannelLoader`.
 To do a general youtube search and add the popular search results, use `YoutubeSearchLoader`.
 
 ```TS
-.addLoader(new YoutubeSearchLoader({ searchString: '...' }))
+.addLoader(new YoutubeSearchLoader({ youtubeSearchString: '...' }))
 ```
 
 ## PDF file
@@ -286,7 +286,7 @@ To do a general youtube search and add the popular search results, use `YoutubeS
 To add a pdf file, use `PdfLoader`. You can add a local file -
 
 ```TS
-.addLoader(new PdfLoader({ filePath: path.resolve('paxos-simple.pdf') }))
+.addLoader(new PdfLoader({ filePathOrUrl: path.resolve('paxos-simple.pdf') }))
 ```
 
 Or, you can add a remote file -
@@ -302,13 +302,13 @@ Or, you can add a remote file -
 To add a docx file, use `DocxLoader`. You can add a local file -
 
 ```TS
-.addLoader(new DocxLoader({ filePath: path.resolve('paxos.docx') }))
+.addLoader(new DocxLoader({ filePathOrUrl: path.resolve('paxos.docx') }))
 ```
 
 Or, you can add a remote file -
 
 ```TS
-.addLoader(new DocxLoader({ url: 'https://xxx' }))
+.addLoader(new DocxLoader({ filePathOrUrl: 'https://xxx' }))
 ```
 
 ## Excel file
@@ -316,13 +316,13 @@ Or, you can add a remote file -
 To add an excel xlsx file, use `ExcelLoader`. You can add a local file -
 
 ```TS
-.addLoader(new ExcelLoader({ filePath: path.resolve('numbers.xlsx') }))
+.addLoader(new ExcelLoader({ filePathOrUrl: path.resolve('numbers.xlsx') }))
 ```
 
 Or, you can add a remote file -
 
 ```TS
-.addLoader(new ExcelLoader({ url: 'https://xxx' }))
+.addLoader(new ExcelLoader({ filePathOrUrl: 'https://xxx' }))
 ```
 
 ## Powerpoint file
@@ -330,13 +330,13 @@ Or, you can add a remote file -
 To add an powerpoint / pptx file, use `PptLoader`. You can add a local file -
 
 ```TS
-.addLoader(new PptLoader({ filePath: path.resolve('wow.pptx') }))
+.addLoader(new PptLoader({ filePathOrUrl: path.resolve('wow.pptx') }))
 ```
 
 Or, you can add a remote file -
 
 ```TS
-.addLoader(new PptLoader({ url: 'https://xxx' }))
+.addLoader(new PptLoader({ filePathOrUrl: 'https://xxx' }))
 ```
 
 ## Web page
@@ -344,7 +344,7 @@ Or, you can add a remote file -
 To add a web page, use `WebLoader`.
 
 ```TS
-.addLoader(new WebLoader({ url: 'https://en.wikipedia.org/wiki/Formula_One' }))
+.addLoader(new WebLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Formula_One' }))
 ```
 
 ## Confluence

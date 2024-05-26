@@ -6,10 +6,11 @@ import { BaseEmbeddings } from '../interfaces/base-embeddings.js';
 import { BaseModel } from '../interfaces/base-model.js';
 import { SIMPLE_MODELS } from '../global/constants.js';
 import { OpenAi } from '../models/openai-model.js';
+import { LoaderParam } from './dynamic-loader-selector.js';
 
 export class RAGApplicationBuilder {
     private searchResultCount: number;
-    private loaders: BaseLoader[];
+    private loaders: LoaderParam[];
     private vectorDb: BaseDb;
     private temperature: number;
     private queryTemplate: string;
