@@ -74,6 +74,9 @@ async function unfurlLoader(loader: string): Promise<BaseLoader[]> {
         return unfurlPathToLoader(loader);
     } else if (isValidJson(loader)) {
         return [new JsonLoader({ object: JSON.parse(loader) })];
+    }
+    else if(loader.length === 11) {
+        return [new YoutubeLoader({ videoIdOrUrl: loader })]
     } else {
         throw new SyntaxError(`Unknown loader ${loader}`);
     }
