@@ -4,20 +4,20 @@ import createDebugMessages from 'debug';
 import magic, { MimeType } from 'stream-mmmagic';
 import axios from 'axios';
 
-import { ConfluenceLoader } from '../loaders/confluence-loader.js';
+import { isValidJson, isValidURL } from '../util/strings.js';
 import { DocxLoader } from '../loaders/docx-loader.js';
 import { ExcelLoader } from '../loaders/excel-loader.js';
 import { WebLoader } from '../loaders/web-loader.js';
 import { PdfLoader } from '../loaders/pdf-loader.js';
 import { PptLoader } from '../loaders/ppt-loader.js';
-import { SitemapLoader } from '../loaders/sitemap-loader.js';
 import { TextLoader } from '../loaders/text-loader.js';
+import { SitemapLoader } from '../loaders/sitemap-loader.js';
+import { ConfluenceLoader } from '../loaders/confluence-loader.js';
 import { YoutubeChannelLoader } from '../loaders/youtube-channel-loader.js';
-import { YoutubeLoader } from '../loaders/youtube-loader.js';
 import { YoutubeSearchLoader } from '../loaders/youtube-search-loader.js';
+import { YoutubeLoader } from '../loaders/youtube-loader.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { JsonLoader } from '../loaders/json-loader.js';
-import { isValidJson, isValidURL } from '../util/strings.js';
 
 export type LoaderObjectParam =
     | ({ type: 'Confluence' } & ConstructorParameters<typeof ConfluenceLoader>[0])
@@ -89,9 +89,9 @@ export class DynamicLoader {
             stream.destroy();
 
             return [await DynamicLoader.createLoaderFromMimeType(loader, mime)];
-        } else if (loader === path.basename(loader)) {
-            DynamicLoader.debug('Loader is a valid path!');
-            return DynamicLoader.unfurlPathToLoader(loader);
+        } else if (fs.existsSync(path.resolve(loader))) {
+            DynamicLoader.debug('Loader is a valid path on local!');
+            return DynamicLoader.unfurlPathToLoader(path.resolve(loader));
         } else if (isValidJson(loader)) {
             DynamicLoader.debug('Loader is a valid JSON!');
             return [new JsonLoader({ object: JSON.parse(loader) })];
