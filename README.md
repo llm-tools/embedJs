@@ -16,7 +16,7 @@ Here's an example of how easy it is to get started -
 
 ```TS
 const ragApplication = await new RAGApplicationBuilder()
-    .addLoader({ type: 'YoutubeChannel', youtubeSearchString: 'Tesla cars' })
+    .addLoader({ type: 'YoutubeSearch', youtubeSearchString: 'Tesla cars' })
     .addLoader('https://en.wikipedia.org/wiki/Tesla,_Inc.')
     .addLoader('https://tesla-info.com/sitemap.xml')
     .setVectorDb(new LanceDb({ path: '.db' }))
