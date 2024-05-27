@@ -72,7 +72,7 @@
         "md5": "^2.3.0",
         "office-text-extractor": "^3.0.3",
         "sitemapper": "^3.1.8",
-        "stream-mime-type": "^2.0.0",
+        "stream-mmmagic": "^2.3.0",
         "usetube": "^2.0.2",
         "uuid": "^9.0.1",
         "youtube-transcript": "^1.2.1"

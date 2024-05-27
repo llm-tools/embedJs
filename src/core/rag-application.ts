@@ -3,7 +3,7 @@ import createDebugMessages from 'debug';
 import { BaseDb } from '../interfaces/base-db.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { AddLoaderReturn, Chunk, InsertChunkData, LoaderChunk } from '../global/types.js';
-import { LoaderParam, createLoader, createLoaders } from './dynamic-loader-selector.js';
+import { DynamicLoader, LoaderObjectParam, LoaderParam } from './dynamic-loader-selector.js';
 import { RAGApplicationBuilder } from './rag-application-builder.js';
 import { DEFAULT_INSERT_BATCH_SIZE } from '../global/constants.js';
 import { BaseModel } from '../interfaces/base-model.js';
@@ -55,7 +55,7 @@ export class RAGApplication {
     }
 
     public async init() {
-        this.loaders = await createLoaders(this.rawLoaders);
+        this.loaders = await DynamicLoader.createLoaders(this.rawLoaders);
 
         await this.model.init();
         this.debug('Initialized LLM class');
@@ -75,9 +75,20 @@ export class RAGApplication {
         this.debug('Initialized pre-loaders');
     }
 
-    public async addLoader(loaderParam: LoaderParam): Promise<AddLoaderReturn[]> {
-        const loaders = await createLoader(loaderParam);
-        return Promise.all(loaders.map((loader) => this._addLoader(loader)));
+    public async addLoader(loaderParam: string): Promise<AddLoaderReturn[]>;
+    public async addLoader(loaderParam: BaseLoader): Promise<AddLoaderReturn>;
+    public async addLoader(loaderParam: LoaderObjectParam): Promise<AddLoaderReturn>;
+    public async addLoader(loaderParam: LoaderParam): Promise<AddLoaderReturn | AddLoaderReturn[]> {
+        if (typeof loaderParam === 'string') {
+            const loaders = await DynamicLoader.createLoader(loaderParam);
+            return Promise.all(loaders.map((loader) => this._addLoader(loader)));
+        } else if (loaderParam instanceof BaseLoader) {
+            const loader = await DynamicLoader.createLoader(loaderParam);
+            return this._addLoader(loader);
+        } else {
+            const loader = await DynamicLoader.createLoader(loaderParam);
+            return this._addLoader(loader);
+        }
     }
 
     private async _addLoader(loader: BaseLoader): Promise<AddLoaderReturn> {
@@ -109,6 +120,8 @@ export class RAGApplication {
 
         this.loaders = this.loaders.filter((x) => x.getUniqueId() != loader.getUniqueId());
         this.loaders.push(loader);
+
+        this.debug(`Add loader ${uniqueId} wrap`);
         return { entriesAdded: newInserts, uniqueId };
     }
 
