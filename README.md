@@ -62,7 +62,8 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [Get count of embedded chunks](#get-count-of-embedded-chunks)
     -   [Remove all embeddings / reset](#remove-all-embeddings--reset)
     -   [Set relevance cutoff](#set-cut-off-for-relevance)
-    -   [Dynamic loaders](#add-new-loaders-later)
+    -   [Add new loader after init](#add-new-loaders-later)
+    -   [Loader inference](#loader-inference)
 -   [Loaders supported](#loaders-supported)
     -   [Youtube video](#youtube-video)
     -   [Youtube channel](#youtube-channel)
@@ -252,6 +253,17 @@ await ragApplication.addLoader(new YoutubeLoader({ videoIdOrUrl: 'pQiT2U5E9tI' }
 ```
 
 **Note:** Do not forget to await the dynamically added loaders to ensure you wait for the load to complete before making queries on it.
+
+## Loader inference
+
+You can add most loaders by passing a string to the `addLoader` or the `addLoaders` methods. The value can be a URL, path, JSON or youtube video id. The library will infer the type of content and invoke the appropirate loader automatically.
+
+```TS
+await ragApplication.addLoader('pQiT2U5E9tI'); //invokes youtube URL
+await ragApplication.addLoader('https://lamport.azurewebsites.net/pubs/paxos-simple.pdf'); //invokes PDF loader
+```
+
+**Note:** If you pass the path to a local directory, every file in that directory is recursively added (including subfolders)!
 
 # Loaders supported
 
