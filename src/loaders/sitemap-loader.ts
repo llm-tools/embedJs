@@ -6,6 +6,16 @@ import { BaseLoader } from '../interfaces/base-loader.js';
 import { WebLoader } from './web-loader.js';
 
 export class SitemapLoader extends BaseLoader<{ type: 'SitemapLoader' }> {
+    public static async test(url: string): Promise<boolean> {
+        try {
+            // @ts-ignore
+            await new Sitemapper({ url, timeout: 15000 }).fetch();
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
     private readonly debug = createDebugMessages('embedjs:loader:SitemapLoader');
     private readonly url: string;
 

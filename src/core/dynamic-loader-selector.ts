@@ -1,8 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import createDebugMessages from 'debug';
-import magic, { MimeType } from 'stream-mmmagic';
-import axios from 'axios';
 
 import { isValidJson, isValidURL } from '../util/strings.js';
 import { DocxLoader } from '../loaders/docx-loader.js';
@@ -18,8 +16,12 @@ import { YoutubeSearchLoader } from '../loaders/youtube-search-loader.js';
 import { YoutubeLoader } from '../loaders/youtube-loader.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { JsonLoader } from '../loaders/json-loader.js';
+import { UrlLoader } from '../loaders/url-loader.js';
+import { LocalPathLoader } from '../loaders/local-path-loader.js';
 
-export type LoaderObjectParam =
+export type LoaderParam =
+    | string
+    | BaseLoader
     | ({ type: 'Confluence' } & ConstructorParameters<typeof ConfluenceLoader>[0])
     | ({ type: 'Web' } & ConstructorParameters<typeof WebLoader>[0])
     | ({ type: 'Doc' } & ConstructorParameters<typeof DocxLoader>[0])
@@ -31,82 +33,32 @@ export type LoaderObjectParam =
     | ({ type: 'Text' } & ConstructorParameters<typeof TextLoader>[0])
     | ({ type: 'YoutubeChannel' } & ConstructorParameters<typeof YoutubeChannelLoader>[0])
     | ({ type: 'Youtube' } & ConstructorParameters<typeof YoutubeLoader>[0])
-    | ({ type: 'YoutubeSearch' } & ConstructorParameters<typeof YoutubeSearchLoader>[0]);
-export type LoaderParam = string | BaseLoader | LoaderObjectParam;
+    | ({ type: 'YoutubeSearch' } & ConstructorParameters<typeof YoutubeSearchLoader>[0])
+    | ({ type: 'LocalPath' } & ConstructorParameters<typeof LocalPathLoader>[0])
+    | ({ type: 'Url' } & ConstructorParameters<typeof UrlLoader>[0]);
 
 export class DynamicLoader {
     private static readonly debug = createDebugMessages('embedjs:DynamicLoader');
 
-    private static async createLoaderFromMimeType(loader: string, mimeType: string): Promise<BaseLoader> {
-        DynamicLoader.debug(`Creating loader for mime type '${mimeType}'`);
-
-        switch (mimeType) {
-            case 'application/msword':
-            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                return new DocxLoader({ filePathOrUrl: loader });
-            case 'application/vnd.ms-excel':
-            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-                return new ExcelLoader({ filePathOrUrl: loader });
-            case 'application/pdf':
-                return new PdfLoader({ filePathOrUrl: loader });
-            case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-                return new PptLoader({ filePathOrUrl: loader });
-            case 'text/plain':
-                return new TextLoader({ text: loader });
-            case 'text/html':
-                return new WebLoader({ urlOrContent: loader });
-            case 'text/xml':
-                return new SitemapLoader({ url: loader });
-            default:
-                throw new SyntaxError(`Unknown mime type '${mimeType}'`);
-        }
-    }
-
-    private static async unfurlPathToLoader(loader: string): Promise<BaseLoader[]> {
-        const isDir = fs.lstatSync(loader).isDirectory();
-        DynamicLoader.debug(`Processing path ${loader}. ${isDir ? 'Is Directory!' : 'Is a file...'}`);
-
-        if (!isDir) {
-            const stream = fs.createReadStream(loader);
-            const mime = (<Exclude<MimeType, string>>(await magic.promise(stream))[0]).type;
-            DynamicLoader.debug(`${path} file type detected as '${mime}'`);
-            stream.destroy();
-
-            return [await DynamicLoader.createLoaderFromMimeType(loader, mime)];
-        } else {
-            const files = fs.readdirSync(loader);
-            DynamicLoader.debug(`${files.length} files found in dir ${loader}`);
-            return (await Promise.all(files.map(DynamicLoader.unfurlPathToLoader))).flat(1);
-        }
-    }
-
-    private static async unfurlLoader(loader: string): Promise<BaseLoader[]> {
+    private static async unfurlLoader(loader: string): Promise<BaseLoader> {
         if (isValidURL(loader)) {
             DynamicLoader.debug('Loader is a valid URL!');
-            const stream = (await axios.get(loader, { responseType: 'stream' })).data;
-            const mime = (<Exclude<MimeType, string>>(await magic.promise(stream))[0]).type;
-            DynamicLoader.debug(`Loader type detected as '${mime}'`);
-            stream.destroy();
-
-            return [await DynamicLoader.createLoaderFromMimeType(loader, mime)];
+            return new UrlLoader({ url: loader });
         } else if (fs.existsSync(path.resolve(loader))) {
             DynamicLoader.debug('Loader is a valid path on local!');
-            return DynamicLoader.unfurlPathToLoader(path.resolve(loader));
+            return new LocalPathLoader({ path: loader });
         } else if (isValidJson(loader)) {
             DynamicLoader.debug('Loader is a valid JSON!');
-            return [new JsonLoader({ object: JSON.parse(loader) })];
+            return new JsonLoader({ object: JSON.parse(loader) });
         } else if (loader.length === 11) {
             DynamicLoader.debug('Loader is likely a youtube video id!');
-            return [new YoutubeLoader({ videoIdOrUrl: loader })];
+            return new YoutubeLoader({ videoIdOrUrl: loader });
         } else {
             throw new SyntaxError(`Unknown loader ${loader}`);
         }
     }
 
-    public static async createLoader(loader: string): Promise<BaseLoader[]>;
-    public static async createLoader(loader: BaseLoader): Promise<BaseLoader>;
-    public static async createLoader(loader: LoaderObjectParam): Promise<BaseLoader>;
-    public static async createLoader(loader: LoaderParam): Promise<BaseLoader | BaseLoader[]> {
+    public static async createLoader(loader: LoaderParam): Promise<BaseLoader> {
         if (typeof loader === 'string') {
             DynamicLoader.debug('Loader is of type string; unfurling');
             return await DynamicLoader.unfurlLoader(loader);
@@ -144,6 +96,10 @@ export class DynamicLoader {
                     return new YoutubeLoader(loader);
                 case 'YoutubeSearch':
                     return new YoutubeSearchLoader(loader);
+                case 'LocalPath':
+                    return new LocalPathLoader(loader);
+                case 'Url':
+                    return new UrlLoader(loader);
                 default:
                     throw new SyntaxError(`Unknown loader type ${(<any>loader).type}`);
             }
