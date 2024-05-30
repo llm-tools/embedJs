@@ -45,7 +45,7 @@ export class DynamicLoader {
             DynamicLoader.debug('Loader is a valid URL!');
             return new UrlLoader({ url: loader });
         } else if (fs.existsSync(path.resolve(loader))) {
-            DynamicLoader.debug('Loader is a valid path on local!');
+            DynamicLoader.debug('Loader is a valid path on local filesystem!');
             return new LocalPathLoader({ path: loader });
         } else if (isValidJson(loader)) {
             DynamicLoader.debug('Loader is a valid JSON!');

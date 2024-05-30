@@ -1,10 +1,12 @@
 import magic, { MimeType } from 'stream-mmmagic';
 import createDebugMessages from 'debug';
+import path from 'node:path';
 import fs from 'node:fs';
 import md5 from 'md5';
 
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { createLoaderFromMimeType } from '../util/mime.js';
+import { UnfilteredLoaderChunk } from '../global/types.js';
 
 export class LocalPathLoader extends BaseLoader<{ type: 'LocalPathLoader' }> {
     private readonly debug = createDebugMessages('embedjs:loader:LocalPathLoader');
@@ -17,23 +19,28 @@ export class LocalPathLoader extends BaseLoader<{ type: 'LocalPathLoader' }> {
 
     override async *getUnfilteredChunks() {
         for await (const result of await this.recursivelyAddPath(this.path)) {
-            result.metadata.type = 'LocalPathLoader';
-            result.metadata.originalPath = this.path;
-            yield result;
+            yield {
+                ...result,
+                metadata: {
+                    ...result.metadata,
+                    type: <'LocalPathLoader'>'LocalPathLoader',
+                    originalPath: path.resolve(this.path),
+                },
+            };
         }
     }
 
-    private async *recursivelyAddPath(currentPath: string) {
+    private async *recursivelyAddPath(currentPath: string): AsyncGenerator<UnfilteredLoaderChunk, void, void> {
         const isDir = fs.lstatSync(currentPath).isDirectory();
-        this.debug(`Processing path ${currentPath}. ${isDir ? 'Is Directory!' : 'Is a file...'}`);
+        this.debug(`Processing path '${currentPath}'. It is a ${isDir ? 'Directory!' : 'file...'}`);
 
         if (!isDir) {
             const stream = fs.createReadStream(currentPath);
             const mime = (<Exclude<MimeType, string>>(await magic.promise(stream))[0]).type;
-            this.debug(`${this.path} file type detected as '${mime}'`);
+            this.debug(`File '${this.path}' has mime type '${mime}'`);
             stream.destroy();
 
-            const loader = await createLoaderFromMimeType(this.path, mime);
+            const loader = await createLoaderFromMimeType(currentPath, mime);
             for await (const result of await loader.getUnfilteredChunks()) {
                 yield {
                     pageContent: result.pageContent,
@@ -44,10 +51,10 @@ export class LocalPathLoader extends BaseLoader<{ type: 'LocalPathLoader' }> {
             }
         } else {
             const files = fs.readdirSync(currentPath);
-            this.debug(`${files.length} files found in dir ${currentPath}`);
+            this.debug(`Dir '${currentPath}' has ${files.length} entries inside`, files);
 
             for (const file of files) {
-                for await (const result of await this.recursivelyAddPath(file)) {
+                for await (const result of await this.recursivelyAddPath(path.resolve(currentPath, file))) {
                     yield result;
                 }
             }
