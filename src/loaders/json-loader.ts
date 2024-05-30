@@ -5,14 +5,14 @@ import { cleanString, truncateCenterString } from '../util/strings.js';
 
 export class JsonLoader extends BaseLoader<{ type: 'JsonLoader' }> {
     private readonly object: Record<string, unknown> | Record<string, unknown>[];
-    private readonly pickKeysForEmbedding: string[];
+    private readonly pickKeysForEmbedding?: string[];
 
     constructor({
         object,
         pickKeysForEmbedding,
     }: {
         object: Record<string, unknown> | Record<string, unknown>[];
-        pickKeysForEmbedding: string[];
+        pickKeysForEmbedding?: string[];
     }) {
         super(`JsonLoader_${md5(cleanString(JSON.stringify(object)))}`);
 
@@ -26,12 +26,17 @@ export class JsonLoader extends BaseLoader<{ type: 'JsonLoader' }> {
 
         let i = 0;
         for (const entry of array) {
-            const subset = Object.fromEntries(
-                this.pickKeysForEmbedding
-                    .filter((key) => key in entry) // line can be removed to make it inclusive
-                    .map((key) => [key, entry[key]]),
-            );
-            const s = cleanString(JSON.stringify(subset));
+            let s: string;
+            if (this.pickKeysForEmbedding) {
+                const subset = Object.fromEntries(
+                    this.pickKeysForEmbedding
+                        .filter((key) => key in entry) // line can be removed to make it inclusive
+                        .map((key) => [key, entry[key]]),
+                );
+                s = cleanString(JSON.stringify(subset));
+            } else {
+                s = cleanString(JSON.stringify(entry));
+            }
 
             if ('id' in entry) {
                 entry.preEmbedId = entry.id;

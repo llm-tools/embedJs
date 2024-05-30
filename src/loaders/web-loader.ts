@@ -5,30 +5,27 @@ import axios from 'axios';
 import md5 from 'md5';
 
 import { BaseLoader } from '../interfaces/base-loader.js';
-import { cleanString, truncateCenterString } from '../util/strings.js';
+import { cleanString, isValidURL, truncateCenterString } from '../util/strings.js';
 
 export class WebLoader extends BaseLoader<{ type: 'WebLoader' }> {
     private readonly debug = createDebugMessages('embedjs:loader:WebLoader');
-    private readonly contentOrUrl: string;
+    private readonly urlOrContent: string;
     private readonly isUrl: boolean;
 
-    constructor({}: { url: string; chunkSize?: number; chunkOverlap?: number });
-    constructor({}: { content: string; chunkSize?: number; chunkOverlap?: number });
     constructor({
-        content,
-        url,
+        urlOrContent,
         chunkSize,
         chunkOverlap,
     }: {
-        content?: string;
-        url?: string;
+        urlOrContent: string;
         chunkSize?: number;
         chunkOverlap?: number;
     }) {
-        super(`WebLoader_${md5(content ? `CONTENT_${content}` : `URL_${url}`)}`, chunkSize ?? 2000, chunkOverlap ?? 0);
+        super(`WebLoader_${md5(urlOrContent)}`, chunkSize ?? 2000, chunkOverlap ?? 0);
 
-        this.isUrl = content ? false : true;
-        this.contentOrUrl = content ?? url;
+        this.isUrl = isValidURL(urlOrContent) ? true : false;
+        this.urlOrContent = urlOrContent;
+        ``;
     }
 
     override async *getUnfilteredChunks() {
@@ -39,15 +36,15 @@ export class WebLoader extends BaseLoader<{ type: 'WebLoader' }> {
 
         try {
             const data = this.isUrl
-                ? (await axios.get<string>(this.contentOrUrl, { responseType: 'document' })).data
-                : this.contentOrUrl;
+                ? (await axios.get<string>(this.urlOrContent, { responseType: 'document' })).data
+                : this.urlOrContent;
 
             const text = convert(data, {
                 wordwrap: false,
                 preserveNewlines: false,
             }).replace(/(?:https?|ftp):\/\/[\n\S]+/g, '');
 
-            const tuncatedObjectString = this.isUrl ? undefined : truncateCenterString(this.contentOrUrl, 50);
+            const tuncatedObjectString = this.isUrl ? undefined : truncateCenterString(this.urlOrContent, 50);
 
             const chunks = await chunker.splitText(cleanString(text));
             for (const chunk of chunks) {
@@ -55,12 +52,12 @@ export class WebLoader extends BaseLoader<{ type: 'WebLoader' }> {
                     pageContent: chunk,
                     metadata: {
                         type: <'WebLoader'>'WebLoader',
-                        source: this.isUrl ? this.contentOrUrl : tuncatedObjectString,
+                        source: this.isUrl ? this.urlOrContent : tuncatedObjectString,
                     },
                 };
             }
         } catch (e) {
-            this.debug('Could not parse input', this.contentOrUrl, e);
+            this.debug('Could not parse input', this.urlOrContent, e);
         }
     }
 }

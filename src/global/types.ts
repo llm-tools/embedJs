@@ -36,7 +36,7 @@ export type ExtractChunkData<
     metadata: Metadata<Meta>;
 };
 
-export type AddLoaderReturn = { entriesAdded: number; uniqueId: string };
+export type AddLoaderReturn = { entriesAdded: number; uniqueId: string; loaderType: string };
 
 export type ConversationHistory = {
     message: string;

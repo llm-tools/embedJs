@@ -6,6 +6,16 @@ import { BaseLoader } from '../interfaces/base-loader.js';
 import { WebLoader } from './web-loader.js';
 
 export class SitemapLoader extends BaseLoader<{ type: 'SitemapLoader' }> {
+    public static async test(url: string): Promise<boolean> {
+        try {
+            // @ts-ignore
+            await new Sitemapper({ url, timeout: 15000 }).fetch();
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
     private readonly debug = createDebugMessages('embedjs:loader:SitemapLoader');
     private readonly url: string;
 
@@ -21,7 +31,11 @@ export class SitemapLoader extends BaseLoader<{ type: 'SitemapLoader' }> {
             this.debug(`Sitemap '${this.url}' returned ${sites.length} URLs`);
 
             for (const url of sites) {
-                const webLoader = new WebLoader({ url, chunkSize: this.chunkSize, chunkOverlap: this.chunkOverlap });
+                const webLoader = new WebLoader({
+                    urlOrContent: url,
+                    chunkSize: this.chunkSize,
+                    chunkOverlap: this.chunkOverlap,
+                });
 
                 for await (const chunk of webLoader.getUnfilteredChunks()) {
                     yield {

@@ -72,7 +72,7 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }> {
 
             if (!content.body.view.value) continue;
             const webLoader = new WebLoader({
-                content: content.body.view.value,
+                urlOrContent: content.body.view.value,
                 chunkSize: this.chunkSize,
                 chunkOverlap: this.chunkOverlap,
             });
