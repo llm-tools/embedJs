@@ -73,6 +73,10 @@ export abstract class BaseLoader<
         this.emit('incrementalChunkAvailable', incrementalGenerator);
     }
 
+   /**
+    * This TypeScript function asynchronously processes chunks of data, cleans up the content,
+    * calculates a content hash, and yields the modified chunks.
+    */
     public async *getChunks(): AsyncGenerator<LoaderChunk<T>, void, void> {
         const chunks = await this.getUnfilteredChunks();
 

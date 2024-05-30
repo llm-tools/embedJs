@@ -37,9 +37,22 @@ export type LoaderParam =
     | ({ type: 'LocalPath' } & ConstructorParameters<typeof LocalPathLoader>[0])
     | ({ type: 'Url' } & ConstructorParameters<typeof UrlLoader>[0]);
 
+/**
+ * This class generates different types of loaders based on a string input.
+ */
 export class DynamicLoader {
     private static readonly debug = createDebugMessages('embedjs:DynamicLoader');
 
+    /**
+     * The function `unfurlLoader` determines the type of loader based on the input string and returns
+     * the corresponding loader object.
+     * @param {string} loader - The `loader` parameter in the `unfurlLoader` function is a string that
+     * represents the source from which data will be loaded. It can be a URL, a local file path, a JSON
+     * string, or a YouTube video ID. The function checks the type of loader and returns an appropriate
+     * @returns The function `unfurlLoader` returns an instance of a subclass of `BaseLoader` based on
+     * the type of input `loader` provided. The possible return types are `UrlLoader`,
+     * `LocalPathLoader`, `JsonLoader`, or `YoutubeLoader`.
+     */
     private static async unfurlLoader(loader: string): Promise<BaseLoader> {
         if (isValidURL(loader)) {
             DynamicLoader.debug('Loader is a valid URL!');
@@ -58,6 +71,16 @@ export class DynamicLoader {
         }
     }
 
+    /**
+     * The function `createLoader` dynamically creates and returns a loader object based on the input provided.
+     * @param {LoaderParam} loader - The `createLoader` function is designed to create a loader based
+     * on the input provided. The `loader` parameter can be of type `string`, an instance of
+     * `BaseLoader`, or an object with a `type` property specifying the type of loader to create.
+     * @returns The `createLoader` function returns a Promise that resolves to an instance of a
+     * specific type of loader based on the input `loader` parameter. The function checks the type of
+     * the `loader` parameter and returns different loader instances based on the type or properties of
+     * the input.
+     */
     public static async createLoader(loader: LoaderParam): Promise<BaseLoader> {
         if (typeof loader === 'string') {
             DynamicLoader.debug('Loader is of type string; unfurling');
@@ -109,7 +132,14 @@ export class DynamicLoader {
         throw new SyntaxError(`Unknown loader ${loader}`);
     }
 
+    /**
+     * The function `createLoaders` asynchronously creates multiple loaders using the provided
+     * parameters and returns them as an array.
+     * @param {LoaderParam[]} loaders - An array of LoaderParam objects.
+     * @returns An array of BaseLoader objects is being returned after creating loaders using the
+     * DynamicLoader class.
+     */
     public static async createLoaders(loaders: LoaderParam[]): Promise<BaseLoader[]> {
-        return (await Promise.all(loaders.map(DynamicLoader.createLoader))).flat(1);
+        return await Promise.all(loaders.map(DynamicLoader.createLoader));
     }
 }
