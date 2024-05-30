@@ -166,6 +166,11 @@ export class RAGApplication {
         this.debug(`${newInserts} new incrementalChunks processed`, uniqueId);
     }
 
+    /**
+     * The function `getLoaders` asynchronously retrieves a list of loaders loaded so far. This includes
+     * internal loaders that were loaded by other loaders. It requires that cache is enabled to work.
+     * @returns The list of loaders with some metadata about them.
+     */
     public async getLoaders() {
         return BaseLoader.getLoadersList();
     }
