@@ -18,7 +18,7 @@ export class ExcelLoader extends BaseLoader<{ type: 'ExcelLoader' }> {
         chunkSize?: number;
         chunkOverlap?: number;
     }) {
-        super(`ExcelLoader_${md5(filePathOrUrl)}`, chunkSize ?? 1000, chunkOverlap ?? 0);
+        super(`ExcelLoader_${md5(filePathOrUrl)}`, { filePathOrUrl }, chunkSize ?? 1000, chunkOverlap ?? 0);
 
         this.filePathOrUrl = filePathOrUrl;
         this.isUrl = isValidURL(filePathOrUrl) ? true : false;

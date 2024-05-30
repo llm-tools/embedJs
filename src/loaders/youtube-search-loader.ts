@@ -18,7 +18,12 @@ export class YoutubeSearchLoader extends BaseLoader<{ type: 'YoutubeSearchLoader
         chunkSize?: number;
         chunkOverlap?: number;
     }) {
-        super(`YoutubeSearchLoader${md5(youtubeSearchString)}`, chunkSize ?? 2000, chunkOverlap);
+        super(
+            `YoutubeSearchLoader${md5(youtubeSearchString)}`,
+            { youtubeSearchString },
+            chunkSize ?? 2000,
+            chunkOverlap,
+        );
         this.searchString = youtubeSearchString;
     }
 

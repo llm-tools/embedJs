@@ -18,7 +18,7 @@ export class DocxLoader extends BaseLoader<{ type: 'DocxLoader' }> {
         chunkSize?: number;
         chunkOverlap?: number;
     }) {
-        super(`DocxLoader_${md5(filePathOrUrl)}`, chunkSize ?? 1000, chunkOverlap ?? 0);
+        super(`DocxLoader_${md5(filePathOrUrl)}`, { filePathOrUrl }, chunkSize ?? 1000, chunkOverlap ?? 0);
 
         this.filePathOrUrl = filePathOrUrl;
         this.isUrl = isValidURL(filePathOrUrl) ? true : false;

@@ -18,7 +18,7 @@ export class PptLoader extends BaseLoader<{ type: 'PptLoader' }> {
         chunkSize?: number;
         chunkOverlap?: number;
     }) {
-        super(`PptLoader_${md5(filePathOrUrl)}`, chunkSize ?? 1000, chunkOverlap ?? 0);
+        super(`PptLoader_${md5(filePathOrUrl)}`, { filePathOrUrl }, chunkSize ?? 1000, chunkOverlap ?? 0);
 
         this.filePathOrUrl = filePathOrUrl;
         this.isUrl = isValidURL(filePathOrUrl) ? true : false;

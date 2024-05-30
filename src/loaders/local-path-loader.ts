@@ -13,7 +13,7 @@ export class LocalPathLoader extends BaseLoader<{ type: 'LocalPathLoader' }> {
     private readonly path: string;
 
     constructor({ path }: { path: string }) {
-        super(`LocalPathLoader_${md5(path)}`);
+        super(`LocalPathLoader_${md5(path)}`, { path });
         this.path = path;
     }
 
@@ -24,7 +24,7 @@ export class LocalPathLoader extends BaseLoader<{ type: 'LocalPathLoader' }> {
                 metadata: {
                     ...result.metadata,
                     type: <'LocalPathLoader'>'LocalPathLoader',
-                    originalPath: path.resolve(this.path),
+                    originalPath: this.path,
                 },
             };
         }

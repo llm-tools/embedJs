@@ -21,7 +21,7 @@ export class WebLoader extends BaseLoader<{ type: 'WebLoader' }> {
         chunkSize?: number;
         chunkOverlap?: number;
     }) {
-        super(`WebLoader_${md5(urlOrContent)}`, chunkSize ?? 2000, chunkOverlap ?? 0);
+        super(`WebLoader_${md5(urlOrContent)}`, { urlOrContent }, chunkSize ?? 2000, chunkOverlap ?? 0);
 
         this.isUrl = isValidURL(urlOrContent) ? true : false;
         this.urlOrContent = urlOrContent;

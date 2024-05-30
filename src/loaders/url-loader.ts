@@ -5,13 +5,14 @@ import md5 from 'md5';
 
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { createLoaderFromMimeType } from '../util/mime.js';
+import { truncateCenterString } from '../util/strings.js';
 
 export class UrlLoader extends BaseLoader<{ type: 'UrlLoader' }> {
     private readonly debug = createDebugMessages('embedjs:loader:UrlLoader');
     private readonly url: string;
 
     constructor({ url }: { url: string }) {
-        super(`UrlLoader_${md5(url)}`);
+        super(`UrlLoader_${md5(url)}`, { url: truncateCenterString(url, 50) });
         this.url = url;
     }
 

@@ -42,3 +42,9 @@ export type ConversationHistory = {
     message: string;
     sender: 'HUMAN' | 'AI' | 'SYSTEM';
 };
+
+export type LoaderList = {
+    type: string;
+    uniqueId: string;
+    loaderMetadata: Record<string, unknown>;
+}[];

@@ -14,7 +14,9 @@ export class JsonLoader extends BaseLoader<{ type: 'JsonLoader' }> {
         object: Record<string, unknown> | Record<string, unknown>[];
         pickKeysForEmbedding?: string[];
     }) {
-        super(`JsonLoader_${md5(cleanString(JSON.stringify(object)))}`);
+        super(`JsonLoader_${md5(cleanString(JSON.stringify(object)))}`, {
+            object: truncateCenterString(JSON.stringify(object), 50),
+        });
 
         this.pickKeysForEmbedding = pickKeysForEmbedding;
         this.object = object;

@@ -19,7 +19,7 @@ export class YoutubeLoader extends BaseLoader<{ type: 'YoutubeLoader' }> {
         chunkSize?: number;
         chunkOverlap?: number;
     }) {
-        super(`YoutubeLoader_${md5(videoIdOrUrl)}`, chunkSize ?? 2000, chunkOverlap ?? 0);
+        super(`YoutubeLoader_${md5(videoIdOrUrl)}`, { videoIdOrUrl }, chunkSize ?? 2000, chunkOverlap ?? 0);
         this.videoIdOrUrl = videoIdOrUrl;
     }
 

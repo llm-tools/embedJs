@@ -20,7 +20,7 @@ export class SitemapLoader extends BaseLoader<{ type: 'SitemapLoader' }> {
     private readonly url: string;
 
     constructor({ url, chunkSize, chunkOverlap }: { url: string; chunkSize?: number; chunkOverlap?: number }) {
-        super(`SitemapLoader_${md5(url)}`, chunkSize ?? 2000, chunkOverlap);
+        super(`SitemapLoader_${md5(url)}`, { url }, chunkSize ?? 2000, chunkOverlap);
         this.url = url;
     }
 

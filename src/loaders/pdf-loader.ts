@@ -18,7 +18,7 @@ export class PdfLoader extends BaseLoader<{ type: 'PdfLoader' }> {
         chunkSize?: number;
         chunkOverlap?: number;
     }) {
-        super(`PdfLoader_${md5(filePathOrUrl)}`, chunkSize ?? 1000, chunkOverlap ?? 0);
+        super(`PdfLoader_${md5(filePathOrUrl)}`, { filePathOrUrl }, chunkSize ?? 1000, chunkOverlap ?? 0);
 
         this.filePathOrUrl = filePathOrUrl;
         this.isUrl = isValidURL(filePathOrUrl) ? true : false;

@@ -56,15 +56,15 @@ export class RAGApplication {
         return RAGEmbedding.getEmbedding().embedDocuments(texts);
     }
 
-   /**
-    * The function `getChunkUniqueId` generates a unique identifier by combining a loader unique ID and
-    * an increment ID.
-    * @param {string} loaderUniqueId - A unique identifier for the loader.
-    * @param {number} incrementId - The `incrementId` parameter is a number that represents the
-    * increment value used to generate a unique chunk identifier.
-    * @returns The function `getChunkUniqueId` returns a string that combines the `loaderUniqueId` and
-    * `incrementId`.
-    */
+    /**
+     * The function `getChunkUniqueId` generates a unique identifier by combining a loader unique ID and
+     * an increment ID.
+     * @param {string} loaderUniqueId - A unique identifier for the loader.
+     * @param {number} incrementId - The `incrementId` parameter is a number that represents the
+     * increment value used to generate a unique chunk identifier.
+     * @returns The function `getChunkUniqueId` returns a string that combines the `loaderUniqueId` and
+     * `incrementId`.
+     */
     private getChunkUniqueId(loaderUniqueId: string, incrementId: number) {
         return `${loaderUniqueId}_${incrementId}`;
     }
@@ -94,31 +94,31 @@ export class RAGApplication {
         this.debug('Initialized pre-loaders');
     }
 
-   /**
-    * The function `addLoader` asynchronously initalizes a loader using the provided parameters and adds
-    * it to the system.
-    * @param {LoaderParam} loaderParam - The `loaderParam` parameter is a string, object or instance of BaseLoader 
-    * that contains the necessary information to create a loader. 
-    * @returns The function `addLoader` returns an object with the following properties:
- * - `entriesAdded`: Number of new entries added during the loader operation
- * - `uniqueId`: Unique identifier of the loader
- * - `loaderType`: Name of the loader's constructor class
-    */
+    /**
+     * The function `addLoader` asynchronously initalizes a loader using the provided parameters and adds
+     * it to the system.
+     * @param {LoaderParam} loaderParam - The `loaderParam` parameter is a string, object or instance of BaseLoader
+     * that contains the necessary information to create a loader.
+     * @returns The function `addLoader` returns an object with the following properties:
+     * - `entriesAdded`: Number of new entries added during the loader operation
+     * - `uniqueId`: Unique identifier of the loader
+     * - `loaderType`: Name of the loader's constructor class
+     */
     public async addLoader(loaderParam: LoaderParam): Promise<AddLoaderReturn> {
         const loader = await DynamicLoader.createLoader(loaderParam);
         return this._addLoader(loader);
     }
-    
-/**
- * The function `_addLoader` asynchronously adds a loader, processes its chunks, and handles
- * incremental loading if supported by the loader.
- * @param {BaseLoader} loader - The `loader` parameter in the `_addLoader` method is an instance of the
- * `BaseLoader` class.
- * @returns The function `_addLoader` returns an object with the following properties:
- * - `entriesAdded`: Number of new entries added during the loader operation
- * - `uniqueId`: Unique identifier of the loader
- * - `loaderType`: Name of the loader's constructor class
- */
+
+    /**
+     * The function `_addLoader` asynchronously adds a loader, processes its chunks, and handles
+     * incremental loading if supported by the loader.
+     * @param {BaseLoader} loader - The `loader` parameter in the `_addLoader` method is an instance of the
+     * `BaseLoader` class.
+     * @returns The function `_addLoader` returns an object with the following properties:
+     * - `entriesAdded`: Number of new entries added during the loader operation
+     * - `uniqueId`: Unique identifier of the loader
+     * - `loaderType`: Name of the loader's constructor class
+     */
     private async _addLoader(loader: BaseLoader): Promise<AddLoaderReturn> {
         const uniqueId = loader.getUniqueId();
         this.debug('Add loader called for', uniqueId);
@@ -153,17 +153,21 @@ export class RAGApplication {
         return { entriesAdded: newInserts, uniqueId, loaderType: loader.constructor.name };
     }
 
-   /**
-    * The `incrementalLoader` function asynchronously processes incremental chunks for a loader.
-    * @param {string} uniqueId - The `uniqueId` parameter is a string that serves as an identifier for
-    * the loader.
-    * @param incrementalGenerator - The `incrementalGenerator` parameter is an asynchronous generator
-    * function that yields `LoaderChunk` objects. It is used to incrementally load chunks of data for a specific loader
-    */
+    /**
+     * The `incrementalLoader` function asynchronously processes incremental chunks for a loader.
+     * @param {string} uniqueId - The `uniqueId` parameter is a string that serves as an identifier for
+     * the loader.
+     * @param incrementalGenerator - The `incrementalGenerator` parameter is an asynchronous generator
+     * function that yields `LoaderChunk` objects. It is used to incrementally load chunks of data for a specific loader
+     */
     private async incrementalLoader(uniqueId: string, incrementalGenerator: AsyncGenerator<LoaderChunk, void, void>) {
         this.debug(`incrementalChunkAvailable for loader`, uniqueId);
         const { newInserts } = await this.batchLoadChunks(uniqueId, incrementalGenerator);
         this.debug(`${newInserts} new incrementalChunks processed`, uniqueId);
+    }
+
+    public async getLoaders() {
+        return BaseLoader.getLoadersList();
     }
 
     /**
@@ -288,17 +292,17 @@ export class RAGApplication {
         return true;
     }
 
-   /**
-    * The function `getEmbeddings` retrieves embeddings for a query, performs similarity search,
-    * filters and sorts the results based on relevance score, and returns a subset of the top results.
-    * @param {string} cleanQuery - The `cleanQuery` parameter is a string that represents the query
-    * input after it has been cleaned or processed to remove any unnecessary characters, symbols, or
-    * noise. This clean query is then used to generate embeddings for similarity search.
-    * @returns The `getEmbeddings` function returns a filtered and sorted array of search results based
-    * on the similarity score of the query embedded in the cleanQuery string. The results are filtered
-    * based on a relevance cutoff value, sorted in descending order of score, and then sliced to return
-    * only the number of results specified by the `searchResultCount` property.
-    */
+    /**
+     * The function `getEmbeddings` retrieves embeddings for a query, performs similarity search,
+     * filters and sorts the results based on relevance score, and returns a subset of the top results.
+     * @param {string} cleanQuery - The `cleanQuery` parameter is a string that represents the query
+     * input after it has been cleaned or processed to remove any unnecessary characters, symbols, or
+     * noise. This clean query is then used to generate embeddings for similarity search.
+     * @returns The `getEmbeddings` function returns a filtered and sorted array of search results based
+     * on the similarity score of the query embedded in the cleanQuery string. The results are filtered
+     * based on a relevance cutoff value, sorted in descending order of score, and then sliced to return
+     * only the number of results specified by the `searchResultCount` property.
+     */
     public async getEmbeddings(cleanQuery: string) {
         const queryEmbedded = await RAGEmbedding.getEmbedding().embedQuery(cleanQuery);
         const unfilteredResultSet = await this.vectorDb.similaritySearch(queryEmbedded, this.searchResultCount + 10);

@@ -28,7 +28,7 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }> {
         chunkSize?: number;
         chunkOverlap?: number;
     }) {
-        super(`ConfluenceLoader_${md5(spaceNames.join(','))}`, chunkSize ?? 2000, chunkOverlap ?? 200);
+        super(`ConfluenceLoader_${md5(spaceNames.join(','))}`, { spaceNames }, chunkSize ?? 2000, chunkOverlap ?? 200);
 
         this.spaceNames = spaceNames;
         this.confluenceBaseUrl = confluenceBaseUrl ?? process.env.CONFLUENCE_BASE_URL;

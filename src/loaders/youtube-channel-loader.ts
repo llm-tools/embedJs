@@ -18,7 +18,7 @@ export class YoutubeChannelLoader extends BaseLoader<{ type: 'YoutubeChannelLoad
         chunkSize?: number;
         chunkOverlap?: number;
     }) {
-        super(`YoutubeChannelLoader_${md5(youtubeChannelId)}`, chunkSize ?? 2000, chunkOverlap);
+        super(`YoutubeChannelLoader_${md5(youtubeChannelId)}`, { youtubeChannelId }, chunkSize ?? 2000, chunkOverlap);
         this.channelId = youtubeChannelId;
     }
 
