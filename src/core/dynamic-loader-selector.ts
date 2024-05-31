@@ -18,6 +18,7 @@ import { BaseLoader } from '../interfaces/base-loader.js';
 import { JsonLoader } from '../loaders/json-loader.js';
 import { UrlLoader } from '../loaders/url-loader.js';
 import { LocalPathLoader } from '../loaders/local-path-loader.js';
+import { CsvLoader } from '../loaders/csv-loader.js';
 
 export type LoaderParam =
     | string
@@ -35,7 +36,8 @@ export type LoaderParam =
     | ({ type: 'Youtube' } & ConstructorParameters<typeof YoutubeLoader>[0])
     | ({ type: 'YoutubeSearch' } & ConstructorParameters<typeof YoutubeSearchLoader>[0])
     | ({ type: 'LocalPath' } & ConstructorParameters<typeof LocalPathLoader>[0])
-    | ({ type: 'Url' } & ConstructorParameters<typeof UrlLoader>[0]);
+    | ({ type: 'Url' } & ConstructorParameters<typeof UrlLoader>[0])
+    | ({ type: 'Csv' } & ConstructorParameters<typeof CsvLoader>[0]);
 
 /**
  * This class generates different types of loaders based on a string input.
@@ -123,6 +125,8 @@ export class DynamicLoader {
                     return new LocalPathLoader(loader);
                 case 'Url':
                     return new UrlLoader(loader);
+                case 'Csv':
+                    return new CsvLoader(loader);
                 default:
                     throw new SyntaxError(`Unknown loader type ${(<any>loader).type}`);
             }

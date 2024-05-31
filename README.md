@@ -77,6 +77,7 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [Sitemap](#sitemap)
     -   [Text](#text)
     -   [Json](#json)
+    -   [Csv](#csv)
     -   [Add a custom loader](#add-a-custom-loader)
     -   [More loaders coming soon](#more-loaders-coming-soon)
 -   [LLMs](#llms)
@@ -406,6 +407,16 @@ To add a parsed Javascript object to your embeddings, use `JsonLoader`. The libr
 ```
 
 **Note:** if you want to restrict the keys that get added to the vectorDb in a dynamically obtained object, you can use the `pickKeysForEmbedding` optional parameter in the `JsonLoader` constructor.
+
+## Csv
+
+To add a Csv file (or URL) to your embeddings, use `CsvLoader`. The library will parse the Csv and add each row to its vector database.
+
+```TS
+.addLoader(new CsvLoader({ filePathOrUrl: '...' }))
+```
+
+**Note:** You can control how the `CsvLoader` parses the file in great detail by passing in the optional `csvParseOptions` constructor parameter.
 
 ## Add a custom loader
 
