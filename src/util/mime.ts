@@ -1,3 +1,6 @@
+import mime from 'mime';
+import createDebugMessages from 'debug';
+
 import { BaseLoader } from '../interfaces/base-loader.js';
 import { DocxLoader } from '../loaders/docx-loader.js';
 import { ExcelLoader } from '../loaders/excel-loader.js';
@@ -6,6 +9,7 @@ import { PptLoader } from '../loaders/ppt-loader.js';
 import { SitemapLoader } from '../loaders/sitemap-loader.js';
 import { TextLoader } from '../loaders/text-loader.js';
 import { WebLoader } from '../loaders/web-loader.js';
+import { CsvLoader } from '../loaders/csv-loader.js';
 
 export async function createLoaderFromMimeType(loader: string, mimeType: string): Promise<BaseLoader> {
     switch (mimeType) {
@@ -20,7 +24,10 @@ export async function createLoaderFromMimeType(loader: string, mimeType: string)
         case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
             return new PptLoader({ filePathOrUrl: loader });
         case 'text/plain':
-            return new TextLoader({ text: loader });
+            const fineType = mime.getType(loader);
+            createDebugMessages('embedjs:createLoaderFromMimeType')(`Fine type for '${loader}' is '${fineType}'`);
+            if (fineType === 'text/csv') return new CsvLoader({ filePathOrUrl: loader });
+            else return new TextLoader({ text: loader });
         case 'text/html':
             return new WebLoader({ urlOrContent: loader });
         case 'text/xml':
