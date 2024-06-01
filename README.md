@@ -1046,11 +1046,10 @@ export LANGCHAIN_API_KEY="<api key>"
 
 Here's a list of projects / examples built with RagKit
 
-| **Project**                                                                      | **Description**                                                         |
-| -------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| [nestjs-embedjs-template](https://github.com/llm-tools/nestjs-embedjs-template)  | A NestJS server side template                                           |
-| [nextjs-chatbot-template](https://github.com/llm-tools/chat-bot-nextjs-template) | A NextJS chat template - including a chat UI                            |
-| [slack-bot](https://github.com/llm-tools/slack-bot-template)                     | A slack bot that can answer questions based on learnt confluence spaces |
+| **Project**                                                                      | **Description**                                                        |
+| -------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| [nextjs-chatbot-template](https://github.com/llm-tools/chat-bot-nextjs-template) | A NextJS chat template - including a chat UI                           |
+| [slack-bot](https://github.com/llm-tools/slack-bot-template)                     | A NestJs based slack bot that can answer questions based on confluence |
 
 # Contributing
 
