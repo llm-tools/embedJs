@@ -105,6 +105,7 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [HNSWLib](#hnswlib)
     -   [Weaviate](#weaviate)
     -   [Qdrant](#qdrant)
+    -   [MongoDB](#mongodb)
     -   [Bring your own database](#bring-your-own-database)
     -   [More databases coming soon](#more-databases-coming-soon)
 -   [Caches](#caches)
@@ -901,6 +902,34 @@ import { QdrantDb } from '@llm-tools/embedjs/vectorDb/qdrant';
 
 .setVectorDb(new QdrantDb({ apiKey: '...'; url: '...'; clusterName: '...' }))
 ```
+
+## MongoDB
+
+[MongoDB](https://www.mongodb.com/products/platform/atlas-vector-search) is an open source document database. They offer a managed cloud offering **MongoDB Atlas**. As of right now, only the Atlas version supports vector search while the open source version does not.
+
+To use MongoDB as your vector database, follow these steps -
+
+-   Sign up for a MongoDB Atlas account if you haven't already. Once you have signed up, you will need to spin up a new cluster (or use an existing one)
+
+**Note:** you will need to provision a M10 (or higher) instance type to use Atlas vector search. Cheaper instance types or the free version (M0) give an error when vector indexes are created programatically.
+
+-   The cluster creation takes a few minutes. Once the cluster is ready, click on the connect button on the dashboard to get the connection string.
+
+**Note:** You will need to add a users separately and allow IP access from your relevant development and production environments.
+
+-   Set MongoDB database as your choice of `vectorDb`
+
+```TS
+import { MongoDb } from '@llm-tools/embedjs/vectorDb/mongodb';
+
+.setVectorDb(
+    new MongoDb({
+        connectionString: 'mongodb+srv://<username>:<password>@<url>',
+    }),
+)
+```
+
+**Note:** you can also optionally configure the database and collection name the library will use with the constructor parameters `dbName` and `collectionName`. Default values are used if these are not provided.
 
 ## Bring your own database
 
