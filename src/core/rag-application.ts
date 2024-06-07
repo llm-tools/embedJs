@@ -311,6 +311,7 @@ export class RAGApplication {
     public async getEmbeddings(cleanQuery: string) {
         const queryEmbedded = await RAGEmbedding.getEmbedding().embedQuery(cleanQuery);
         const unfilteredResultSet = await this.vectorDb.similaritySearch(queryEmbedded, this.searchResultCount + 10);
+        this.debug(`Query resulted in ${unfilteredResultSet.length} chunks before filteration...`);
 
         return unfilteredResultSet
             .filter((result) => result.score > this.embeddingRelevanceCutOff)
@@ -355,6 +356,9 @@ export class RAGApplication {
     }> {
         const context = await this.getContext(userQuery);
         const sources = [...new Set(context.map((chunk) => chunk.metadata.source))];
+        this.debug(
+            `Query resulted in ${context.length} chunks after filteration; chunks from ${sources.length} unique sources.`,
+        );
 
         return {
             sources,

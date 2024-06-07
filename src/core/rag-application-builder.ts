@@ -1,5 +1,4 @@
 import { BaseDb } from '../interfaces/base-db.js';
-import { BaseLoader } from '../interfaces/base-loader.js';
 import { RAGApplication } from './rag-application.js';
 import { BaseCache } from '../interfaces/base-cache.js';
 import { BaseEmbeddings } from '../interfaces/base-embeddings.js';
@@ -39,7 +38,7 @@ export class RAGApplicationBuilder {
         return entity;
     }
 
-    addLoader(loader: BaseLoader) {
+    addLoader(loader: LoaderParam) {
         this.loaders.push(loader);
         return this;
     }

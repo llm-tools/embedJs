@@ -15,6 +15,9 @@ import { BaseCache } from './interfaces/base-cache.js';
 import { YoutubeChannelLoader } from './loaders/youtube-channel-loader.js';
 import { YoutubeSearchLoader } from './loaders/youtube-search-loader.js';
 import { SitemapLoader } from './loaders/sitemap-loader.js';
+import { CsvLoader } from './loaders/csv-loader.js';
+import { LocalPathLoader } from './loaders/local-path-loader.js';
+import { UrlLoader } from './loaders/url-loader.js';
 import { BaseModel } from './interfaces/base-model.js';
 import { SIMPLE_MODELS } from './global/constants.js';
 import { OpenAi } from './models/openai-model.js';
@@ -34,21 +37,24 @@ export {
     RAGApplication,
     RAGApplicationBuilder,
     TextLoader,
-    YoutubeLoader,
     PdfLoader,
     WebLoader,
     JsonLoader,
     DocxLoader,
     ExcelLoader,
     PptLoader,
-    BaseCache,
-    BaseDb,
-    BaseLoader,
-    BaseEmbeddings,
+    UrlLoader,
+    LocalPathLoader,
+    CsvLoader,
+    YoutubeLoader,
     YoutubeChannelLoader,
     YoutubeSearchLoader,
     SitemapLoader,
     ConfluenceLoader,
+    BaseDb,
+    BaseCache,
+    BaseLoader,
+    BaseEmbeddings,
     BaseModel,
     SIMPLE_MODELS,
     OpenAi,
