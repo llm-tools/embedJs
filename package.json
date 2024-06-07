@@ -202,6 +202,11 @@
             "import": "./dist/vectorDb/mongo-db.js",
             "require": "./dist/vectorDb/mongo-db.cjs"
         },
+        "./vectorDb/cosmosdb": {
+            "types": "./dist/vectorDb/cosmos-db.d.ts",
+            "import": "./dist/vectorDb/cosmos-db.js",
+            "require": "./dist/vectorDb/cosmos-db.cjs"
+        },
         "./cache/lmdb": {
             "types": "./dist/cache/lmdb-cache.d.ts",
             "import": "./dist/cache/lmdb-cache.js",

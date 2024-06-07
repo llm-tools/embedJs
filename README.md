@@ -917,6 +917,12 @@ To use MongoDB as your vector database, follow these steps -
 
 **Note:** You will need to add a users separately and allow IP access from your relevant development and production environments.
 
+-   Install mongodb package in your project
+
+```bash
+npm install mongodb
+```
+
 -   Set MongoDB database as your choice of `vectorDb`
 
 ```TS
