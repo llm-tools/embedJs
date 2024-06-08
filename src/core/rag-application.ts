@@ -253,8 +253,9 @@ export class RAGApplication {
     private async batchLoadEmbeddings(loaderUniqueId: string, formattedChunks: Chunk[]) {
         if (formattedChunks.length === 0) return 0;
 
+        this.debug(`Processing batch (size ${formattedChunks.length}) for loader ${loaderUniqueId}`);
         const embeddings = await this.embedChunks(formattedChunks);
-        this.debug(`Batch embeddings (size ${formattedChunks.length}) obtained for loader`, loaderUniqueId);
+        this.debug(`Batch embeddings (size ${formattedChunks.length}) obtained for loader ${loaderUniqueId}`);
 
         const embedChunks = formattedChunks.map((chunk, index) => {
             return <InsertChunkData>{
@@ -264,6 +265,7 @@ export class RAGApplication {
             };
         });
 
+        this.debug(`Inserting chunks for loader ${loaderUniqueId} to vectorDb`);
         return this.vectorDb.insertChunks(embedChunks);
     }
 

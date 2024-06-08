@@ -1,6 +1,6 @@
 {
     "name": "@llm-tools/embedjs",
-    "version": "0.0.86",
+    "version": "0.0.87",
     "description": "A NodeJS RAG framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -80,6 +80,7 @@
         "youtube-transcript": "^1.2.1"
     },
     "devDependencies": {
+        "@azure/cosmos": "^4.0.0",
         "@pinecone-database/pinecone": "^2.2.2",
         "@qdrant/js-client-rest": "^1.9.0",
         "@tsconfig/recommended": "^1.0.6",
@@ -109,7 +110,6 @@
         "weaviate-ts-client": "^2.2.0"
     },
     "peerDependencies": {
-        "mongodb": "^6.7.0",
         "@pinecone-database/pinecone": "^2.2.2",
         "@qdrant/js-client-rest": "^1.9.0",
         "chromadb": "^1.8.1",
@@ -117,8 +117,10 @@
         "hnswlib-node": "^3.0.0",
         "ioredis": "^5.4.1",
         "lmdb": "^3.0.11",
+        "mongodb": "^6.7.0",
         "vectordb": "^0.5.0",
-        "weaviate-ts-client": "^2.2.0"
+        "weaviate-ts-client": "^2.2.0",
+        "@azure/cosmos": "^4.0.0"
     },
     "overrides": {
         "@pinecone-database/pinecone": "^2.2.2",
@@ -155,6 +157,9 @@
             "optional": true
         },
         "mongodb": {
+            "optional": true
+        },
+        "@azure/cosmos": {
             "optional": true
         }
     },
