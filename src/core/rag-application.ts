@@ -31,18 +31,19 @@ export class RAGApplication {
 
         this.model = llmBuilder.getModel();
         BaseModel.setDefaultTemperature(llmBuilder.getTemperature());
+        if (!this.model) this.debug('No base model set; query function unavailable!');
 
         this.queryTemplate = cleanString(llmBuilder.getQueryTemplate());
         this.debug(`Using system query template - "${this.queryTemplate}"`);
 
-        this.rawLoaders = llmBuilder.getLoaders();
         this.vectorDb = llmBuilder.getVectorDb();
+        if (!this.vectorDb) throw new SyntaxError('VectorDb not set');
+
+        this.rawLoaders = llmBuilder.getLoaders();
         this.searchResultCount = llmBuilder.getSearchResultCount();
         this.embeddingRelevanceCutOff = llmBuilder.getEmbeddingRelevanceCutOff();
 
         RAGEmbedding.init(llmBuilder.getEmbeddingModel() ?? new OpenAi3SmallEmbeddings());
-        if (!this.model) throw new SyntaxError('Model not set');
-        if (!this.vectorDb) throw new SyntaxError('VectorDb not set');
     }
 
     /**
@@ -76,8 +77,10 @@ export class RAGApplication {
     public async init() {
         this.loaders = await DynamicLoader.createLoaders(this.rawLoaders);
 
-        await this.model.init();
-        this.debug('Initialized LLM class');
+        if (this.model) {
+            await this.model.init();
+            this.debug('Initialized LLM class');
+        }
 
         await this.vectorDb.init({ dimensions: RAGEmbedding.getEmbedding().getDimensions() });
         this.debug('Initialized vector database');
@@ -356,6 +359,10 @@ export class RAGApplication {
         result: string;
         sources: string[];
     }> {
+        if (!this.model) {
+            throw new Error('LLM Not set; query method not available');
+        }
+
         const context = await this.getContext(userQuery);
         const sources = [...new Set(context.map((chunk) => chunk.metadata.source))];
         this.debug(

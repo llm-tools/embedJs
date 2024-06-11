@@ -8,15 +8,15 @@ import { OpenAi } from '../models/openai-model.js';
 import { LoaderParam } from './dynamic-loader-selector.js';
 
 export class RAGApplicationBuilder {
-    private searchResultCount: number;
-    private loaders: LoaderParam[];
-    private vectorDb: BaseDb;
     private temperature: number;
     private queryTemplate: string;
     private cache?: BaseCache;
+    private model: BaseModel | null;
+    private searchResultCount: number;
     private embeddingModel: BaseEmbeddings;
-    private model: BaseModel;
     private embeddingRelevanceCutOff: number;
+    private loaders: LoaderParam[];
+    private vectorDb: BaseDb;
 
     constructor() {
         this.loaders = [];
@@ -82,7 +82,7 @@ export class RAGApplicationBuilder {
         return this;
     }
 
-    setModel(model: string | SIMPLE_MODELS | BaseModel) {
+    setModel(model: 'NO_MODEL' | SIMPLE_MODELS | BaseModel) {
         if (typeof model === 'object') this.model = model;
         else {
             if (model === SIMPLE_MODELS.OPENAI_GPT4_O) this.model = new OpenAi({ modelName: 'gpt-4o' });
@@ -90,7 +90,7 @@ export class RAGApplicationBuilder {
                 this.model = new OpenAi({ modelName: 'gpt-4-turbo' });
             else if (model === SIMPLE_MODELS['OPENAI_GPT3.5_TURBO'])
                 this.model = new OpenAi({ modelName: 'gpt-3.5-turbo' });
-            else this.model = new OpenAi({ modelName: model });
+            else this.model = null;
         }
 
         return this;

@@ -1,16 +1,17 @@
 # EmbedJs
 
 <p>
-<a href="https://www.npmjs.com/package/@@llm-tools/embedjs"  target="_blank">
-<img alt="NPM Version" src="https://img.shields.io/npm/v/%40llm-tools/embedjs">
-</a>
-
 <a href="https://www.npmjs.com/package/@llm-tools/embedjs"  target="_blank">
-<img alt="License" src="https://img.shields.io/npm/l/%40llm-tools%2Fembedjs">
-</a>
+<img alt="License" src="https://img.shields.io/npm/l/%40llm-tools%2Fembedjs?style=for-the-badge">
+</a>&nbsp;
+<a href="https://www.npmjs.com/package/@@llm-tools/embedjs"  target="_blank">
+<img alt="NPM Version" src="https://img.shields.io/npm/v/%40llm-tools/embedjs?style=for-the-badge">
+</a>&nbsp;
 </p>
 
-EmbedJs is a NodeJS framework that simplifies RAG application development by efficiently processing unstructured data. It segments data, creates relevant embeddings, and stores them in a vector database for quick retrieval.
+EmbedJs is an Open Source Framework for personalizing LLM responses. An ultimate toolkit for building powerful Retrieval-Augmented Generation (RAG) and Large Language Model (LLM) applications with ease in Node.js.
+
+It segments data into manageable chunks, generates relevant embeddings, and stores them in a vector database for optimized retrieval. It enables users to extract contextual information, find precise answers, or engage in interactive chat conversations, all tailored to their own data.
 
 Here's an example of how easy it is to get started -
 
@@ -26,12 +27,12 @@ const ragApplication = await new RAGApplicationBuilder()
 That's it. Now you can ask questions -
 
 ```TS
-console.log(await ragApplication.query('Tell me about the history of Tesla?'));
+console.log(await ragApplication.query('Give me the history of Tesla?'));
 ```
 
 ## Features
 
--   Supports several large language models
+-   Supports all popular large language models - paid and open source
 
 -   Supports many vector databases including self-hosted and cloud variants.
 
@@ -39,7 +40,9 @@ console.log(await ragApplication.query('Tell me about the history of Tesla?'));
 
 -   Supports several cache options that can greatly improve the performance of your RAG applications in production.
 
--   EmbedJs's simple and powerful API allows both quick launch and deep customizabilty.
+-   Exposes a simple and highly configureable API allows both quick launch and deep customizabilty.
+
+-   Use just as an embedding engine or a full blown chat API with history
 
 ## Quick note
 
@@ -142,6 +145,8 @@ const ragApplication = await new RAGApplicationBuilder()
     .setModel(new HuggingFace({ modelName: 'mistralai/Mixtral-8x7B-v0.1' }))
     ...
 ```
+
+**Note:** To use the library only for embeddings and not instantiate a LLM, you can pass the string `NO_MODEL` to the setModel function here. This will disable the option to call the `query` function but you can still get the embeddings with the [`getContext`](#get-context-dry-run) method.
 
 > **2. Pick a Vector database**<br/>
 > The library supports several vector databases. Enable one by allowing the instructions in the [Vector Databases](#vector-databases-supported) section.

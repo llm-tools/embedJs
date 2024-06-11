@@ -103,11 +103,11 @@ export class CosmosDb implements BaseDb {
 
         const queryResponse = await this.container.items
             .query(
-                `SELECT x.id, x.${CosmosDb.LOADER_FIELD_NAME}, x.pageContent, x.metadata, x.score
-                FROM (SELECT c.id, c.${CosmosDb.LOADER_FIELD_NAME}, c.pageContent, c.metadata,
+                `SELECT c.id, c.${CosmosDb.LOADER_FIELD_NAME}, c.pageContent, c.metadata,
                 VectorDistance(c.${CosmosDb.VECTOR_FIELD_NAME}, [${encodedQuery}]) AS score
-                FROM c) x
-                ORDER BY x.score OFFSET 0 LIMIT ${k}`,
+                FROM c
+                ORDER BY VectorDistance(c.${CosmosDb.VECTOR_FIELD_NAME}, [${encodedQuery}]) 
+                OFFSET 0 LIMIT ${k}`,
                 { forceQueryPlan: true, maxItemCount: k },
             )
             // This ORDER BY part is necessary to enable the correct content to be available.
