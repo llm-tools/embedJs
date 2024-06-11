@@ -358,6 +358,7 @@ export class RAGApplication {
     ): Promise<{
         result: string;
         sources: string[];
+        tokenUsage: { completionTokens: number; promptTokens: number; totalTokens: number };
     }> {
         if (!this.model) {
             throw new Error('LLM Not set; query method not available');
@@ -369,9 +370,14 @@ export class RAGApplication {
             `Query resulted in ${context.length} chunks after filteration; chunks from ${sources.length} unique sources.`,
         );
 
+        const result = await this.model.query(this.queryTemplate, userQuery, context, conversationId);
         return {
             sources,
-            result: await this.model.query(this.queryTemplate, userQuery, context, conversationId),
+            result: result.llmResponse,
+            tokenUsage: {
+                ...result.tokenUsage,
+                totalTokens: result.tokenUsage.completionTokens + result.tokenUsage.promptTokens,
+            },
         };
     }
 }

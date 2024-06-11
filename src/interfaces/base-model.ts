@@ -1,5 +1,5 @@
 import createDebugMessages from 'debug';
-import { Chunk, ConversationHistory } from '../global/types.js';
+import { Chunk, ConversationHistory, ModelResponse } from '../global/types.js';
 
 export abstract class BaseModel {
     private readonly baseDebug = createDebugMessages('embedjs:model:BaseModel');
@@ -28,7 +28,7 @@ export abstract class BaseModel {
      * and maintains the conversation history.
      * @param {string} system - This is the system prompt passed to the LLM.
      * @param {string} userQuery - The `userQuery` parameter in the `query` method represents the query
-     * or question inputted by the user that the system will process and provide a response to. 
+     * or question inputted by the user that the system will process and provide a response to.
      * @param {Chunk[]} supportingContext - The `supportingContext` parameter in the `query` method is
      * an array of `Chunk` objects. Each `Chunk` object typically contains information or context
      * relevant to the user query being processed. The `supportingContext` is used to provide
@@ -44,7 +44,7 @@ export abstract class BaseModel {
         userQuery: string,
         supportingContext: Chunk[],
         conversationId: string = 'default',
-    ): Promise<string> {
+    ): Promise<ModelResponse> {
         if (!this.conversationMap.has(conversationId)) this.conversationMap.set(conversationId, []);
 
         const conversationHistory = this.conversationMap.get(conversationId);
@@ -56,7 +56,7 @@ export abstract class BaseModel {
             message: `Old context: ${supportingContext.map((s) => s.pageContent).join('; ')}`,
             sender: 'SYSTEM',
         });
-        conversationHistory.push({ message: result, sender: 'AI' });
+        conversationHistory.push({ message: result.llmResponse, sender: 'AI' });
         return result;
     }
 
@@ -65,5 +65,5 @@ export abstract class BaseModel {
         userQuery: string,
         supportingContext: Chunk[],
         pastConversations: ConversationHistory[],
-    ): Promise<string>;
+    ): Promise<ModelResponse>;
 }

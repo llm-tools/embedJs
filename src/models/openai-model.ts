@@ -3,7 +3,7 @@ import { ChatOpenAI } from '@langchain/openai';
 import { HumanMessage, AIMessage, SystemMessage } from '@langchain/core/messages';
 
 import { BaseModel } from '../interfaces/base-model.js';
-import { Chunk, ConversationHistory } from '../global/types.js';
+import { Chunk, ConversationHistory, ModelResponse } from '../global/types.js';
 
 export class OpenAi extends BaseModel {
     private readonly debug = createDebugMessages('embedjs:model:OpenAi');
@@ -24,7 +24,7 @@ export class OpenAi extends BaseModel {
         userQuery: string,
         supportingContext: Chunk[],
         pastConversations: ConversationHistory[],
-    ): Promise<string> {
+    ): Promise<ModelResponse> {
         const pastMessages: (AIMessage | SystemMessage | HumanMessage)[] = [new SystemMessage(system)];
         pastMessages.push(
             new SystemMessage(`Supporting context: ${supportingContext.map((s) => s.pageContent).join('; ')}`),
@@ -43,6 +43,13 @@ export class OpenAi extends BaseModel {
         this.debug('Executing openai model with prompt -', userQuery);
         const result = await this.model.invoke(pastMessages);
         this.debug('OpenAI response -', result);
-        return result.content.toString();
+
+        return {
+            llmResponse: result.content.toString(),
+            tokenUsage: {
+                promptTokens: result.response_metadata.tokenUsage.promptTokens,
+                completionTokens: result.response_metadata.tokenUsage.completionTokens,
+            },
+        };
     }
 }

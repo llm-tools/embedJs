@@ -48,3 +48,8 @@ export type LoaderList = {
     uniqueId: string;
     loaderMetadata: Record<string, unknown>;
 }[];
+
+export type ModelResponse = {
+    llmResponse: string;
+    tokenUsage: { completionTokens: number; promptTokens: number };
+};
