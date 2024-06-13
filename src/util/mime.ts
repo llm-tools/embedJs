@@ -28,6 +28,8 @@ export async function createLoaderFromMimeType(loader: string, mimeType: string)
             createDebugMessages('embedjs:createLoaderFromMimeType')(`Fine type for '${loader}' is '${fineType}'`);
             if (fineType === 'text/csv') return new CsvLoader({ filePathOrUrl: loader });
             else return new TextLoader({ text: loader });
+        case 'application/csv':
+            return new CsvLoader({ filePathOrUrl: loader });
         case 'text/html':
             return new WebLoader({ urlOrContent: loader });
         case 'text/xml':
