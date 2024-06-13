@@ -1,4 +1,4 @@
-import magic, { MimeType } from 'stream-mmmagic';
+import magic, { MimeType } from 'stream-mmmagic-patched';
 import createDebugMessages from 'debug';
 import axios from 'axios';
 import md5 from 'md5';

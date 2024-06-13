@@ -1,4 +1,4 @@
-import magic, { MimeType } from 'stream-mmmagic';
+import magic, { MimeType } from 'stream-mmmagic-patched';
 import createDebugMessages from 'debug';
 import path from 'node:path';
 import fs from 'node:fs';
