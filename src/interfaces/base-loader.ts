@@ -84,7 +84,7 @@ export abstract class BaseLoader<
         this.chunkSize = chunkSize;
 
         BaseLoader.recordLoaderInCache(this.constructor.name, uniqueId, loaderMetadata);
-        createDebugMessages('embedjs:loader:BaseLoader')(`New loader class initalized with key ${uniqueId}`);
+        createDebugMessages('ragkit:loader:BaseLoader')(`New loader class initalized with key ${uniqueId}`);
     }
 
     public async init(): Promise<void> {}

@@ -1,4 +1,4 @@
-# Contributing to embedJs
+# Contributing to RAGKit
 
 To make a contribution, please follow these steps:
 

@@ -5,9 +5,9 @@ import { BaseDb } from '../interfaces/base-db.js';
 import { ExtractChunkData, InsertChunkData } from '../global/types.js';
 
 export class CosmosDb implements BaseDb {
-    private readonly debug = createDebugMessages('embedjs:vector:CosmosDb');
+    private readonly debug = createDebugMessages('ragkit:vector:CosmosDb');
 
-    private static readonly DEFAULT_DB_NAME = 'embedjs';
+    private static readonly DEFAULT_DB_NAME = 'ragkit';
     private static readonly CONTAINER_NAME = 'vectors';
 
     private static readonly VECTOR_FIELD_NAME = 'v_fld';

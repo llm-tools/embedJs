@@ -6,7 +6,7 @@ import { Chunk, ConversationHistory } from '../global/types.js';
 import { BaseModel } from '../interfaces/base-model.js';
 
 export class VertexAI extends BaseModel {
-    private readonly debug = createDebugMessages('embedjs:model:VertexAI');
+    private readonly debug = createDebugMessages('ragkit:model:VertexAI');
     private model: ChatVertexAI;
 
     constructor({ temperature, modelName }: { temperature?: number; modelName?: string }) {

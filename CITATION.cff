@@ -3,6 +3,6 @@ message: 'If you use this software, please cite it as below.'
 authors:
     - family-names: 'K V'
       given-names: 'Adhityan'
-title: 'EmbedJs'
+title: 'RAGKit'
 date-released: 2023-06-24
-url: 'https://github.com/llm-tools/embedjs'
+url: 'https://github.com/ragkit'

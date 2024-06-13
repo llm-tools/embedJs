@@ -5,9 +5,9 @@ import { BaseDb } from '../interfaces/base-db.js';
 import { ExtractChunkData, InsertChunkData } from '../global/types.js';
 
 export class MongoDb implements BaseDb {
-    private readonly debug = createDebugMessages('embedjs:vector:MongoDb');
+    private readonly debug = createDebugMessages('ragkit:vector:MongoDb');
 
-    private static readonly DEFAULT_DB_NAME = 'embedjs';
+    private static readonly DEFAULT_DB_NAME = 'ragkit';
     private static readonly COLLECTION_NAME = 'vectors';
     private static readonly VECTOR_FIELD_NAME = 'v_fld';
     private static readonly LOADER_FIELD_NAME = 'l_fld';

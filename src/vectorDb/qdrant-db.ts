@@ -6,7 +6,7 @@ import { BaseDb } from '../interfaces/base-db.js';
 import { ExtractChunkData, InsertChunkData } from '../global/types.js';
 
 export class QdrantDb implements BaseDb {
-    private readonly debug = createDebugMessages('embedjs:vector:QdrantDb');
+    private readonly debug = createDebugMessages('ragkit:vector:QdrantDb');
     private static readonly QDRANT_INSERT_CHUNK_SIZE = 500;
 
     private readonly client: QdrantClient;

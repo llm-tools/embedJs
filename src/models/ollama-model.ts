@@ -6,7 +6,7 @@ import { Chunk, ConversationHistory } from '../global/types.js';
 import { BaseModel } from '../interfaces/base-model.js';
 
 export class Ollama extends BaseModel {
-    private readonly debug = createDebugMessages('embedjs:model:Ollama');
+    private readonly debug = createDebugMessages('ragkit:model:Ollama');
     private model: ChatOllamaAI;
 
     constructor({ baseUrl, temperature, modelName }: { baseUrl?: string; temperature?: number; modelName?: string }) {

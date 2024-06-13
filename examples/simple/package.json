@@ -4,7 +4,7 @@
     "type": "module",
     "private": true,
     "scripts": {
-        "start": "tsc && DEBUG=embedjs:* node dist/examples/simple/src/index.js"
+        "start": "tsc && DEBUG=ragkit:* node dist/examples/simple/src/index.js"
     },
     "author": "",
     "license": "ISC",

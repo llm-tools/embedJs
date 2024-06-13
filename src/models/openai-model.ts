@@ -6,7 +6,7 @@ import { BaseModel } from '../interfaces/base-model.js';
 import { Chunk, ConversationHistory, ModelResponse } from '../global/types.js';
 
 export class OpenAi extends BaseModel {
-    private readonly debug = createDebugMessages('embedjs:model:OpenAi');
+    private readonly debug = createDebugMessages('ragkit:model:OpenAi');
     private readonly modelName: string;
     private model: ChatOpenAI;
 

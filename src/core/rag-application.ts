@@ -14,7 +14,7 @@ import { cleanString } from '../util/strings.js';
 import { getUnique } from '../util/arrays.js';
 
 export class RAGApplication {
-    private readonly debug = createDebugMessages('embedjs:core');
+    private readonly debug = createDebugMessages('ragkit:core');
     private readonly queryTemplate: string;
     private readonly searchResultCount: number;
     private readonly cache?: BaseCache;

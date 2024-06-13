@@ -5,7 +5,7 @@ import { BaseModel } from '../interfaces/base-model.js';
 import { Chunk, ConversationHistory, ModelResponse } from '../global/types.js';
 
 export class HuggingFace extends BaseModel {
-    private readonly debug = createDebugMessages('embedjs:model:HuggingFace');
+    private readonly debug = createDebugMessages('ragkit:model:HuggingFace');
 
     private readonly modelName: string;
     private readonly maxNewTokens: number;

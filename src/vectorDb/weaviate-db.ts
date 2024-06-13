@@ -7,7 +7,7 @@ import { BaseDb } from '../interfaces/base-db.js';
 import { ExtractChunkData, InsertChunkData } from '../global/types.js';
 
 export class WeaviateDb implements BaseDb {
-    private readonly debug = createDebugMessages('embedjs:vector:WeaviateDb');
+    private readonly debug = createDebugMessages('ragkit:vector:WeaviateDb');
     private static readonly WEAVIATE_INSERT_CHUNK_SIZE = 500;
 
     private dimensions: number;

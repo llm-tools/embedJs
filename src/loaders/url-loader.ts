@@ -8,7 +8,7 @@ import { createLoaderFromMimeType } from '../util/mime.js';
 import { truncateCenterString } from '../util/strings.js';
 
 export class UrlLoader extends BaseLoader<{ type: 'UrlLoader' }> {
-    private readonly debug = createDebugMessages('embedjs:loader:UrlLoader');
+    private readonly debug = createDebugMessages('ragkit:loader:UrlLoader');
     private readonly url: string;
 
     constructor({ url }: { url: string }) {

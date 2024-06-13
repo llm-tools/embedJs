@@ -6,7 +6,7 @@ import { BaseDb } from '../interfaces/base-db.js';
 import { ExtractChunkData, InsertChunkData } from '../global/types.js';
 
 export class PineconeDb implements BaseDb {
-    private readonly debug = createDebugMessages('embedjs:vector:PineconeDb');
+    private readonly debug = createDebugMessages('ragkit:vector:PineconeDb');
     private static readonly PINECONE_INSERT_CHUNK_SIZE = 200; //Pinecone only allows inserting 2MB worth of chunks at a time; this is an approximation
 
     private readonly client: Pinecone;

@@ -5,7 +5,7 @@ import { BaseDb } from '../interfaces/base-db.js';
 import { ExtractChunkData, InsertChunkData, Metadata } from '../global/types.js';
 
 export class HNSWDb implements BaseDb {
-    private readonly debug = createDebugMessages('embedjs:vector:HNSWDb');
+    private readonly debug = createDebugMessages('ragkit:vector:HNSWDb');
     private index: HNSWLib.HierarchicalNSW;
 
     private docCount: number;

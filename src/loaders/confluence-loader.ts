@@ -7,7 +7,7 @@ import { BaseLoader } from '../interfaces/base-loader.js';
 import { WebLoader } from './web-loader.js';
 
 export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }> {
-    private readonly debug = createDebugMessages('embedjs:loader:ConfluenceLoader');
+    private readonly debug = createDebugMessages('ragkit:loader:ConfluenceLoader');
 
     private readonly confluence: ConfluenceClient;
     private readonly confluenceBaseUrl: string;

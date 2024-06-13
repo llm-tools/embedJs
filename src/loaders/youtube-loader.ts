@@ -7,7 +7,7 @@ import { BaseLoader } from '../interfaces/base-loader.js';
 import { cleanString } from '../util/strings.js';
 
 export class YoutubeLoader extends BaseLoader<{ type: 'YoutubeLoader' }> {
-    private readonly debug = createDebugMessages('embedjs:loader:YoutubeLoader');
+    private readonly debug = createDebugMessages('ragkit:loader:YoutubeLoader');
     private readonly videoIdOrUrl: string;
 
     constructor({

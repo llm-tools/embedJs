@@ -9,7 +9,7 @@ import { cleanString, isValidURL } from '../util/strings.js';
 import { stream2buffer } from '../util/stream.js';
 
 export class CsvLoader extends BaseLoader<{ type: 'CsvLoader' }> {
-    private readonly debug = createDebugMessages('embedjs:loader:CsvLoader');
+    private readonly debug = createDebugMessages('ragkit:loader:CsvLoader');
     private readonly csvParseOptions: CsvParseOptions;
     private readonly filePathOrUrl: string;
     private readonly isUrl: boolean;

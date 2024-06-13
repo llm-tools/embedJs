@@ -9,7 +9,7 @@ import { createLoaderFromMimeType } from '../util/mime.js';
 import { UnfilteredLoaderChunk } from '../global/types.js';
 
 export class LocalPathLoader extends BaseLoader<{ type: 'LocalPathLoader' }> {
-    private readonly debug = createDebugMessages('embedjs:loader:LocalPathLoader');
+    private readonly debug = createDebugMessages('ragkit:loader:LocalPathLoader');
     private readonly path: string;
 
     constructor({ path }: { path: string }) {

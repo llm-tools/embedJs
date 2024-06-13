@@ -2,7 +2,7 @@ import createDebugMessages from 'debug';
 import { Chunk, ConversationHistory, ModelResponse } from '../global/types.js';
 
 export abstract class BaseModel {
-    private readonly baseDebug = createDebugMessages('embedjs:model:BaseModel');
+    private readonly baseDebug = createDebugMessages('ragkit:model:BaseModel');
     private static defaultTemperature: number;
 
     public static setDefaultTemperature(temperature?: number) {

@@ -6,7 +6,7 @@ import { BaseLoader } from '../interfaces/base-loader.js';
 import { YoutubeChannelLoader } from './youtube-channel-loader.js';
 
 export class YoutubeSearchLoader extends BaseLoader<{ type: 'YoutubeSearchLoader' }> {
-    private readonly debug = createDebugMessages('embedjs:loader:YoutubeSearchLoader');
+    private readonly debug = createDebugMessages('ragkit:loader:YoutubeSearchLoader');
     private readonly searchString: string;
 
     constructor({

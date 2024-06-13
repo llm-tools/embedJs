@@ -8,7 +8,7 @@ import { BaseLoader } from '../interfaces/base-loader.js';
 import { cleanString, isValidURL, truncateCenterString } from '../util/strings.js';
 
 export class WebLoader extends BaseLoader<{ type: 'WebLoader' }> {
-    private readonly debug = createDebugMessages('embedjs:loader:WebLoader');
+    private readonly debug = createDebugMessages('ragkit:loader:WebLoader');
     private readonly urlOrContent: string;
     private readonly isUrl: boolean;
 

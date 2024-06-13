@@ -43,7 +43,7 @@ export type LoaderParam =
  * This class generates different types of loaders based on a string input.
  */
 export class DynamicLoader {
-    private static readonly debug = createDebugMessages('embedjs:DynamicLoader');
+    private static readonly debug = createDebugMessages('ragkit:DynamicLoader');
 
     /**
      * The function `unfurlLoader` determines the type of loader based on the input string and returns

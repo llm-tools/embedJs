@@ -16,7 +16,7 @@ export class SitemapLoader extends BaseLoader<{ type: 'SitemapLoader' }> {
         }
     }
 
-    private readonly debug = createDebugMessages('embedjs:loader:SitemapLoader');
+    private readonly debug = createDebugMessages('ragkit:loader:SitemapLoader');
     private readonly url: string;
 
     constructor({ url, chunkSize, chunkOverlap }: { url: string; chunkSize?: number; chunkOverlap?: number }) {

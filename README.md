@@ -1,15 +1,15 @@
-# EmbedJs
+# RAGKit
 
 <p>
-<a href="https://www.npmjs.com/package/@llm-tools/embedjs"  target="_blank">
-<img alt="License" src="https://img.shields.io/npm/l/%40llm-tools%2Fembedjs?style=for-the-badge">
+<a href="https://www.npmjs.com/package/ragkit"  target="_blank">
+<img alt="License" src="https://img.shields.io/npm/l/ragkit?style=for-the-badge">
 </a>&nbsp;
-<a href="https://www.npmjs.com/package/@@llm-tools/embedjs"  target="_blank">
-<img alt="NPM Version" src="https://img.shields.io/npm/v/%40llm-tools/embedjs?style=for-the-badge">
+<a href="https://www.npmjs.com/package/ragkit"  target="_blank">
+<img alt="NPM Version" src="https://img.shields.io/npm/v/ragkit?style=for-the-badge">
 </a>&nbsp;
 </p>
 
-EmbedJs is an Open Source Framework for personalizing LLM responses. An ultimate toolkit for building powerful Retrieval-Augmented Generation (RAG) and Large Language Model (LLM) applications with ease in Node.js.
+RAGKit is an Open Source Framework for personalizing LLM responses. An ultimate toolkit for building powerful Retrieval-Augmented Generation (RAG) and Large Language Model (LLM) applications with ease in Node.js.
 
 It segments data into manageable chunks, generates relevant embeddings, and stores them in a vector database for optimized retrieval. It enables users to extract contextual information, find precise answers, or engage in interactive chat conversations, all tailored to their own data.
 
@@ -46,11 +46,11 @@ console.log(await ragApplication.query('Give me the history of Tesla?'));
 
 ## Quick note
 
-The author(s) are looking to add core maintainers for this opensource project. Reach out on [Linkedin](https://www.linkedin.com/in/adhityan/) if you are interested. If you want to contribute in general - create issues on GitHub or send in PRs.
+The library is being renamed from `embedjs` to `ragkit`. Read the release notes on the reasons behind this. All future versions of the package will be published exclusively to NPM under the name `ragkit`. Existing versions will be available as is. Sorry for the inconvinience this may cause you.
 
 # Contents
 
--   [EmbedJs](#embedjs)
+-   [RAGKit](#ragkit)
     -   [Features](#features)
     -   [Quick note](#quick-note)
 -   [Contents](#contents)
@@ -128,14 +128,14 @@ The author(s) are looking to add core maintainers for this opensource project. R
 You can install the library via NPM or Yarn
 
 ```bash
-npm i @llm-tools/embedjs
+npm i ragkit
 ```
 
 **Note:** The library uses the newer ES6 modules and `import` syntax.
 
 ## Usage
 
-To configure a new EmbedJs application, you need to do three steps -
+To configure a new RAGKit application, you need to do three steps -
 
 > **1. Pick an LLM**<br/>
 > The library supports several LLMs. Activate one by allowing the instructions in the [LLM](#llms) section.
@@ -274,7 +274,7 @@ await ragApplication.addLoader('https://lamport.azurewebsites.net/pubs/paxos-sim
 
 # Loaders supported
 
-Loaders take a specific format, process the input and create chunks of the data. You can import all the loaders from the path `@llm-tools/embedjs`. Currently, the library supports the following formats -
+Loaders take a specific format, process the input and create chunks of the data. The library supports the following formats -
 
 ## Youtube video
 
@@ -448,7 +448,7 @@ If you want to add any other format, please create an [issue](https://github.com
 
 # LLMs
 
-It's relatively easy to switch between different LLMs using the library. You can import any of the LLMs from the path `@llm-tools/embedjs`. We support the following LLMs today -
+It's relatively easy to switch between different LLMs using the library. We support the following LLMs today -
 
 ## OpenAI
 
@@ -674,7 +674,7 @@ To set it as your model of choice -
 -   Set `OpenAi3LargeEmbeddings` as your embedding model on `RAGApplicationBuilder`
 
 ```TS
-import { OpenAi3LargeEmbeddings } from '@llm-tools/embedjs';
+import { OpenAi3LargeEmbeddings } from 'ragkit';
 
 await new RAGApplicationBuilder()
 .setEmbeddingModel(new OpenAi3LargeEmbeddings())
@@ -689,7 +689,7 @@ To set it as your model of choice -
 -   Set `AdaEmbeddings` as your embedding model on `RAGApplicationBuilder`
 
 ```TS
-import { AdaEmbeddings } from '@llm-tools/embedjs';
+import { AdaEmbeddings } from 'ragkit';
 
 await new RAGApplicationBuilder()
 .setEmbeddingModel(new AdaEmbeddings())
@@ -712,7 +712,7 @@ COHERE_API_KEY="<YOUR_KEY>"
 -   Set `CohereEmbeddings` as your embedding model on `RAGApplicationBuilder`
 
 ```TS
-import { CohereEmbeddings } from '@llm-tools/embedjs';
+import { CohereEmbeddings } from 'ragkit';
 
 await new RAGApplicationBuilder()
 .setEmbeddingModel(new CohereEmbeddings())
@@ -725,7 +725,7 @@ The libaray supports the embedding model `textembedding-gecko` with 768 dimensio
 To use this, you can authenticate to Vertex AI on GCP. Refer [here](#vertex-ai) on how to do this. Once done, simply set `GeckoEmbedding` as your choice of embedding model, like so -
 
 ```TS
-import { GeckoEmbedding } from '@llm-tools/embedjs';
+import { GeckoEmbedding } from 'ragkit';
 
 await new RAGApplicationBuilder()
 .setEmbeddingModel(new GeckoEmbedding())
@@ -784,7 +784,7 @@ PINECONE_API_KEY=<your api key>
 -   Set the Pinecone database as your choice of `vectorDb`
 
 ```TS
-import { PineconeDb } from '@llm-tools/embedjs/vectorDb/pinecone';
+import { PineconeDb } from 'ragkit/vectorDb/pinecone';
 
 .setVectorDb(new PineconeDb({
     projectName: 'test',
@@ -813,7 +813,7 @@ npm install vectordb
 -   Set LanceDB database as your choice of `vectorDb`
 
 ```TS
-import { LanceDb } from '@llm-tools/embedjs/vectorDb/lance';
+import { LanceDb } from 'ragkit/vectorDb/lance';
 
 .setVectorDb(new LanceDb({ path: path.resolve('/db') }))
 ```
@@ -821,7 +821,7 @@ import { LanceDb } from '@llm-tools/embedjs/vectorDb/lance';
 **Note:** The `path` property will be used by LanceDB to create a directory to host all the database files. There is also support for creating temporary directories for testing -
 
 ```TS
-import { LanceDb } from '@llm-tools/embedjs/vectorDb/lance';
+import { LanceDb } from 'ragkit/vectorDb/lance';
 
 .setVectorDb(new LanceDb({ path: 'lance-', isTemp: true }))
 ```
@@ -841,7 +841,7 @@ npm install chromadb
 -   Set Chroma database as your choice of `vectorDb`
 
 ```TS
-import { ChromaDb } from '@llm-tools/embedjs/vectorDb/chroma';
+import { ChromaDb } from 'ragkit/vectorDb/chroma';
 
 .setVectorDb(new ChromaDb({ url: 'http://localhost:8000' }))
 ```
@@ -865,7 +865,7 @@ npm install hnswlib-node
 -   Set HNSWLib database as your choice of `vectorDb`
 
 ```TS
-import { HNSWDb } from '@llm-tools/embedjs/vectorDb/hnswlib';
+import { HNSWDb } from 'ragkit/vectorDb/hnswlib';
 
 .setVectorDb(new HNSWDb())
 ```
@@ -885,7 +885,7 @@ npm install weaviate-ts-client
 -   Set Weaviate database as your choice of `vectorDb`
 
 ```TS
-import { WeaviateDb } from '@llm-tools/embedjs/vectorDb/weaviate';
+import { WeaviateDb } from 'ragkit/vectorDb/weaviate';
 
 .setVectorDb(new WeaviateDb({ host: '...', apiKey: '...', className: '...', scheme: '...' }))
 ```
@@ -903,7 +903,7 @@ npm install @qdrant/js-client-rest
 -   Set Qdrant database as your choice of `vectorDb`
 
 ```TS
-import { QdrantDb } from '@llm-tools/embedjs/vectorDb/qdrant';
+import { QdrantDb } from 'ragkit/vectorDb/qdrant';
 
 .setVectorDb(new QdrantDb({ apiKey: '...'; url: '...'; clusterName: '...' }))
 ```
@@ -931,7 +931,7 @@ npm install mongodb
 -   Set MongoDB database as your choice of `vectorDb`
 
 ```TS
-import { MongoDb } from '@llm-tools/embedjs/vectorDb/mongodb';
+import { MongoDb } from 'ragkit/vectorDb/mongodb';
 
 .setVectorDb(
     new MongoDb({
@@ -999,7 +999,7 @@ npm install lmdb
 -   Set `LmdbCache` as your cache provider on `RAGApplicationBuilder`
 
 ```TS
-import { LmdbCache } from '@llm-tools/embedjs/cache/lmdb';
+import { LmdbCache } from 'ragkit/cache/lmdb';
 
 await new RAGApplicationBuilder()
 .setCache(new LmdbCache({ path: path.resolve('./cache') }))
@@ -1014,7 +1014,7 @@ You can use a simple in-memory cache to store values during testing.
 -   Set `MemoryCache` as your cache provider on `RAGApplicationBuilder`
 
 ```TS
-import { MemoryCache } from '@llm-tools/embedjs/cache/memory';
+import { MemoryCache } from 'ragkit/cache/memory';
 
 await new RAGApplicationBuilder()
 .setCache(new MemoryCache())
@@ -1029,7 +1029,7 @@ You can use redis as a cache to store values during testing.
 -   Set `RedisCache` as your cache provider on `RAGApplicationBuilder`
 
 ```TS
-import { RedisCache } from '@llm-tools/embedjs/cache/redis';
+import { RedisCache } from 'ragkit/cache/redis';
 
 await new RAGApplicationBuilder()
 .setCache(new RedisCache({ ... }))

@@ -1,6 +1,6 @@
 ## Requirements
 
-This example consists of a Node.js application that uses vector embeddings with `embedJs` RAG library to store text from various sources to database, retrieve them with similarity search and interpret with Ollama LLM.
+This example consists of a Node.js application that uses vector embeddings with `ragkit` library to store text from various sources to database, retrieve them with similarity search and interpret with Ollama LLM.
 
 Main motivation is on the open-source and local running of the RAG application.
 

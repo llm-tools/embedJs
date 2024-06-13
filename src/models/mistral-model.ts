@@ -6,7 +6,7 @@ import { Chunk, ConversationHistory, ModelResponse } from '../global/types.js';
 import { BaseModel } from '../interfaces/base-model.js';
 
 export class Mistral extends BaseModel {
-    private readonly debug = createDebugMessages('embedjs:model:Mistral');
+    private readonly debug = createDebugMessages('ragkit:model:Mistral');
     private model: ChatMistralAI;
 
     constructor({

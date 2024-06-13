@@ -6,7 +6,7 @@ import { BaseModel } from '../interfaces/base-model.js';
 import { Chunk, ConversationHistory, ModelResponse } from '../global/types.js';
 
 export class Anthropic extends BaseModel {
-    private readonly debug = createDebugMessages('embedjs:model:Anthropic');
+    private readonly debug = createDebugMessages('ragkit:model:Anthropic');
     private readonly modelName: string;
     private model: ChatAnthropic;
 

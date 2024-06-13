@@ -25,7 +25,7 @@ export async function createLoaderFromMimeType(loader: string, mimeType: string)
             return new PptLoader({ filePathOrUrl: loader });
         case 'text/plain':
             const fineType = mime.getType(loader);
-            createDebugMessages('embedjs:createLoaderFromMimeType')(`Fine type for '${loader}' is '${fineType}'`);
+            createDebugMessages('ragkit:createLoaderFromMimeType')(`Fine type for '${loader}' is '${fineType}'`);
             if (fineType === 'text/csv') return new CsvLoader({ filePathOrUrl: loader });
             else return new TextLoader({ text: loader });
         case 'text/html':
