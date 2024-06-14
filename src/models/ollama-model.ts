@@ -2,7 +2,7 @@ import createDebugMessages from 'debug';
 import { Ollama as ChatOllamaAI } from '@langchain/community/llms/ollama';
 import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages';
 
-import { Chunk, ConversationHistory } from '../global/types.js';
+import { Chunk, EntryMessage } from '../global/types.js';
 import { BaseModel } from '../interfaces/base-model.js';
 
 export class Ollama extends BaseModel {
@@ -21,7 +21,7 @@ export class Ollama extends BaseModel {
         system: string,
         userQuery: string,
         supportingContext: Chunk[],
-        pastConversations: ConversationHistory[],
+        pastConversations: EntryMessage[],
     ): Promise<string> {
         const pastMessages: (AIMessage | SystemMessage | HumanMessage)[] = [new SystemMessage(system)];
         pastMessages.push(
