@@ -1067,6 +1067,48 @@ We really encourage you send in a PR to this library if you are implementing a f
 
 If you want to add support for any other cache providers, please create an [issue](https://github.com/llm-tools/embedjs/issues) and we will add it to the list of supported caches. All PRs are welcome.
 
+# Conversation history
+
+This version of EmbedJS adds an abstraction layer so conversation history can be stored and made persistant between sessions. Like all other aspects of embedJS there is a base interface for conversations and you can create a new plugin that supports different ways to store conversations.
+
+The library supports the following caches -
+
+## InMemory (default)
+
+You can use a simple in-memory cache to store values during testing.
+
+**Note:** This is the default if you don't specify anything.
+
+-   Set `MemoryConversations` as your cache provider on `RAGApplicationBuilder`
+
+```TS
+import { MemoryConversations } from '@llm-tools/embedjs/conversations/memory';
+
+await new RAGApplicationBuilder()
+.setConversations(new MemoryConversations())
+```
+
+**Note:** Although this cache can remove duplicate loaders and chunks, its store does not persist between process restarts. You should only be using it for testing.
+
+## MongoDB
+
+Can be used with any version of Mongo.
+
+-   Set `MongoConversations` as your cache provider on `RAGApplicationBuilder`
+
+```TS
+import { MongoConversations } from '@llm-tools/embedjs/conversations/mongo';
+
+const conversationsdb = new MongoConversations({
+    uri: MONGODB_URI,
+    dbName: DB_NAME,
+    collectionName: CONVERSATIONS_COLLECTION_NAME
+});
+
+await new RAGApplicationBuilder()
+.setConversations(conversationsdb)
+```
+
 # Langsmith Integration
 
 Langsmith allows you to keep track of how you use LLM and embedding models. It logs histories, token uses and other metadata. Follow these three simple steps to enable -
