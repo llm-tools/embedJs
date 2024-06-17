@@ -2,7 +2,7 @@ import createDebugMessages from 'debug';
 import { ChatMistralAI } from '@langchain/mistralai';
 import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages';
 
-import { Chunk, ConversationHistory } from '../global/types.js';
+import { Chunk, Message } from '../global/types.js';
 import { BaseModel } from '../interfaces/base-model.js';
 
 export class Mistral extends BaseModel {
@@ -26,7 +26,7 @@ export class Mistral extends BaseModel {
         system: string,
         userQuery: string,
         supportingContext: Chunk[],
-        pastConversations: ConversationHistory[],
+        pastConversations: Message[],
     ): Promise<string> {
         const pastMessages: (AIMessage | SystemMessage | HumanMessage)[] = [new SystemMessage(system)];
         pastMessages.push(

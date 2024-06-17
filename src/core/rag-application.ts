@@ -2,15 +2,17 @@ import createDebugMessages from 'debug';
 
 import { BaseDb } from '../interfaces/base-db.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
-import { AddLoaderReturn, Chunk, InsertChunkData, LoaderChunk } from '../global/types.js';
+import { AddLoaderReturn, Chunk, InsertChunkData, LoaderChunk, ConversationEntry } from '../global/types.js';
 import { DynamicLoader, LoaderParam } from './dynamic-loader-selector.js';
 import { RAGApplicationBuilder } from './rag-application-builder.js';
 import { DEFAULT_INSERT_BATCH_SIZE } from '../global/constants.js';
 import { BaseModel } from '../interfaces/base-model.js';
 import { BaseCache } from '../interfaces/base-cache.js';
-import { OpenAi3SmallEmbeddings } from '../index.js';
+import { BaseConversations } from '../interfaces/base-conversations.js';
 import { RAGEmbedding } from './rag-embedding.js';
 import { cleanString } from '../util/strings.js';
+import { OpenAi3SmallEmbeddings } from '../index.js';
+import { InMemoryConversations } from '../conversations/memory-conversations.js';
 import { getUnique } from '../util/arrays.js';
 
 export class RAGApplication {
@@ -24,6 +26,7 @@ export class RAGApplication {
 
     private readonly rawLoaders: LoaderParam[];
     private loaders: BaseLoader[];
+    private readonly conversations: BaseConversations;
 
     constructor(llmBuilder: RAGApplicationBuilder) {
         this.cache = llmBuilder.getCache();
@@ -32,6 +35,9 @@ export class RAGApplication {
         this.model = llmBuilder.getModel();
         BaseModel.setDefaultTemperature(llmBuilder.getTemperature());
         if (!this.model) this.debug('No base model set; query function unavailable!');
+
+        this.conversations = llmBuilder.getConversations() || new InMemoryConversations();
+        BaseModel.setConversations(this.conversations);  // Use the set conversations
 
         this.queryTemplate = cleanString(llmBuilder.getQueryTemplate());
         this.debug(`Using system query template - "${this.queryTemplate}"`);
@@ -355,23 +361,23 @@ export class RAGApplication {
     public async query(
         userQuery: string,
         conversationId?: string,
-    ): Promise<{
-        result: string;
-        sources: string[];
-    }> {
+        context?: Chunk[]
+    ): Promise<ConversationEntry> {
         if (!this.model) {
             throw new Error('LLM Not set; query method not available');
         }
 
-        const context = await this.getContext(userQuery);
+        if (!context) {
+            context = await this.getContext(userQuery);
+        }
         const sources = [...new Set(context.map((chunk) => chunk.metadata.source))];
         this.debug(
             `Query resulted in ${context.length} chunks after filteration; chunks from ${sources.length} unique sources.`,
         );
 
-        return {
-            sources,
-            result: await this.model.query(this.queryTemplate, userQuery, context, conversationId),
-        };
+        var result = await this.model.query(this.queryTemplate, userQuery, context, conversationId)
+
+        return result;
     }
+
 }

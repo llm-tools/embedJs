@@ -2,7 +2,7 @@ import createDebugMessages from 'debug';
 import { ChatVertexAI } from '@langchain/google-vertexai';
 import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages';
 
-import { Chunk, ConversationHistory } from '../global/types.js';
+import { Chunk, Message } from '../global/types.js';
 import { BaseModel } from '../interfaces/base-model.js';
 
 export class VertexAI extends BaseModel {
@@ -18,7 +18,7 @@ export class VertexAI extends BaseModel {
         system: string,
         userQuery: string,
         supportingContext: Chunk[],
-        pastConversations: ConversationHistory[],
+        pastConversations: Message[],
     ): Promise<string> {
         const systemString =
             system + '\n' + `Supporting context: ${supportingContext.map((s) => s.pageContent).join('; ')}`;
