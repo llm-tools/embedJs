@@ -3,7 +3,7 @@ import { ChatAnthropic } from '@langchain/anthropic';
 import { HumanMessage, AIMessage, SystemMessage } from '@langchain/core/messages';
 
 import { BaseModel } from '../interfaces/base-model.js';
-import { Chunk, EntryMessage } from '../global/types.js';
+import { Chunk, Message } from '../global/types.js';
 
 export class Anthropic extends BaseModel {
     private readonly debug = createDebugMessages('embedjs:model:Anthropic');
@@ -23,7 +23,7 @@ export class Anthropic extends BaseModel {
         system: string,
         userQuery: string,
         supportingContext: Chunk[],
-        pastConversations: EntryMessage[],
+        pastConversations: Message[],
     ): Promise<string> {
         const pastMessages: (AIMessage | SystemMessage | HumanMessage)[] = [
             new SystemMessage(

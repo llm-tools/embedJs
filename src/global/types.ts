@@ -38,7 +38,7 @@ export type ExtractChunkData<
 
 export type AddLoaderReturn = { entriesAdded: number; uniqueId: string; loaderType: string };
 
-export type EntryMessage = {
+export type Message = {
     sender: 'HUMAN' | 'AI' | 'SYSTEM';
     message: string
 }
@@ -57,7 +57,7 @@ export type Conversation = {
 export type ConversationEntry = {
     _id: string;
     timestamp: Date;
-    content: EntryMessage;
+    content: Message;
     sources: Sources[]
 }
 

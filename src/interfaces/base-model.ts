@@ -1,6 +1,6 @@
 import createDebugMessages from 'debug';
 import { v4 as uuidv4 } from 'uuid';
-import { Chunk, EntryMessage, ConversationEntry, Sources } from '../global/types.js';
+import { Chunk, Message, ConversationEntry, Sources } from '../global/types.js';
 import { BaseConversations } from './base-conversations.js';
 
 export abstract class BaseModel {
@@ -95,6 +95,6 @@ export abstract class BaseModel {
         system: string,
         userQuery: string,
         supportingContext: Chunk[],
-        pastConversations: EntryMessage[],
+        pastConversations: Message[],
     ): Promise<any>;
 }
