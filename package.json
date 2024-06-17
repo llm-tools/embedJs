@@ -6,11 +6,11 @@
     "types": "dist/index.d.ts",
     "type": "module",
     "scripts": {
-        "build": "npm run clean && npm run build:esm && npm run build:cjs",
-        "build:local": "npm run build:esm && npm run build:cjs",
         "clean": "rimraf dist/",
-        "build:esm": "tsc --outDir dist/",
+        "build:local": "npm run build:esm && npm run build:cjs",
+        "build": "npm run clean && npm run build:esm && npm run build:cjs",
         "build:cjs": "tsc --outDir dist-cjs/ -p tsconfig.cjs.json && node scripts/move-cjs-to-dist.js && rimraf dist-cjs",
+        "build:esm": "tsc --outDir dist/",
         "prepublishOnly": "npm run build",
         "tsc": "tsc --noEmit --pretty"
     },
@@ -59,7 +59,7 @@
         "@huggingface/inference": "^2.7.0",
         "@langchain/anthropic": "^0.2.1",
         "@langchain/cohere": "^0.1.0",
-        "@langchain/community": "^0.2.10",
+        "@langchain/community": "^0.2.11",
         "@langchain/core": "^0.2.6",
         "@langchain/google-vertexai": "^0.0.18",
         "@langchain/mistralai": "^0.0.24",
@@ -105,7 +105,7 @@
         "mongodb": "^6.7.0",
         "prettier": "^3.3.2",
         "rimraf": "^5.0.7",
-        "ts-jest": "29.1.4",
+        "ts-jest": "29.1.5",
         "typescript": "^5.4.5",
         "vectordb": "^0.5.0",
         "weaviate-ts-client": "^2.2.0"
