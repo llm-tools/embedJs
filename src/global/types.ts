@@ -38,13 +38,30 @@ export type ExtractChunkData<
 
 export type AddLoaderReturn = { entriesAdded: number; uniqueId: string; loaderType: string };
 
-export type ConversationHistory = {
-    message: string;
+export type Message = {
     sender: 'HUMAN' | 'AI' | 'SYSTEM';
-};
+    message: string
+}
 
 export type LoaderList = {
     type: string;
     uniqueId: string;
     loaderMetadata: Record<string, unknown>;
 }[];
+
+export type Conversation = {
+    conversationId: string;
+    entries: ConversationEntry[];
+}
+
+export type ConversationEntry = {
+    _id: string;
+    timestamp: Date;
+    content: Message;
+    sources: Sources[]
+}
+
+export type Sources = {
+    source: string;
+    loaderId: string
+}

@@ -1,20 +1,25 @@
 import createDebugMessages from 'debug';
-import { Chunk, ConversationHistory } from '../global/types.js';
+import { v4 as uuidv4 } from 'uuid';
+import { Chunk, Message, ConversationEntry, Sources } from '../global/types.js';
+import { BaseConversations } from './base-conversations.js';
 
 export abstract class BaseModel {
-    private readonly baseDebug = createDebugMessages('embedjs:model:BaseModel');
     private static defaultTemperature: number;
+    private static conversations: BaseConversations; // Static property for managing conversations
+
+    private readonly baseDebug = createDebugMessages('embedjs:model:BaseModel');
+    private readonly _temperature?: number;
+
+    constructor(temperature?: number) {
+        this._temperature = temperature;
+    }
 
     public static setDefaultTemperature(temperature?: number) {
         BaseModel.defaultTemperature = temperature;
     }
 
-    private readonly conversationMap: Map<string, ConversationHistory[]>;
-    private readonly _temperature?: number;
-
-    constructor(temperature?: number) {
-        this._temperature = temperature;
-        this.conversationMap = new Map();
+    public static setConversations(conversations: BaseConversations) {
+        BaseModel.conversations = conversations; // Correct setting of the static property
     }
 
     public get temperature() {
@@ -23,47 +28,73 @@ export abstract class BaseModel {
 
     public async init(): Promise<void> {}
 
-    /**
-     * The query function asynchronously processes user queries mixing references from a vector database
-     * and maintains the conversation history.
-     * @param {string} system - This is the system prompt passed to the LLM.
-     * @param {string} userQuery - The `userQuery` parameter in the `query` method represents the query
-     * or question inputted by the user that the system will process and provide a response to. 
-     * @param {Chunk[]} supportingContext - The `supportingContext` parameter in the `query` method is
-     * an array of `Chunk` objects. Each `Chunk` object typically contains information or context
-     * relevant to the user query being processed. The `supportingContext` is used to provide
-     * additional RAG context to the system when running the query,
-     * @param {string} [conversationId=default] - The `conversationId` parameter in the `query` method
-     * is a unique identifier for a conversation. It is used to keep track of the conversation history
-     * and context for each conversation. If a conversation with the specified `conversationId` does
-     * not exist in the `conversationMap`, a new entry is created
-     * @returns The `query` method returns a Promise that resolves to a string with the LLM response.
-     */
     public async query(
         system: string,
         userQuery: string,
         supportingContext: Chunk[],
         conversationId: string = 'default',
-    ): Promise<string> {
-        if (!this.conversationMap.has(conversationId)) this.conversationMap.set(conversationId, []);
+    ): Promise<any> {
+        const conversation = await BaseModel.conversations.getConversation(conversationId); // Use static property
 
-        const conversationHistory = this.conversationMap.get(conversationId);
-        this.baseDebug(`${conversationHistory.length} history entries found for conversationId '${conversationId}'`);
-        const result = await this.runQuery(system, userQuery, supportingContext, conversationHistory);
+        this.baseDebug(`${conversation.entries.length} history entries found for conversationId '${conversationId}'`);
 
-        conversationHistory.push({ message: userQuery, sender: 'HUMAN' });
-        conversationHistory.push({
-            message: `Old context: ${supportingContext.map((s) => s.pageContent).join('; ')}`,
-            sender: 'SYSTEM',
+        const uniqueSources = this.extractUniqueSources(supportingContext);
+
+        // Extract only the content from each entry in the conversation
+        const pastConversations = conversation.entries.map(entry => entry.content);
+
+        const result = await this.runQuery(system, userQuery, supportingContext, pastConversations);
+
+        // Add user query to history
+        await BaseModel.conversations.addEntryToConversation(conversationId, {
+            _id: uuidv4(),
+            timestamp: new Date(),
+            content: {
+                sender: 'HUMAN',
+                message: userQuery
+            },
+            sources: []
         });
-        conversationHistory.push({ message: result, sender: 'AI' });
-        return result;
+
+        const newEntry: ConversationEntry = {
+            _id: uuidv4(),
+            timestamp: new Date(),
+            content: {
+                sender: "AI",
+                message: result
+            },
+            sources: uniqueSources
+        }
+        // Add AI response to history
+        await BaseModel.conversations.addEntryToConversation(conversationId, newEntry);
+
+        return newEntry;
+    }
+
+    private extractUniqueSources(supportingContext: Chunk[]): Sources[] {
+        const uniqueSources = new Map<string, Sources>();  // Use a Map to track unique sources by URL
+
+        supportingContext.forEach(item => {
+            const { metadata } = item;
+            if (metadata && metadata.source) {
+                // Use the source URL as the key to ensure uniqueness
+                if (!uniqueSources.has(metadata.source)) {
+                    uniqueSources.set(metadata.source, {
+                        source: metadata.source,
+                        loaderId: metadata.uniqueLoaderId // Assuming this field always exists
+                    });
+                }
+            }
+        });
+
+        // Convert the values of the Map to an array
+        return Array.from(uniqueSources.values());
     }
 
     protected abstract runQuery(
         system: string,
         userQuery: string,
         supportingContext: Chunk[],
-        pastConversations: ConversationHistory[],
-    ): Promise<string>;
+        pastConversations: Message[],
+    ): Promise<any>;
 }

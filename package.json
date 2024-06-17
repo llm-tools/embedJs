@@ -228,6 +228,21 @@
             "import": "./dist/cache/redis-cache.js",
             "require": "./dist/cache/redis-cache.cjs"
         },
+        "./cache/mongo": {
+            "types": "./dist/cache/mongo-cache.d.ts",
+            "import": "./dist/cache/mongo-cache.js",
+            "require": "./dist/cache/mongo-cache.cjs"
+        },
+        "./conversations/memory": {
+            "types": "./dist/conversations/memory-conversations.d.ts",
+            "import": "./dist/conversations/memory-conversations.js",
+            "require": "./dist/conversations/memory-conversations.cjs"
+        },
+        "./conversations/mongo": {
+            "types": "./dist/conversations/mongo-conversations.d.ts",
+            "import": "./dist/conversations/mongo-conversations.js",
+            "require": "./dist/conversations/mongo-conversations.cjs"
+        },
         "./package.json": "./package.json"
     },
     "jest": {

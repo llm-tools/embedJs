@@ -6,6 +6,7 @@ import { BaseModel } from '../interfaces/base-model.js';
 import { SIMPLE_MODELS } from '../global/constants.js';
 import { OpenAi } from '../models/openai-model.js';
 import { LoaderParam } from './dynamic-loader-selector.js';
+import { BaseConversations } from '../interfaces/base-conversations.js';
 
 export class RAGApplicationBuilder {
     private temperature: number;
@@ -17,6 +18,7 @@ export class RAGApplicationBuilder {
     private embeddingRelevanceCutOff: number;
     private loaders: LoaderParam[];
     private vectorDb: BaseDb;
+    private conversations: BaseConversations;
 
     constructor() {
         this.loaders = [];
@@ -24,8 +26,8 @@ export class RAGApplicationBuilder {
         this.searchResultCount = 7;
 
         this.queryTemplate = `You are a helpful human like chat bot. Use relevant provided context and chat history to answer the query at the end. Answer in full.
-        If you don't know the answer, just say that you don't know, don't try to make up an answer. 
-        
+        If you don't know the answer, just say that you don't know, don't try to make up an answer.
+
         Do not use words like context or training data when responding. You can say you do not have all the information but do not indicate that you are not a reliable source.`;
 
         this.setModel(SIMPLE_MODELS.OPENAI_GPT4_O);
@@ -130,5 +132,14 @@ export class RAGApplicationBuilder {
 
     getModel() {
         return this.model;
+    }
+
+    setConversations(conversations: BaseConversations) {
+        this.conversations = conversations;
+        return this;
+    }
+
+    getConversations() {
+        return this.conversations;
     }
 }
