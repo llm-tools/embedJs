@@ -61,7 +61,7 @@ export abstract class BaseModel {
             timestamp: new Date(),
             content: {
                 sender: "AI",
-                message: result.output
+                message: result
             },
             sources: uniqueSources
         }
