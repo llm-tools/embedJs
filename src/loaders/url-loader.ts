@@ -1,4 +1,4 @@
-import magic, { MimeType } from 'stream-mmmagic-patched';
+import { getMimeType } from 'stream-mime-type';
 import createDebugMessages from 'debug';
 import axios from 'axios';
 import md5 from 'md5';
@@ -19,7 +19,7 @@ export class UrlLoader extends BaseLoader<{ type: 'UrlLoader' }> {
     override async *getUnfilteredChunks() {
         this.debug('Loader is a valid URL!');
         const stream = (await axios.get(this.url, { responseType: 'stream' })).data;
-        const mime = (<Exclude<MimeType, string>>(await magic.promise(stream))[0]).type;
+        const { mime } = await getMimeType(stream);
         this.debug(`Loader type detected as '${mime}'`);
         stream.destroy();
 
