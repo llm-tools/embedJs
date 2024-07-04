@@ -1,12 +1,8 @@
 # EmbedJs
 
 <p>
-<a href="https://www.npmjs.com/package/@llm-tools/embedjs"  target="_blank">
-<img alt="License" src="https://img.shields.io/npm/l/%40llm-tools%2Fembedjs?style=for-the-badge">
-</a>&nbsp;
-<a href="https://www.npmjs.com/package/@@llm-tools/embedjs"  target="_blank">
-<img alt="NPM Version" src="https://img.shields.io/npm/v/%40llm-tools/embedjs?style=for-the-badge">
-</a>&nbsp;
+<a href="https://www.npmjs.com/package/@llm-tools/embedjs"  target="_blank"><img alt="License" src="https://img.shields.io/npm/l/%40llm-tools%2Fembedjs?style=for-the-badge"></a>
+<a href="https://www.npmjs.com/package/@@llm-tools/embedjs"  target="_blank"><img alt="NPM Version" src="https://img.shields.io/npm/v/%40llm-tools/embedjs?style=for-the-badge"></a>
 </p>
 
 EmbedJs is an Open Source Framework for personalizing LLM responses. An ultimate toolkit for building powerful Retrieval-Augmented Generation (RAG) and Large Language Model (LLM) applications with ease in Node.js.
