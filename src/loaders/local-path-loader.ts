@@ -1,4 +1,4 @@
-import magic, { MimeType } from 'stream-mmmagic-patched';
+import { getMimeType } from 'stream-mime-type';
 import createDebugMessages from 'debug';
 import path from 'node:path';
 import fs from 'node:fs';
@@ -36,7 +36,7 @@ export class LocalPathLoader extends BaseLoader<{ type: 'LocalPathLoader' }> {
 
         if (!isDir) {
             const stream = fs.createReadStream(currentPath);
-            const mime = (<Exclude<MimeType, string>>(await magic.promise(stream))[0]).type;
+            const { mime } = await getMimeType(stream);
             this.debug(`File '${this.path}' has mime type '${mime}'`);
             stream.destroy();
 
