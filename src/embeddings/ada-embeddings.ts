@@ -1,11 +1,16 @@
-import { OpenAIEmbeddings } from '@langchain/openai';
+import { ClientOptions, OpenAIEmbeddings } from '@langchain/openai';
 import { BaseEmbeddings } from '../interfaces/base-embeddings.js';
 
 export class AdaEmbeddings implements BaseEmbeddings {
     private model: OpenAIEmbeddings;
 
-    constructor() {
-        this.model = new OpenAIEmbeddings({ modelName: 'text-embedding-ada-002', maxConcurrency: 3, maxRetries: 5 });
+    constructor(options?: { configuration?: ClientOptions; maxConcurrency: number; maxRetries: number }) {
+        this.model = new OpenAIEmbeddings({
+            modelName: 'text-embedding-ada-002',
+            configuration: options?.configuration,
+            maxConcurrency: options?.maxConcurrency ?? 3,
+            maxRetries: options?.maxRetries ?? 5,
+        });
     }
 
     getDimensions(): number {
