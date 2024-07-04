@@ -2,16 +2,17 @@ import createDebugMessages from 'debug';
 
 import { BaseDb } from '../interfaces/base-db.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
-import { AddLoaderReturn, Chunk, InsertChunkData, LoaderChunk } from '../global/types.js';
+import { AddLoaderReturn, Chunk, InsertChunkData, LoaderChunk, Message } from '../global/types.js';
 import { DynamicLoader, LoaderParam } from './dynamic-loader-selector.js';
 import { RAGApplicationBuilder } from './rag-application-builder.js';
 import { DEFAULT_INSERT_BATCH_SIZE } from '../global/constants.js';
 import { BaseModel } from '../interfaces/base-model.js';
 import { BaseCache } from '../interfaces/base-cache.js';
-import { OpenAi3SmallEmbeddings } from '../index.js';
 import { RAGEmbedding } from './rag-embedding.js';
 import { cleanString } from '../util/strings.js';
 import { getUnique } from '../util/arrays.js';
+import { OpenAi3SmallEmbeddings } from '../index.js';
+import { InMemoryConversation } from '../conversation/memory-conversations.js';
 
 export class RAGApplication {
     private readonly debug = createDebugMessages('embedjs:core');
@@ -30,8 +31,11 @@ export class RAGApplication {
         BaseLoader.setCache(this.cache);
 
         this.model = llmBuilder.getModel();
-        BaseModel.setDefaultTemperature(llmBuilder.getTemperature());
         if (!this.model) this.debug('No base model set; query function unavailable!');
+        else {
+            BaseModel.setDefaultTemperature(llmBuilder.getTemperature());
+            BaseModel.setConversations(llmBuilder.getConversationsEngine() || new InMemoryConversation());
+        }
 
         this.queryTemplate = cleanString(llmBuilder.getQueryTemplate());
         this.debug(`Using system query template - "${this.queryTemplate}"`);
@@ -347,6 +351,8 @@ export class RAGApplication {
      * optional parameter that represents the unique identifier for a conversation. It allows you to
      * track and associate the query with a specific conversation thread if needed. If provided, it can be
      * used to maintain context or history related to the conversation.
+     * @param {Chunk} [customContext] - You can pass in custom context from your own RAG stack. Passing.
+     * your own context will disable the inbuilt RAG retrieval for that specific query
      * @returns The `query` method returns a Promise that resolves to an object with two properties:
      * `result` and `sources`. The `result` property is a string representing the result of querying
      * the LLM model with the provided query template, user query, context, and conversation history. The
@@ -355,23 +361,21 @@ export class RAGApplication {
     public async query(
         userQuery: string,
         conversationId?: string,
-    ): Promise<{
-        result: string;
-        sources: string[];
-    }> {
+        customContext?: Chunk[],
+    ): Promise<Extract<Message, { actor: 'AI' }>> {
         if (!this.model) {
             throw new Error('LLM Not set; query method not available');
         }
 
-        const context = await this.getContext(userQuery);
-        const sources = [...new Set(context.map((chunk) => chunk.metadata.source))];
+        if (!customContext) {
+            customContext = await this.getContext(userQuery);
+        }
+
+        const sources = [...new Set(customContext.map((chunk) => chunk.metadata.source))];
         this.debug(
-            `Query resulted in ${context.length} chunks after filteration; chunks from ${sources.length} unique sources.`,
+            `Query resulted in ${customContext.length} chunks after filteration; chunks from ${sources.length} unique sources.`,
         );
 
-        return {
-            sources,
-            result: await this.model.query(this.queryTemplate, userQuery, context, conversationId),
-        };
+        return this.model.query(this.queryTemplate, userQuery, customContext, conversationId);
     }
 }

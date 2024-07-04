@@ -3,7 +3,7 @@ import { ChatOpenAI, ClientOptions } from '@langchain/openai';
 import { HumanMessage, AIMessage, SystemMessage } from '@langchain/core/messages';
 
 import { BaseModel } from '../interfaces/base-model.js';
-import { Chunk, ConversationHistory } from '../global/types.js';
+import { Chunk, Message } from '../global/types.js';
 
 export class OpenAi extends BaseModel {
     private readonly debug = createDebugMessages('embedjs:model:OpenAi');
@@ -37,7 +37,7 @@ export class OpenAi extends BaseModel {
         system: string,
         userQuery: string,
         supportingContext: Chunk[],
-        pastConversations: ConversationHistory[],
+        pastConversations: Message[],
     ): Promise<string> {
         const pastMessages: (AIMessage | SystemMessage | HumanMessage)[] = [new SystemMessage(system)];
         pastMessages.push(
@@ -47,9 +47,9 @@ export class OpenAi extends BaseModel {
         pastMessages.push.apply(
             pastMessages,
             pastConversations.map((c) => {
-                if (c.sender === 'AI') return new AIMessage({ content: c.message });
-                else if (c.sender === 'SYSTEM') return new SystemMessage({ content: c.message });
-                else return new HumanMessage({ content: c.message });
+                if (c.actor === 'AI') return new AIMessage({ content: c.content });
+                else if (c.actor === 'SYSTEM') return new SystemMessage({ content: c.content });
+                else return new HumanMessage({ content: c.content });
             }),
         );
         pastMessages.push(new HumanMessage(`${userQuery}?`));

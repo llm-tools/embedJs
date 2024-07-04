@@ -117,6 +117,9 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [Redis](#redis)
     -   [Bring your own cache](#bring-your-own-cache)
     -   [More caches coming soon](#more-caches-coming-soon)
+-   [Conversation history](#conversation-history)
+    -   [InMemory](#inmemory-default)
+    -   [MongoDb](#mongodb-1)
 -   [Langsmith Integration](#langsmith-integration)
 -   [Sample projects](#sample-projects)
 -   [Contributors](#contributors)
@@ -725,13 +728,13 @@ The libaray supports the embedding model `textembedding-gecko` with 768 dimensio
 To use this, you can authenticate to Vertex AI on GCP. Refer [here](#vertex-ai) on how to do this. Once done, simply set `GeckoEmbedding` as your choice of embedding model, like so -
 
 ```TS
-import { GeckoEmbedding } from '@llm-tools/embedjs';
+import { GeckoEmbeddings } from '@llm-tools/embedjs';
 
 await new RAGApplicationBuilder()
-.setEmbeddingModel(new GeckoEmbedding())
+.setEmbeddingModel(new GeckoEmbeddings())
 ```
 
-For example usage of GeckoEmbedding with Gemini LLM on VertexAI check the folder `/examples/vertexai/`.
+For an example usage of GeckoEmbeddings with Gemini LLM on VertexAI check the folder `/examples/vertexai/`.
 
 ## Use custom embedding model
 
@@ -1066,6 +1069,44 @@ We really encourage you send in a PR to this library if you are implementing a f
 ## More caches coming soon
 
 If you want to add support for any other cache providers, please create an [issue](https://github.com/llm-tools/embedjs/issues) and we will add it to the list of supported caches. All PRs are welcome.
+
+# Conversation history
+
+EmbedJS allows the addition of various storage layers for conversations. This allows the conversation history to be stored and made persistant between sessions. Like all other aspects of embedJS there is a base interface for conversations and you can create your own conversation history implementation.
+
+The library supports the following conversation history types out of the box -
+
+## InMemory (default)
+
+You can use a simple in-memory object to store conversation history during testing. This is the default activated conversation history manager if you don't specify anything else.
+
+-   Set `InMemoryConversation` as your cache provider on `RAGApplicationBuilder`
+
+```TS
+import { MemoryConversations } from '@llm-tools/embedjs/conversation/memory';
+
+await new RAGApplicationBuilder()
+.setConversationEngine(new InMemoryConversation())
+```
+
+**Note:** Although this cache does remove duplicate loaders and chunks, its store does not persist between process restarts.
+
+## MongoDB
+
+Can be used with any version of MongoDb.
+
+-   Set `MongoConversation` as your cache provider on `RAGApplicationBuilder`
+
+```TS
+import { MongoConversation } from '@llm-tools/embedjs/conversation/mongo';
+
+await new RAGApplicationBuilder()
+.setConversationEngine(new MongoConversations({
+    uri: MONGODB_URI,
+    dbName: DB_NAME,
+    collectionName: CONVERSATIONS_COLLECTION_NAME
+});)
+```
 
 # Langsmith Integration
 
