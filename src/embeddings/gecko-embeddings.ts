@@ -1,11 +1,11 @@
-import { GoogleVertexAIEmbeddings } from "@langchain/community/embeddings/googlevertexai";
+import { GoogleVertexAIEmbeddings } from '@langchain/community/embeddings/googlevertexai';
 import { BaseEmbeddings } from '../interfaces/base-embeddings.js';
 
-export class GeckoEmbedding implements BaseEmbeddings {
+export class GeckoEmbeddings implements BaseEmbeddings {
     private model: GoogleVertexAIEmbeddings;
 
     constructor() {
-        this.model = new GoogleVertexAIEmbeddings({model:'textembedding-gecko', maxConcurrency: 3, maxRetries: 5 });
+        this.model = new GoogleVertexAIEmbeddings({ model: 'textembedding-gecko', maxConcurrency: 3, maxRetries: 5 });
     }
 
     getDimensions(): number {

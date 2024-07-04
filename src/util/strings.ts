@@ -1,4 +1,4 @@
-import { Message  } from '../global/types.js';
+import { Message } from '../global/types.js';
 
 export function truncateCenterString(fullStr: string, strLen: number, separator?: string) {
     if (fullStr.length <= strLen) return fullStr;
@@ -31,7 +31,7 @@ export function stringFormat(template: string, ...args: any[]) {
 
 export function historyToString(history: Message[]) {
     return history.reduce((p: string, c: Message) => {
-        return p.concat(`${c.sender}: ${c.message}`);
+        return p.concat(`${c.actor}: ${c.content}`);
     }, '');
 }
 

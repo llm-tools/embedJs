@@ -34,9 +34,9 @@ export class Anthropic extends BaseModel {
         pastMessages.push.apply(
             pastMessages,
             pastConversations.map((c) => {
-                if (c.sender === 'AI') return new AIMessage({ content: c.message });
-                else if (c.sender === 'SYSTEM') return new SystemMessage({ content: c.message });
-                else return new HumanMessage({ content: c.message });
+                if (c.actor === 'AI') return new AIMessage({ content: c.content });
+                else if (c.actor === 'SYSTEM') return new SystemMessage({ content: c.content });
+                else return new HumanMessage({ content: c.content });
             }),
         );
         pastMessages.push(new HumanMessage(`${userQuery}?`));

@@ -728,13 +728,13 @@ The libaray supports the embedding model `textembedding-gecko` with 768 dimensio
 To use this, you can authenticate to Vertex AI on GCP. Refer [here](#vertex-ai) on how to do this. Once done, simply set `GeckoEmbedding` as your choice of embedding model, like so -
 
 ```TS
-import { GeckoEmbedding } from '@llm-tools/embedjs';
+import { GeckoEmbeddings } from '@llm-tools/embedjs';
 
 await new RAGApplicationBuilder()
-.setEmbeddingModel(new GeckoEmbedding())
+.setEmbeddingModel(new GeckoEmbeddings())
 ```
 
-For example usage of GeckoEmbedding with Gemini LLM on VertexAI check the folder `/examples/vertexai/`.
+For an example usage of GeckoEmbeddings with Gemini LLM on VertexAI check the folder `/examples/vertexai/`.
 
 ## Use custom embedding model
 
@@ -1072,44 +1072,40 @@ If you want to add support for any other cache providers, please create an [issu
 
 # Conversation history
 
-This version of EmbedJS adds an abstraction layer so conversation history can be stored and made persistant between sessions. Like all other aspects of embedJS there is a base interface for conversations and you can create a new plugin that supports different ways to store conversations.
+EmbedJS allows the addition of various storage layers for conversations. This allows the conversation history to be stored and made persistant between sessions. Like all other aspects of embedJS there is a base interface for conversations and you can create your own conversation history implementation.
 
-The library supports the following caches -
+The library supports the following conversation history types out of the box -
 
 ## InMemory (default)
 
-You can use a simple in-memory cache to store values during testing.
+You can use a simple in-memory object to store conversation history during testing. This is the default activated conversation history manager if you don't specify anything else.
 
-**Note:** This is the default if you don't specify anything.
-
--   Set `MemoryConversations` as your cache provider on `RAGApplicationBuilder`
+-   Set `InMemoryConversation` as your cache provider on `RAGApplicationBuilder`
 
 ```TS
-import { MemoryConversations } from '@llm-tools/embedjs/conversations/memory';
+import { MemoryConversations } from '@llm-tools/embedjs/conversation/memory';
 
 await new RAGApplicationBuilder()
-.setConversations(new MemoryConversations())
+.setConversationEngine(new InMemoryConversation())
 ```
 
-**Note:** Although this cache can remove duplicate loaders and chunks, its store does not persist between process restarts. You should only be using it for testing.
+**Note:** Although this cache does remove duplicate loaders and chunks, its store does not persist between process restarts.
 
 ## MongoDB
 
-Can be used with any version of Mongo.
+Can be used with any version of MongoDb.
 
--   Set `MongoConversations` as your cache provider on `RAGApplicationBuilder`
+-   Set `MongoConversation` as your cache provider on `RAGApplicationBuilder`
 
 ```TS
-import { MongoConversations } from '@llm-tools/embedjs/conversations/mongo';
+import { MongoConversation } from '@llm-tools/embedjs/conversation/mongo';
 
-const conversationsdb = new MongoConversations({
+await new RAGApplicationBuilder()
+.setConversationEngine(new MongoConversations({
     uri: MONGODB_URI,
     dbName: DB_NAME,
     collectionName: CONVERSATIONS_COLLECTION_NAME
-});
-
-await new RAGApplicationBuilder()
-.setConversations(conversationsdb)
+});)
 ```
 
 # Langsmith Integration

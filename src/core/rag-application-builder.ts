@@ -6,7 +6,7 @@ import { BaseModel } from '../interfaces/base-model.js';
 import { SIMPLE_MODELS } from '../global/constants.js';
 import { OpenAi } from '../models/openai-model.js';
 import { LoaderParam } from './dynamic-loader-selector.js';
-import { BaseConversations } from '../interfaces/base-conversations.js';
+import { BaseConversation } from '../interfaces/base-conversations.js';
 
 export class RAGApplicationBuilder {
     private temperature: number;
@@ -18,7 +18,7 @@ export class RAGApplicationBuilder {
     private embeddingRelevanceCutOff: number;
     private loaders: LoaderParam[];
     private vectorDb: BaseDb;
-    private conversations: BaseConversations;
+    private conversations: BaseConversation;
 
     constructor() {
         this.loaders = [];
@@ -134,12 +134,12 @@ export class RAGApplicationBuilder {
         return this.model;
     }
 
-    setConversations(conversations: BaseConversations) {
+    setConversationEngine(conversations: BaseConversation) {
         this.conversations = conversations;
         return this;
     }
 
-    getConversations() {
+    getConversationsEngine() {
         return this.conversations;
     }
 }

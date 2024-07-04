@@ -1,8 +1,8 @@
 // InMemoryConversations.ts
-import { Conversation, ConversationEntry } from '../global/types.js';
-import { BaseConversations } from '../interfaces/base-conversations.js';
+import { Conversation, Message } from '../global/types.js';
+import { BaseConversation } from '../interfaces/base-conversations.js';
 
-class InMemoryConversations implements BaseConversations {
+export class InMemoryConversation implements BaseConversation {
     private conversations: Map<string, Conversation> = new Map();
 
     async init(): Promise<void> {
@@ -31,7 +31,7 @@ class InMemoryConversations implements BaseConversations {
         this.conversations.delete(conversationId);
     }
 
-    async addEntryToConversation(conversationId: string, entry: ConversationEntry): Promise<void> {
+    async addEntryToConversation(conversationId: string, entry: Message): Promise<void> {
         const conversation = await this.getConversation(conversationId);
         conversation.entries.push(entry);
     }
@@ -40,5 +40,3 @@ class InMemoryConversations implements BaseConversations {
         this.conversations.clear();
     }
 }
-
-export { InMemoryConversations };
