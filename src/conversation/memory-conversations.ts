@@ -1,4 +1,3 @@
-// InMemoryConversations.ts
 import { Conversation, Message } from '../global/types.js';
 import { BaseConversation } from '../interfaces/base-conversations.js';
 

@@ -95,6 +95,7 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [Ada](#ada)
     -   [Cohere](#cohere)
     -   [Gecko Embedding](#gecko-embedding)
+    -   [Ollama Embedding](#ollama-local-embedding)
     -   [Use custom embedding model](#use-custom-embedding-model)
     -   [More embedding models coming soon](#more-embedding-models-coming-soon)
 -   [Vector databases supported](#vector-databases-supported)
@@ -104,18 +105,19 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [HNSWLib](#hnswlib)
     -   [Weaviate](#weaviate)
     -   [Qdrant](#qdrant)
-    -   [MongoDB](#mongodb)
+    -   [MongoDB](#mongodb-vector-database)
     -   [Bring your own database](#bring-your-own-database)
     -   [More databases coming soon](#more-databases-coming-soon)
 -   [Caches](#caches)
     -   [LMDB](#lmdb)
-    -   [InMemory](#inmemory)
+    -   [InMemory](#inmemory-cache)
     -   [Redis](#redis)
+    -   [MongoDb](#mongodb-cache)
     -   [Bring your own cache](#bring-your-own-cache)
     -   [More caches coming soon](#more-caches-coming-soon)
 -   [Conversation history](#conversation-history)
-    -   [InMemory](#inmemory-default)
-    -   [MongoDb](#mongodb-1)
+    -   [InMemory](#inmemory-conversation)
+    -   [MongoDb](#mongodb-conversation)
 -   [Langsmith Integration](#langsmith-integration)
 -   [Sample projects](#sample-projects)
 -   [Contributors](#contributors)
@@ -732,6 +734,22 @@ await new RAGApplicationBuilder()
 
 For an example usage of GeckoEmbeddings with Gemini LLM on VertexAI check the folder `/examples/vertexai/`.
 
+## Ollama local embedding
+
+The libaray supports fully local embeddings via `Ollama`. Read more here [Ollama embeddings](https://ollama.com/blog/embedding-models).
+
+To use this, you need to setup and have Ollama working locally. Refer to their Github [here](https://github.com/ollama/ollama) to understand how to do this. Once done, simply set `OllamaEmbeddings` as your choice of embedding model, like so -
+
+```TS
+import { OllamaEmbeddings } from '@llm-tools/embedjs';
+
+await new RAGApplicationBuilder()
+.setEmbeddingModel(new OllamaEmbeddings({
+    model: '...',
+    baseUrl: '...'
+}))
+```
+
 ## Use custom embedding model
 
 You can use your own custom embedding model by implementing the `BaseEmbeddings` interface. Here's how that would look like -
@@ -907,7 +925,7 @@ import { QdrantDb } from '@llm-tools/embedjs/vectorDb/qdrant';
 .setVectorDb(new QdrantDb({ apiKey: '...'; url: '...'; clusterName: '...' }))
 ```
 
-## MongoDB
+## MongoDB (vector database)
 
 [MongoDB](https://www.mongodb.com/products/platform/atlas-vector-search) is an open source document database. They offer a managed cloud offering **MongoDB Atlas**. As of right now, only the Atlas version supports vector search while the open source version does not.
 
@@ -1006,7 +1024,7 @@ await new RAGApplicationBuilder()
 
 **Note:** The `path` property will be used by the LMDB driver to create a folder housing the LMDB database files.
 
-## InMemory
+## InMemory (cache)
 
 You can use a simple in-memory cache to store values during testing.
 
@@ -1023,7 +1041,7 @@ await new RAGApplicationBuilder()
 
 ## Redis
 
-You can use redis as a cache to store values during testing.
+You can use redis as a cache to store values.
 
 -   Set `RedisCache` as your cache provider on `RAGApplicationBuilder`
 
@@ -1035,6 +1053,19 @@ await new RAGApplicationBuilder()
 ```
 
 **Note:** The library internally uses `IORedis` to work with redis. `RedisCache` constructor supports all `IORedis` constructor parameters. Check [`IORedis` documentation](https://github.com/redis/ioredis) for more detials.
+
+## MongoDB (cache)
+
+You can use a MongoDB as a cache to cache values.
+
+-   Set `MongoCache` as your cache provider on `RAGApplicationBuilder`
+
+```TS
+import { MemoryCache } from '@llm-tools/embedjs/cache/mongo';
+
+await new RAGApplicationBuilder()
+.setCache(new MongoCache({ ... }))
+```
 
 ## Bring your own cache
 
@@ -1072,9 +1103,9 @@ EmbedJS allows the addition of various storage layers for conversations. This al
 
 The library supports the following conversation history types out of the box -
 
-## InMemory (default)
+## InMemory (conversation)
 
-You can use a simple in-memory object to store conversation history during testing. This is the default activated conversation history manager if you don't specify anything else.
+You can use a simple in-memory object to store conversation history during testing. This is the default activated conversation history manager if you don't specify anything else. This cache is used by **default** if no other cache is specified.
 
 -   Set `InMemoryConversation` as your cache provider on `RAGApplicationBuilder`
 
@@ -1087,7 +1118,7 @@ await new RAGApplicationBuilder()
 
 **Note:** Although this cache does remove duplicate loaders and chunks, its store does not persist between process restarts.
 
-## MongoDB
+## MongoDB (conversation)
 
 Can be used with any version of MongoDb.
 

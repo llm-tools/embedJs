@@ -86,7 +86,7 @@ export class RAGApplication {
             this.debug('Initialized LLM class');
         }
 
-        await this.vectorDb.init({ dimensions: RAGEmbedding.getEmbedding().getDimensions() });
+        await this.vectorDb.init({ dimensions: await RAGEmbedding.getEmbedding().getDimensions() });
         this.debug('Initialized vector database');
 
         if (this.cache) {

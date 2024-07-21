@@ -21,15 +21,15 @@ export class OpenAi3LargeEmbeddings implements BaseEmbeddings {
         });
     }
 
-    getDimensions(): number {
+    async getDimensions(): Promise<number> {
         return this.dynamicDimension;
     }
 
-    embedDocuments(texts: string[]): Promise<number[][]> {
+    async embedDocuments(texts: string[]): Promise<number[][]> {
         return this.model.embedDocuments(texts);
     }
 
-    embedQuery(text: string): Promise<number[]> {
+    async embedQuery(text: string): Promise<number[]> {
         return this.model.embedQuery(text);
     }
 }

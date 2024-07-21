@@ -8,15 +8,15 @@ export class GeckoEmbeddings implements BaseEmbeddings {
         this.model = new GoogleVertexAIEmbeddings({ model: 'textembedding-gecko', maxConcurrency: 3, maxRetries: 5 });
     }
 
-    getDimensions(): number {
+    async getDimensions(): Promise<number> {
         return 768;
     }
 
-    embedDocuments(texts: string[]): Promise<number[][]> {
+    async embedDocuments(texts: string[]): Promise<number[][]> {
         return this.model.embedDocuments(texts);
     }
 
-    embedQuery(text: string): Promise<number[]> {
+    async embedQuery(text: string): Promise<number[]> {
         return this.model.embedQuery(text);
     }
 }

@@ -13,15 +13,15 @@ export class CohereEmbeddings implements BaseEmbeddings {
         });
     }
 
-    getDimensions(): number {
+    async getDimensions(): Promise<number> {
         return 4096;
     }
 
-    embedDocuments(texts: string[]): Promise<number[][]> {
+    async embedDocuments(texts: string[]): Promise<number[][]> {
         return this.model.embedDocuments(texts);
     }
 
-    embedQuery(text: string): Promise<number[]> {
+    async embedQuery(text: string): Promise<number[]> {
         return this.model.embedQuery(text);
     }
 }

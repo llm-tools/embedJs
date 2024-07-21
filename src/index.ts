@@ -32,6 +32,7 @@ import { Anthropic } from './models/anthropic-model.js';
 import { VertexAI } from './models/vertexai-model.js';
 import { Ollama } from './models/ollama-model.js';
 import { GeckoEmbeddings } from './embeddings/gecko-embeddings.js';
+import { OllamaEmbeddings } from './embeddings/ollama-embeddings.js';
 
 export {
     RAGApplication,
@@ -68,4 +69,5 @@ export {
     VertexAI,
     Ollama,
     GeckoEmbeddings,
+    OllamaEmbeddings,
 };
