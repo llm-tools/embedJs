@@ -2,7 +2,7 @@ import createDebugMessages from 'debug';
 import { ChatVertexAI } from '@langchain/google-vertexai';
 import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages';
 
-import { Chunk, Message } from '../global/types.js';
+import { Chunk, Message, ModelResponse } from '../global/types.js';
 import { BaseModel } from '../interfaces/base-model.js';
 
 export class VertexAI extends BaseModel {
@@ -19,7 +19,7 @@ export class VertexAI extends BaseModel {
         userQuery: string,
         supportingContext: Chunk[],
         pastConversations: Message[],
-    ): Promise<string> {
+    ): Promise<ModelResponse> {
         const systemString =
             system + '\n' + `Supporting context: ${supportingContext.map((s) => s.pageContent).join('; ')}`;
         const pastMessages: (AIMessage | SystemMessage | HumanMessage)[] = [new SystemMessage(systemString)];
@@ -37,6 +37,9 @@ export class VertexAI extends BaseModel {
         this.debug('Executing VertexAI model with prompt -', userQuery);
         const result = await this.model.invoke(pastMessages);
         this.debug('VertexAI response -', result);
-        return result.content.toString();
+
+        return {
+            result: result.content.toString(),
+        };
     }
 }

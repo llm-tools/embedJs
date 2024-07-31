@@ -2,7 +2,7 @@ import createDebugMessages from 'debug';
 
 import { BaseDb } from '../interfaces/base-db.js';
 import { BaseLoader } from '../interfaces/base-loader.js';
-import { AddLoaderReturn, Chunk, InsertChunkData, LoaderChunk, Message } from '../global/types.js';
+import { AddLoaderReturn, Chunk, InsertChunkData, LoaderChunk, QueryResponse } from '../global/types.js';
 import { DynamicLoader, LoaderParam } from './dynamic-loader-selector.js';
 import { RAGApplicationBuilder } from './rag-application-builder.js';
 import { DEFAULT_INSERT_BATCH_SIZE } from '../global/constants.js';
@@ -358,11 +358,7 @@ export class RAGApplication {
      * the LLM model with the provided query template, user query, context, and conversation history. The
      * `sources` property is an array of strings representing unique sources used to generate the LLM response.
      */
-    public async query(
-        userQuery: string,
-        conversationId?: string,
-        customContext?: Chunk[],
-    ): Promise<Extract<Message, { actor: 'AI' }>> {
+    public async query(userQuery: string, conversationId?: string, customContext?: Chunk[]): Promise<QueryResponse> {
         if (!this.model) {
             throw new Error('LLM Not set; query method not available');
         }

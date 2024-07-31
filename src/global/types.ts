@@ -67,3 +67,18 @@ export type Conversation = {
     conversationId: string;
     entries: Message[];
 };
+
+export type ModelResponse = {
+    result: string;
+    tokenUse?: {
+        inputTokens: number;
+        outputTokens: number;
+    };
+};
+
+export type QueryResponse = Extract<Message, { actor: 'AI' }> & {
+    tokenUse: {
+        inputTokens: number | 'UNKNOWN';
+        outputTokens: number | 'UNKNOWN';
+    };
+};

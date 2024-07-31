@@ -2,7 +2,7 @@ import createDebugMessages from 'debug';
 import { ChatMistralAI } from '@langchain/mistralai';
 import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages';
 
-import { Chunk, Message } from '../global/types.js';
+import { Chunk, Message, ModelResponse } from '../global/types.js';
 import { BaseModel } from '../interfaces/base-model.js';
 
 export class Mistral extends BaseModel {
@@ -27,7 +27,7 @@ export class Mistral extends BaseModel {
         userQuery: string,
         supportingContext: Chunk[],
         pastConversations: Message[],
-    ): Promise<string> {
+    ): Promise<ModelResponse> {
         const pastMessages: (AIMessage | SystemMessage | HumanMessage)[] = [new SystemMessage(system)];
         pastMessages.push(
             new SystemMessage(`Supporting context: ${supportingContext.map((s) => s.pageContent).join('; ')}`),
@@ -46,6 +46,9 @@ export class Mistral extends BaseModel {
         this.debug('Executing mistral model with prompt -', userQuery);
         const result = await this.model.invoke(pastMessages);
         this.debug('Mistral response -', result);
-        return result.content.toString();
+
+        return {
+            result: result.content.toString(),
+        };
     }
 }

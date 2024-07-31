@@ -2,7 +2,7 @@ import createDebugMessages from 'debug';
 import { HuggingFaceInference } from '@langchain/community/llms/hf';
 
 import { BaseModel } from '../interfaces/base-model.js';
-import { Chunk, Message } from '../global/types.js';
+import { Chunk, Message, ModelResponse } from '../global/types.js';
 
 export class HuggingFace extends BaseModel {
     private readonly debug = createDebugMessages('embedjs:model:HuggingFace');
@@ -36,7 +36,7 @@ export class HuggingFace extends BaseModel {
         userQuery: string,
         supportingContext: Chunk[],
         pastConversations: Message[],
-    ): Promise<string> {
+    ): Promise<ModelResponse> {
         const pastMessages = [system];
         pastMessages.push(`Data: ${supportingContext.map((s) => s.pageContent).join('; ')}`);
 
@@ -57,6 +57,9 @@ export class HuggingFace extends BaseModel {
         this.debug(`Executing hugging face '${this.model.model}' model with prompt -`, userQuery);
         const result = await this.model.invoke(finalPrompt);
         this.debug('Hugging response -', result);
-        return result;
+
+        return {
+            result,
+        };
     }
 }

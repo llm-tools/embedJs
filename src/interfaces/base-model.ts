@@ -2,7 +2,7 @@ import createDebugMessages from 'debug';
 import { v4 as uuidv4 } from 'uuid';
 
 import { BaseConversation } from './base-conversations.js';
-import { Chunk, Message, SourceDetail } from '../global/types.js';
+import { Chunk, Message, ModelResponse, QueryResponse, SourceDetail } from '../global/types.js';
 
 export abstract class BaseModel {
     private readonly baseDebug = createDebugMessages('embedjs:model:BaseModel');
@@ -35,7 +35,7 @@ export abstract class BaseModel {
         userQuery: string,
         supportingContext: Chunk[],
         conversationId: string = 'default',
-    ): Promise<Extract<Message, { actor: 'AI' }>> {
+    ): Promise<QueryResponse> {
         const conversation = await BaseModel.conversations.getConversation(conversationId);
         this.baseDebug(`${conversation.entries.length} history entries found for conversationId '${conversationId}'`);
 
@@ -48,20 +48,26 @@ export abstract class BaseModel {
         });
 
         // Run LLM implementation in subclass
-        const result = await this.runQuery(system, userQuery, supportingContext, conversation.entries);
+        const response = await this.runQuery(system, userQuery, supportingContext, conversation.entries);
 
         const uniqueSources = this.extractUniqueSources(supportingContext);
         const newEntry: Message = {
             id: uuidv4(),
             timestamp: new Date(),
-            content: result,
+            content: response.result,
             actor: 'AI',
             sources: uniqueSources,
         };
 
         // Add AI response to history
         await BaseModel.conversations.addEntryToConversation(conversationId, newEntry);
-        return newEntry;
+        return {
+            ...newEntry,
+            tokenUse: {
+                inputTokens: response.tokenUse?.inputTokens ?? 'UNKNOWN',
+                outputTokens: response.tokenUse?.outputTokens ?? 'UNKNOWN',
+            },
+        };
     }
 
     private extractUniqueSources(supportingContext: Chunk[]): SourceDetail[] {
@@ -89,5 +95,5 @@ export abstract class BaseModel {
         userQuery: string,
         supportingContext: Chunk[],
         pastConversations: Message[],
-    ): Promise<string>;
+    ): Promise<ModelResponse>;
 }
