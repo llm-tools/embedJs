@@ -48,7 +48,7 @@ export abstract class BaseModel {
         });
 
         // Run LLM implementation in subclass
-        const response = await this.runQuery(system, userQuery, supportingContext, conversation.entries);
+        const response = await this.runQuery(system, userQuery, supportingContext, conversation.entries.slice(0, -1));
 
         const uniqueSources = this.extractUniqueSources(supportingContext);
         const newEntry: Message = {
