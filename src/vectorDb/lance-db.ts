@@ -1,7 +1,7 @@
 import * as fsOld from 'node:fs';
 import * as fs from 'node:fs/promises';
-import { Table, connect } from 'vectordb';
 import similarity from 'compute-cosine-similarity';
+import { Table, connect } from '@lancedb/lancedb';
 
 import { BaseDb } from '../interfaces/base-db.js';
 import { ExtractChunkData, InsertChunkData } from '../global/types.js';
@@ -10,7 +10,7 @@ export class LanceDb implements BaseDb {
     private static readonly STATIC_DB_NAME = 'vectors';
     private readonly isTemp: boolean = true;
     private readonly path: string;
-    private table: Table<number[]>;
+    private table: Table;
 
     constructor({ path, isTemp }: { path: string; isTemp?: boolean }) {
         this.isTemp = isTemp !== undefined ? isTemp : false;
@@ -62,7 +62,7 @@ export class LanceDb implements BaseDb {
     }
 
     async similaritySearch(query: number[], k: number): Promise<ExtractChunkData[]> {
-        const results = await this.table.search(query).limit(k).execute();
+        const results = await this.table.search(query).limit(k).toArray();
 
         return (
             results

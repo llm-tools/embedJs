@@ -824,7 +824,7 @@ import { PineconeDb } from '@llm-tools/embedjs/vectorDb/pinecone';
 -   Install LanceDb package in your project
 
 ```bash
-npm install vectordb
+npm install @lancedb/lancedb
 ```
 
 -   Set LanceDB database as your choice of `vectorDb`
