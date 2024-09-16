@@ -1,6 +1,6 @@
 {
     "name": "@llm-tools/embedjs",
-    "version": "0.0.94",
+    "version": "0.0.95",
     "description": "A NodeJS RAG framework to easily work with LLMs and custom datasets",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -240,14 +240,14 @@
             "require": "./dist/cache/mongo-cache.cjs"
         },
         "./conversation/memory": {
-            "types": "./dist/conversations/memory-conversations.d.ts",
-            "import": "./dist/conversations/memory-conversations.js",
-            "require": "./dist/conversations/memory-conversations.cjs"
+            "types": "./dist/conversation/memory-conversations.d.ts",
+            "import": "./dist/conversation/memory-conversations.js",
+            "require": "./dist/conversation/memory-conversations.cjs"
         },
         "./conversation/mongo": {
-            "types": "./dist/conversations/mongo-conversations.d.ts",
-            "import": "./dist/conversations/mongo-conversations.js",
-            "require": "./dist/conversations/mongo-conversations.cjs"
+            "types": "./dist/conversation/mongo-conversations.d.ts",
+            "import": "./dist/conversation/mongo-conversations.js",
+            "require": "./dist/conversation/mongo-conversations.cjs"
         },
         "./package.json": "./package.json"
     },
