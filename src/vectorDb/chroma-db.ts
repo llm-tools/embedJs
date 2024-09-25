@@ -14,11 +14,7 @@ export class ChromaDb implements BaseDb {
 
     async init() {
         const client = new ChromaClient({ path: this.url });
-
-        const list = await client.listCollections();
-        if (list.map((e) => e.name).indexOf(ChromaDb.STATIC_COLLECTION_NAME) > -1)
-            this.collection = await client.getCollection({ name: ChromaDb.STATIC_COLLECTION_NAME });
-        else this.collection = await client.createCollection({ name: ChromaDb.STATIC_COLLECTION_NAME });
+        this.collection = await client.getOrCreateCollection({ name: ChromaDb.STATIC_COLLECTION_NAME });
     }
 
     async insertChunks(chunks: InsertChunkData[]): Promise<number> {

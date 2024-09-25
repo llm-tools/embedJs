@@ -1,4 +1,4 @@
-import { CreateIndexRequestSpec } from '@pinecone-database/pinecone/dist/pinecone-generated-ts-fetch/index.js';
+import { CreateIndexSpec } from '@pinecone-database/pinecone/dist/control/createIndex.js';
 import { Pinecone, PineconeRecord } from '@pinecone-database/pinecone';
 import createDebugMessages from 'debug';
 
@@ -12,7 +12,7 @@ export class PineconeDb implements BaseDb {
     private readonly client: Pinecone;
     private readonly namespace: string;
     private readonly projectName: string;
-    private readonly indexSpec: CreateIndexRequestSpec;
+    private readonly indexSpec: CreateIndexSpec;
 
     constructor({
         projectName,
@@ -21,7 +21,7 @@ export class PineconeDb implements BaseDb {
     }: {
         projectName: string;
         namespace: string;
-        indexSpec: CreateIndexRequestSpec;
+        indexSpec: CreateIndexSpec;
     }) {
         this.client = new Pinecone();
 
@@ -37,8 +37,8 @@ export class PineconeDb implements BaseDb {
         await this.client.createIndex({
             name: this.projectName,
             dimension: dimensions,
-            spec: this.indexSpec,
             metric: 'cosine',
+            spec: this.indexSpec,
         });
     }
 
