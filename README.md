@@ -60,17 +60,17 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [Delete loader](#delete-loader)
     -   [Get count of embedded chunks](#get-count-of-embedded-chunks)
     -   [Remove all embeddings / reset](#remove-all-embeddings--reset)
-    -   [Set relevance cutoff](#set-cut-off-for-relevance)
-    -   [Add new loader after init](#add-new-loaders-later)
+    -   [Set cut-off for relevance](#set-cut-off-for-relevance)
+    -   [Add new loaders later](#add-new-loaders-later)
     -   [Loader inference](#loader-inference)
 -   [Loaders supported](#loaders-supported)
     -   [Youtube video](#youtube-video)
     -   [Youtube channel](#youtube-channel)
     -   [Youtube search](#youtube-search)
     -   [PDF file](#pdf-file)
-    -   [Word document](#docx-file)
-    -   [Excel document](#excel-file)
-    -   [Powerpoint document](#powerpoint-file)
+    -   [Docx file](#docx-file)
+    -   [Excel file](#excel-file)
+    -   [Powerpoint file](#powerpoint-file)
     -   [Web page](#web-page)
     -   [Confluence](#confluence)
     -   [Sitemap](#sitemap)
@@ -95,7 +95,7 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [Ada](#ada)
     -   [Cohere](#cohere)
     -   [Gecko Embedding](#gecko-embedding)
-    -   [Ollama Embedding](#ollama-local-embedding)
+    -   [Ollama local embedding](#ollama-local-embedding)
     -   [Use custom embedding model](#use-custom-embedding-model)
     -   [More embedding models coming soon](#more-embedding-models-coming-soon)
 -   [Vector databases supported](#vector-databases-supported)
@@ -105,22 +105,23 @@ The author(s) are looking to add core maintainers for this opensource project. R
     -   [HNSWLib](#hnswlib)
     -   [Weaviate](#weaviate)
     -   [Qdrant](#qdrant)
-    -   [MongoDB](#mongodb-vector-database)
+    -   [MongoDB (vector database)](#mongodb-vector-database)
+    -   [Astra DB](#astra-db)
     -   [Bring your own database](#bring-your-own-database)
     -   [More databases coming soon](#more-databases-coming-soon)
 -   [Caches](#caches)
     -   [LMDB](#lmdb)
-    -   [InMemory](#inmemory-cache)
+    -   [InMemory (cache)](#inmemory-cache)
     -   [Redis](#redis)
-    -   [MongoDb](#mongodb-cache)
+    -   [MongoDB (cache)](#mongodb-cache)
     -   [Bring your own cache](#bring-your-own-cache)
     -   [More caches coming soon](#more-caches-coming-soon)
 -   [Conversation history](#conversation-history)
-    -   [InMemory](#inmemory-conversation)
-    -   [MongoDb](#mongodb-conversation)
+    -   [InMemory (conversation)](#inmemory-conversation)
+    -   [MongoDB (conversation)](#mongodb-conversation)
 -   [Langsmith Integration](#langsmith-integration)
 -   [Sample projects](#sample-projects)
--   [Contributors](#contributors)
+-   [Contributing](#contributing)
 
 # Getting started
 
@@ -958,6 +959,33 @@ import { MongoDb } from '@llm-tools/embedjs/vectorDb/mongodb';
 ```
 
 **Note:** you can also optionally configure the database and collection name the library will use with the constructor parameters `dbName` and `collectionName`. Default values are used if these are not provided.
+
+## Astra DB
+
+[Astra DB is a document database with a highly performant vector index](https://www.datastax.com/products/datastax-astra) powered by Apache Cassandra and available as a managed service.
+
+To use Astra DB as your vector database follow these steps:
+
+-   [Sign up for an Astra DB account](https://astra.datastax.com/signup). It is free to sign up and doesn't require a credit card.
+-   Create a database (this takes a couple of minutes to provision)
+-   From the database overview page get the API Endpoint and generate an Application Token
+-   Install the Astra DB package in your project:
+    ```bash
+    npm install @datastax/astra-db-ts
+    ```
+-   Set Astra DB as your choice of `vectorDb`
+
+    ```TS
+    import { AstraDb } from '@llm-tools/embedjs/vectorDb/astra-db'
+
+    .setVectorDb(
+        new AstraDb({
+            endpoint: process.env.ASTRA_DB_API_ENDPOINT,
+            apiKey: process.env.ASTRA_DB_APP_TOKEN,
+            collectionName: "documents"
+        }),
+    )
+    ```
 
 ## Bring your own database
 
