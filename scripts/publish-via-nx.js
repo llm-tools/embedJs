@@ -5,6 +5,7 @@ import { existsSync } from 'node:fs';
 import { releaseVersion, releaseChangelog } from 'nx/release/index.js';
 import { confirm, input } from '@inquirer/prompts';
 import PackageJson from '@npmcli/package-json';
+import arg from 'arg';
 
 function abs(relativePath) {
     return resolve(dirname(fileURLToPath(import.meta.url)), relativePath);
@@ -76,6 +77,7 @@ async function createRelease(dryRun, version) {
     }
 
     await releaseChangelog({
+        firstRelease: true,
         versionData: projectsVersionData,
         version: workspaceVersion,
         dryRun,
@@ -85,17 +87,37 @@ async function createRelease(dryRun, version) {
 }
 
 async function startReleasePipeline() {
-    const dryRun = await confirm({ message: 'Is this a dry run?', default: true, required: true });
-    const specificVersion = await confirm({
-        message: 'Do you want to provide a specific version?',
-        default: false,
-        required: true,
+    const args = arg({
+        // Types
+        '--ci': Boolean,
+        '--dryRun': String,
+        '--version': String,
+
+        // Aliases
+        '-d': '--dryRun',
+        '-v': '--version',
     });
 
+    const dryRun =
+        args['--dryRun'] ??
+        (args['--ci'] ? false : await confirm({ message: 'Is this a dry run?', default: true, required: true }));
+
     let version = 'patch';
-    if (specificVersion) {
-        version = await input({ message: 'What version do you want to publish?', default: version, required: true });
-    }
+    if (!args['--version']) {
+        const specificVersion = await confirm({
+            message: 'Do you want to provide a specific version?',
+            default: false,
+            required: true,
+        });
+
+        if (specificVersion) {
+            version = await input({
+                message: 'What version do you want to publish?',
+                default: version,
+                required: true,
+            });
+        }
+    } else version = args['--version'];
 
     await createRelease(dryRun, version);
 }

@@ -1,9 +1,6 @@
 name: Publish
 
 on:
-    #Run manually using the GitHub Actions UI
-    workflow_dispatch:
-
     #When a new release is published
     release:
         types: [published]
@@ -36,7 +33,10 @@ jobs:
               shell: bash
 
             - name: Publish packages
-              run: npx nx release publish
+              run: |
+                  VERSION=${{ github.ref_name }}
+                  npm run deploy --ci --version $VERSION
+                  npx nx release publish
               shell: bash
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
