@@ -1,0 +1,29 @@
+{
+    "name": "embedjs-ollama",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "models/embedjs-ollama/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/esm/embedjs-ollama",
+                "main": "models/embedjs-ollama/src/index.ts",
+                "tsConfig": "models/embedjs-ollama/tsconfig.lib.json",
+                "assets": ["models/embedjs-ollama/*.md"]
+            }
+        },
+        "build-cjs": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "dependsOn": ["^build-cjs"],
+            "options": {
+                "outputPath": "dist/cjs/embedjs-ollama",
+                "main": "models/embedjs-ollama/src/index.ts",
+                "tsConfig": "models/embedjs-ollama/tsconfig.cjs.json"
+            }
+        }
+    }
+}

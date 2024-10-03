@@ -1,0 +1,49 @@
+{
+    "type": "module",
+    "name": "@llm-tools/embedjs",
+    "version": "0.0.1",
+    "description": "A NodeJS RAG framework to easily work with LLMs and custom datasets",
+    "dependencies": {
+        "axios": "^1.7.7",
+        "debug": "^4.3.7",
+        "langchain": "^0.3.2",
+        "md5": "^2.3.0",
+        "mime": "^4.0.4",
+        "stream-mime-type": "^2.0.0",
+        "@llm-tools/embedjs-utils": "0.0.1",
+        "@llm-tools/embedjs-interfaces": "0.0.1"
+    },
+    "devDependencies": {
+        "@types/debug": "^4.1.12",
+        "@types/md5": "^2.3.5",
+        "@types/node": "^22.7.4"
+    },
+    "main": "./src/index.js",
+    "license": "Apache-2.0",
+    "publishConfig": {
+        "access": "public"
+    },
+    "keywords": [
+        "llm",
+        "ai",
+        "gpt3",
+        "chain",
+        "prompt",
+        "prompt engineering",
+        "chatgpt",
+        "machine learning",
+        "ml",
+        "anthropic",
+        "embeddings",
+        "vectorstores"
+    ],
+    "author": "K V Adhityan",
+    "bugs": {
+        "url": "https://github.com/llm-tools/embedjs/issues"
+    },
+    "homepage": "https://github.com/llm-tools/embedjs#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/llm-tools/embedjs.git"
+    }
+}

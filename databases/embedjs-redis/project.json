@@ -1,0 +1,29 @@
+{
+    "name": "embedjs-redis",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "databases/embedjs-redis/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/esm/embedjs-redis",
+                "main": "databases/embedjs-redis/src/index.ts",
+                "tsConfig": "databases/embedjs-redis/tsconfig.lib.json",
+                "assets": ["databases/embedjs-redis/*.md"]
+            }
+        },
+        "build-cjs": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "dependsOn": ["^build-cjs"],
+            "options": {
+                "outputPath": "dist/cjs/embedjs-redis",
+                "main": "databases/embedjs-redis/src/index.ts",
+                "tsConfig": "databases/embedjs-redis/tsconfig.cjs.json"
+            }
+        }
+    }
+}

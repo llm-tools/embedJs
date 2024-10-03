@@ -1,0 +1,29 @@
+{
+    "name": "embedjs-huggingface",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "models/embedjs-huggingface/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/esm/embedjs-huggingface",
+                "main": "models/embedjs-huggingface/src/index.ts",
+                "tsConfig": "models/embedjs-huggingface/tsconfig.lib.json",
+                "assets": ["models/embedjs-huggingface/*.md"]
+            }
+        },
+        "build-cjs": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "dependsOn": ["^build-cjs"],
+            "options": {
+                "outputPath": "dist/cjs/embedjs-huggingface",
+                "main": "models/embedjs-huggingface/src/index.ts",
+                "tsConfig": "models/embedjs-huggingface/tsconfig.cjs.json"
+            }
+        }
+    }
+}

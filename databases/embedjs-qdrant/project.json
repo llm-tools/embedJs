@@ -1,0 +1,29 @@
+{
+    "name": "embedjs-qdrant",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "databases/embedjs-qdrant/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/esm/embedjs-qdrant",
+                "main": "databases/embedjs-qdrant/src/index.ts",
+                "tsConfig": "databases/embedjs-qdrant/tsconfig.lib.json",
+                "assets": ["databases/embedjs-qdrant/*.md"]
+            }
+        },
+        "build-cjs": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "dependsOn": ["^build-cjs"],
+            "options": {
+                "outputPath": "dist/cjs/embedjs-qdrant",
+                "main": "databases/embedjs-qdrant/src/index.ts",
+                "tsConfig": "databases/embedjs-qdrant/tsconfig.cjs.json"
+            }
+        }
+    }
+}

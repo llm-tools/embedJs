@@ -1,0 +1,29 @@
+{
+    "name": "embedjs-utils",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "core/embedjs-utils/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/esm/embedjs-utils",
+                "main": "core/embedjs-utils/src/index.ts",
+                "tsConfig": "core/embedjs-utils/tsconfig.lib.json",
+                "assets": ["core/embedjs-utils/*.md"]
+            }
+        },
+        "build-cjs": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "dependsOn": ["^build-cjs"],
+            "options": {
+                "outputPath": "dist/cjs/embedjs-utils",
+                "main": "core/embedjs-utils/src/index.ts",
+                "tsConfig": "core/embedjs-utils/tsconfig.cjs.json"
+            }
+        }
+    }
+}

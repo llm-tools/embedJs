@@ -1,0 +1,29 @@
+{
+    "name": "embedjs-loader-web",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "loaders/embedjs-loader-web/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/esm/embedjs-loader-web",
+                "main": "loaders/embedjs-loader-web/src/index.ts",
+                "tsConfig": "loaders/embedjs-loader-web/tsconfig.lib.json",
+                "assets": ["loaders/embedjs-loader-web/*.md"]
+            }
+        },
+        "build-cjs": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "dependsOn": ["^build-cjs"],
+            "options": {
+                "outputPath": "dist/cjs/embedjs-loader-web",
+                "main": "loaders/embedjs-loader-web/src/index.ts",
+                "tsConfig": "loaders/embedjs-loader-web/tsconfig.cjs.json"
+            }
+        }
+    }
+}

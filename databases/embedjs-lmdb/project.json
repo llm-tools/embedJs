@@ -1,0 +1,29 @@
+{
+    "name": "embedjs-lmdb",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "databases/embedjs-lmdb/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/esm/embedjs-lmdb",
+                "main": "databases/embedjs-lmdb/src/index.ts",
+                "tsConfig": "databases/embedjs-lmdb/tsconfig.lib.json",
+                "assets": ["databases/embedjs-lmdb/*.md"]
+            }
+        },
+        "build-cjs": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "dependsOn": ["^build-cjs"],
+            "options": {
+                "outputPath": "dist/cjs/embedjs-lmdb",
+                "main": "databases/embedjs-lmdb/src/index.ts",
+                "tsConfig": "databases/embedjs-lmdb/tsconfig.cjs.json"
+            }
+        }
+    }
+}

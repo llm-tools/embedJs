@@ -1,0 +1,29 @@
+{
+    "name": "embedjs-anthropic",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "models/embedjs-anthropic/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/esm/embedjs-anthropic",
+                "main": "models/embedjs-anthropic/src/index.ts",
+                "tsConfig": "models/embedjs-anthropic/tsconfig.lib.json",
+                "assets": ["models/embedjs-anthropic/*.md"]
+            }
+        },
+        "build-cjs": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "dependsOn": ["^build-cjs"],
+            "options": {
+                "outputPath": "dist/cjs/embedjs-anthropic",
+                "main": "models/embedjs-anthropic/src/index.ts",
+                "tsConfig": "models/embedjs-anthropic/tsconfig.cjs.json"
+            }
+        }
+    }
+}

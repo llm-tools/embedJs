@@ -1,0 +1,29 @@
+{
+    "name": "embedjs-cohere",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "models/embedjs-cohere/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/esm/embedjs-cohere",
+                "main": "models/embedjs-cohere/src/index.ts",
+                "tsConfig": "models/embedjs-cohere/tsconfig.lib.json",
+                "assets": ["models/embedjs-cohere/*.md"]
+            }
+        },
+        "build-cjs": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "dependsOn": ["^build-cjs"],
+            "options": {
+                "outputPath": "dist/cjs/embedjs-cohere",
+                "main": "models/embedjs-cohere/src/index.ts",
+                "tsConfig": "models/embedjs-cohere/tsconfig.cjs.json"
+            }
+        }
+    }
+}

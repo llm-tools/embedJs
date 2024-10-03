@@ -1,0 +1,40 @@
+{
+    "name": "@llm-tools/embedjs-loader-sitemap",
+    "version": "0.0.1",
+    "dependencies": {
+        "md5": "^2.3.0",
+        "debug": "^4.3.7",
+        "sitemapper": "^3.2.12",
+        "@llm-tools/embedjs-interfaces": "^0.0.1",
+        "@llm-tools/embedjs-loader-web": "^0.0.1"
+    },
+    "type": "module",
+    "main": "./src/index.js",
+    "license": "Apache-2.0",
+    "publishConfig": {
+        "access": "public"
+    },
+    "keywords": [
+        "llm",
+        "ai",
+        "gpt3",
+        "chain",
+        "prompt",
+        "prompt engineering",
+        "chatgpt",
+        "machine learning",
+        "ml",
+        "anthropic",
+        "embeddings",
+        "vectorstores"
+    ],
+    "author": "K V Adhityan",
+    "bugs": {
+        "url": "https://github.com/llm-tools/embedjs/issues"
+    },
+    "homepage": "https://github.com/llm-tools/embedjs#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/llm-tools/embedjs.git"
+    }
+}
