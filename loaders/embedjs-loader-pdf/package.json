@@ -1,6 +1,7 @@
 {
     "name": "@llm-tools/embedjs-loader-pdf",
     "version": "0.1.0",
+    "description": "PDF loader for embedjs",
     "dependencies": {
         "@llm-tools/embedjs-interfaces": "0.1.0",
         "@llm-tools/embedjs-utils": "0.1.0",

@@ -1,8 +1,7 @@
 import createDebugMessages from 'debug';
 
-import { DynamicLoader, LoaderParam } from './dynamic-loader-selector.js';
-import { RAGApplicationBuilder } from './rag-application-builder.js';
 import { RAGEmbedding } from './rag-embedding.js';
+import { RAGApplicationBuilder } from './rag-application-builder.js';
 import { InMemoryConversation } from '../conversation/memory-conversations.js';
 import {
     AddLoaderReturn,
@@ -17,7 +16,6 @@ import {
     QueryResponse,
 } from '@llm-tools/embedjs-interfaces';
 import { cleanString, getUnique } from '@llm-tools/embedjs-utils';
-import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
 
 export class RAGApplication {
     private readonly debug = createDebugMessages('embedjs:core');
@@ -28,7 +26,7 @@ export class RAGApplication {
     private readonly model: BaseModel;
     private readonly embeddingRelevanceCutOff: number;
 
-    private readonly rawLoaders: LoaderParam[];
+    private readonly rawLoaders: BaseLoader[];
     private loaders: BaseLoader[];
 
     constructor(llmBuilder: RAGApplicationBuilder) {
@@ -52,7 +50,7 @@ export class RAGApplication {
         this.searchResultCount = llmBuilder.getSearchResultCount();
         this.embeddingRelevanceCutOff = llmBuilder.getEmbeddingRelevanceCutOff();
 
-        RAGEmbedding.init(llmBuilder.getEmbeddingModel() ?? new OpenAi3SmallEmbeddings());
+        RAGEmbedding.init(llmBuilder.getEmbeddingModel());
     }
 
     /**
@@ -84,7 +82,7 @@ export class RAGApplication {
      * cache, and pre-loaders.
      */
     public async init() {
-        this.loaders = await DynamicLoader.createLoaders(this.rawLoaders);
+        this.loaders = this.rawLoaders;
 
         if (this.model) {
             await this.model.init();
@@ -116,9 +114,8 @@ export class RAGApplication {
      * - `uniqueId`: Unique identifier of the loader
      * - `loaderType`: Name of the loader's constructor class
      */
-    public async addLoader(loaderParam: LoaderParam): Promise<AddLoaderReturn> {
-        const loader = await DynamicLoader.createLoader(loaderParam);
-        return this._addLoader(loader);
+    public async addLoader(loaderParam: BaseLoader): Promise<AddLoaderReturn> {
+        return this._addLoader(loaderParam);
     }
 
     /**
