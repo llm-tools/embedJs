@@ -35,7 +35,8 @@ jobs:
             - name: Publish packages
               run: |
                   VERSION=${{ github.ref_name }}
-                  npm run deploy --ci --version $VERSION
+                  echo 'Publishing version' $VERSION
+                  node scripts/publish-via-nx.js --ci --version $VERSION
                   npx nx release publish
               shell: bash
               env:
