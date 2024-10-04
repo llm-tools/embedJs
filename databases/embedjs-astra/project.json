@@ -1,0 +1,29 @@
+{
+    "name": "embedjs-astra",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "databases/embedjs-astra/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/esm/embedjs-astra",
+                "main": "databases/embedjs-astra/src/index.ts",
+                "tsConfig": "databases/embedjs-astra/tsconfig.lib.json",
+                "assets": ["databases/embedjs-astra/*.md"]
+            }
+        },
+        "build-cjs": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "dependsOn": ["^build-cjs"],
+            "options": {
+                "outputPath": "dist/cjs/embedjs-astra",
+                "main": "databases/embedjs-astra/src/index.ts",
+                "tsConfig": "databases/embedjs-astra/tsconfig.cjs.json"
+            }
+        }
+    }
+}

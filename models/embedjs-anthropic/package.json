@@ -1,0 +1,40 @@
+{
+    "name": "@llm-tools/embedjs-anthropic",
+    "version": "0.1.0",
+    "description": "Enable usage of Anthropic models with embedjs",
+    "dependencies": {
+        "@langchain/anthropic": "^0.3.3",
+        "@langchain/core": "^0.3.6",
+        "@llm-tools/embedjs-interfaces": "0.1.0",
+        "debug": "^4.3.7"
+    },
+    "type": "module",
+    "main": "./src/index.js",
+    "license": "Apache-2.0",
+    "publishConfig": {
+        "access": "public"
+    },
+    "keywords": [
+        "llm",
+        "ai",
+        "gpt3",
+        "chain",
+        "prompt",
+        "prompt engineering",
+        "chatgpt",
+        "machine learning",
+        "ml",
+        "anthropic",
+        "embeddings",
+        "vectorstores"
+    ],
+    "author": "K V Adhityan",
+    "bugs": {
+        "url": "https://github.com/llm-tools/embedjs/issues"
+    },
+    "homepage": "https://github.com/llm-tools/embedjs#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/llm-tools/embedjs.git"
+    }
+}

@@ -32,7 +32,7 @@ async function moveAndRename(source, dest) {
     }
 }
 
-moveAndRename('../dist-cjs', '../dist').catch((err) => {
-    console.error(err);
+moveAndRename('../dist/cjs', '../dist/esm').catch((err) => {
+    console.error('Error', err);
     process.exit(1);
 });

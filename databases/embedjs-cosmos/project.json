@@ -1,0 +1,29 @@
+{
+    "name": "embedjs-cosmos",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "databases/embedjs-cosmos/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/esm/embedjs-cosmos",
+                "main": "databases/embedjs-cosmos/src/index.ts",
+                "tsConfig": "databases/embedjs-cosmos/tsconfig.lib.json",
+                "assets": ["databases/embedjs-cosmos/*.md"]
+            }
+        },
+        "build-cjs": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "dependsOn": ["^build-cjs"],
+            "options": {
+                "outputPath": "dist/cjs/embedjs-cosmos",
+                "main": "databases/embedjs-cosmos/src/index.ts",
+                "tsConfig": "databases/embedjs-cosmos/tsconfig.cjs.json"
+            }
+        }
+    }
+}

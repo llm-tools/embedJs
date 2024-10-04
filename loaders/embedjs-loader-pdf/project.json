@@ -1,0 +1,29 @@
+{
+    "name": "embedjs-loader-pdf",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "loaders/embedjs-loader-pdf/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/esm/embedjs-loader-pdf",
+                "main": "loaders/embedjs-loader-pdf/src/index.ts",
+                "tsConfig": "loaders/embedjs-loader-pdf/tsconfig.lib.json",
+                "assets": ["loaders/embedjs-loader-pdf/*.md"]
+            }
+        },
+        "build-cjs": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "dependsOn": ["^build-cjs"],
+            "options": {
+                "outputPath": "dist/cjs/embedjs-loader-pdf",
+                "main": "loaders/embedjs-loader-pdf/src/index.ts",
+                "tsConfig": "loaders/embedjs-loader-pdf/tsconfig.cjs.json"
+            }
+        }
+    }
+}

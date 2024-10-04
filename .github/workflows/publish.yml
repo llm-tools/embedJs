@@ -1,0 +1,43 @@
+name: Publish
+
+on:
+    #When a new release is published
+    release:
+        types: [published]
+
+jobs:
+    test:
+        name: Publish
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            id-token: write # needed for provenance data generation
+        timeout-minutes: 10
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Install Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  registry-url: https://registry.npmjs.org/
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Print Environment Info
+              run: npx nx report
+              shell: bash
+
+            - name: Publish packages
+              run: |
+                  VERSION=${{ github.ref_name }}
+                  npm run deploy --ci --version $VERSION
+                  npx nx release publish
+              shell: bash
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
+                  NPM_CONFIG_PROVENANCE: true

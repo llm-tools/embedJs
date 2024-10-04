@@ -1,0 +1,29 @@
+{
+    "name": "embedjs-pinecone",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "databases/embedjs-pinecone/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/esm/embedjs-pinecone",
+                "main": "databases/embedjs-pinecone/src/index.ts",
+                "tsConfig": "databases/embedjs-pinecone/tsconfig.lib.json",
+                "assets": ["databases/embedjs-pinecone/*.md"]
+            }
+        },
+        "build-cjs": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "dependsOn": ["^build-cjs"],
+            "options": {
+                "outputPath": "dist/cjs/embedjs-pinecone",
+                "main": "databases/embedjs-pinecone/src/index.ts",
+                "tsConfig": "databases/embedjs-pinecone/tsconfig.cjs.json"
+            }
+        }
+    }
+}

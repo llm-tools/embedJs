@@ -1,0 +1,60 @@
+{
+    "pluginsConfig": {
+        "@nx/js": {
+            "analyzeSourceFiles": true
+        }
+    },
+    "extends": "nx/presets/npm.json",
+    "$schema": "./node_modules/nx/schemas/nx-schema.json",
+    "defaultBase": "main",
+    "nxCloudId": "66f6d7217cbafe1e30563d6e",
+    "namedInputs": {
+        "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"],
+        "default": ["sharedGlobals"]
+    },
+    "plugins": [
+        {
+            "plugin": "@nx/eslint/plugin",
+            "options": {
+                "targetName": "lint"
+            }
+        }
+    ],
+    "targetDefaults": {
+        "@nx/js:tsc": {
+            "cache": true,
+            "dependsOn": ["^build"],
+            "inputs": ["default", "^default"]
+        },
+        "nx-release-publish": {
+            "options": {
+                "packageRoot": "dist/esm/{projectName}"
+            }
+        }
+    },
+    "release": {
+        "projects": ["*"],
+        "changelog": {
+            "projectChangelogs": {
+                "renderOptions": {
+                    "commitReferences": true
+                }
+            },
+            "workspaceChangelog": {
+                "file": false,
+                "createRelease": "github",
+                "renderOptions": {
+                    "commitReferences": true
+                }
+            }
+        },
+        "version": {
+            "preVersionCommand": "npm run build:pipeline",
+            "generatorOptions": {
+                "currentVersionResolver": "registry",
+                "fallbackCurrentVersionResolver": "disk",
+                "packageRoot": "dist/esm/{projectName}"
+            }
+        }
+    }
+}

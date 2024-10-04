@@ -1,0 +1,1 @@
+npx --no-install --yes commitlint --edit $1
