@@ -1,5 +1,5 @@
 {
-    "name": "@llm-tools/embedjs-astra",
+    "name": "@llm-tools/embedjs-astradb",
     "version": "0.1.1",
     "description": "Add AstraDB support to embedjs",
     "dependencies": {

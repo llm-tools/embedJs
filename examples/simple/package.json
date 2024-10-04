@@ -1,0 +1,16 @@
+{
+    "type": "module",
+    "name": "embedjs-example-simple",
+    "version": "0.1.0",
+    "description": "A simple RAG application based on embedJS",
+    "dependencies": {
+        "@llm-tools/embedjs": "0.1.1",
+        "@llm-tools/embedjs-lancedb": "0.1.1",
+        "@llm-tools/embedjs-loader-web": "0.1.1",
+        "@llm-tools/embedjs-openai": "0.1.1",
+        "dotenv": "^16.4.5"
+    },
+    "scripts": {
+        "start": "node --experimental-strip-types ./src/index.ts"
+    }
+}
