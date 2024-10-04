@@ -1,13 +1,13 @@
 {
     "name": "@llm-tools/embedjs-loader-youtube",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "dependencies": {
-        "md5": "^2.3.0",
+        "@llm-tools/embedjs-interfaces": "0.1.0",
+        "@llm-tools/embedjs-utils": "0.1.0",
         "debug": "^4.3.7",
+        "md5": "^2.3.0",
         "usetube": "^2.2.7",
-        "youtube-transcript": "^1.2.1",
-        "@llm-tools/embedjs-utils": "0.0.1",
-        "@llm-tools/embedjs-interfaces": "0.0.1"
+        "youtube-transcript": "^1.2.1"
     },
     "devDependencies": {
         "@types/usetube": "^2.1.2"

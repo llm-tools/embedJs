@@ -1,12 +1,12 @@
 {
     "name": "@llm-tools/embedjs-loader-pdf",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "dependencies": {
-        "md5": "^2.3.0",
-        "office-text-extractor": "^3.0.3",
+        "@llm-tools/embedjs-interfaces": "0.1.0",
+        "@llm-tools/embedjs-utils": "0.1.0",
         "langchain": "^0.3.2",
-        "@llm-tools/embedjs-utils": "0.0.1",
-        "@llm-tools/embedjs-interfaces": "0.0.1"
+        "md5": "^2.3.0",
+        "office-text-extractor": "^3.0.3"
     },
     "type": "module",
     "main": "./src/index.js",

@@ -1,11 +1,11 @@
 {
     "name": "@llm-tools/embedjs-interfaces",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "Interfaces for extending the embedjs ecosystem",
     "dependencies": {
-        "uuid": "^10.0.0",
         "debug": "^4.3.7",
-        "md5": "^2.3.0"
+        "md5": "^2.3.0",
+        "uuid": "^10.0.0"
     },
     "type": "module",
     "main": "./src/index.js",

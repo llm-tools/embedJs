@@ -1,12 +1,12 @@
 {
     "name": "@llm-tools/embedjs-loader-sitemap",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "dependencies": {
-        "md5": "^2.3.0",
+        "@llm-tools/embedjs-interfaces": "0.1.0",
+        "@llm-tools/embedjs-loader-web": "0.1.0",
         "debug": "^4.3.7",
-        "sitemapper": "^3.2.12",
-        "@llm-tools/embedjs-interfaces": "^0.0.1",
-        "@llm-tools/embedjs-loader-web": "^0.0.1"
+        "md5": "^2.3.0",
+        "sitemapper": "^3.2.12"
     },
     "type": "module",
     "main": "./src/index.js",
