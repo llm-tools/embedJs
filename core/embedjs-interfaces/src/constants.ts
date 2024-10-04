@@ -1,5 +1,3 @@
-import { BaseLoader } from './interfaces/base-loader.js';
-
 export const DEFAULT_INSERT_BATCH_SIZE = 500;
 
 export enum SIMPLE_MODELS {
