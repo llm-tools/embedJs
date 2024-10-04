@@ -1,3 +1,7 @@
+## 0.1.1 (2024-10-04)
+
+Temporarily disabled dynamic, url and local path loaders as they required install of all modules from the monorepo. They will be reenabled soon.
+
 ## 0.1.0 (2024-10-03)
 
 This component has been extracted and is now published as part of a workspace monorepo managed by [NX](https://nx.dev/). There are many reasons that prompted this move, but the most critical issue was to decouple the need to install all dependencies for a single usecase. While we add (and continue to add) more and more loaders, databases, caches and models - the number of shared dependencies grew a lot. Most projects will not use all these combinations and it made no sense to have them all installed for everyone. Further, issues with dependent packages raised vulnerabilities that affected all projects - clearly something we did not intend.

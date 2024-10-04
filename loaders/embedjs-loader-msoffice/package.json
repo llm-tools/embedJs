@@ -1,9 +1,10 @@
 {
     "name": "@llm-tools/embedjs-loader-msoffice",
-    "version": "0.1.0",
+    "version": "0.1.1",
+    "description": "Word, PPT and Excel loader for embedjs",
     "dependencies": {
-        "@llm-tools/embedjs-interfaces": "0.1.0",
-        "@llm-tools/embedjs-utils": "0.1.0",
+        "@llm-tools/embedjs-interfaces": "0.1.1",
+        "@llm-tools/embedjs-utils": "0.1.1",
         "langchain": "^0.3.2",
         "md5": "^2.3.0",
         "office-text-extractor": "^3.0.3"

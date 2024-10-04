@@ -1,14 +1,12 @@
 import { RAGApplication } from './rag-application.js';
-import { LoaderParam } from './dynamic-loader-selector.js';
 import {
     BaseCache,
     BaseConversation,
     BaseDb,
     BaseEmbeddings,
+    BaseLoader,
     BaseModel,
-    SIMPLE_MODELS,
 } from '@llm-tools/embedjs-interfaces';
-import { OpenAi } from '@llm-tools/embedjs-openai';
 
 export class RAGApplicationBuilder {
     private temperature: number;
@@ -18,7 +16,7 @@ export class RAGApplicationBuilder {
     private searchResultCount: number;
     private embeddingModel: BaseEmbeddings;
     private embeddingRelevanceCutOff: number;
-    private loaders: LoaderParam[];
+    private loaders: BaseLoader[];
     private vectorDb: BaseDb;
     private conversations: BaseConversation;
 
@@ -32,7 +30,6 @@ export class RAGApplicationBuilder {
 
         Do not use words like context or training data when responding. You can say you do not have all the information but do not indicate that you are not a reliable source.`;
 
-        this.setModel(SIMPLE_MODELS.OPENAI_GPT4_O);
         this.embeddingRelevanceCutOff = 0;
     }
 
@@ -42,7 +39,7 @@ export class RAGApplicationBuilder {
         return entity;
     }
 
-    addLoader(loader: LoaderParam) {
+    addLoader(loader: BaseLoader) {
         this.loaders.push(loader);
         return this;
     }
@@ -86,17 +83,9 @@ export class RAGApplicationBuilder {
         return this;
     }
 
-    setModel(model: 'NO_MODEL' | SIMPLE_MODELS | BaseModel) {
+    setModel(model: 'NO_MODEL' | BaseModel) {
         if (typeof model === 'object') this.model = model;
-        else {
-            if (model === SIMPLE_MODELS.OPENAI_GPT4_O) this.model = new OpenAi({ modelName: 'gpt-4o' });
-            else if (model === SIMPLE_MODELS['OPENAI_GPT4_TURBO'])
-                this.model = new OpenAi({ modelName: 'gpt-4-turbo' });
-            else if (model === SIMPLE_MODELS['OPENAI_GPT3.5_TURBO'])
-                this.model = new OpenAi({ modelName: 'gpt-3.5-turbo' });
-            else this.model = null;
-        }
-
+        else this.model = null;
         return this;
     }
 
