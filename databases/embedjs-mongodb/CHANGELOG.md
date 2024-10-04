@@ -1,19 +1,6 @@
 ## 0.1.1 (2024-10-04)
 
-
-### 🚀 Features
-
-- switch to monorepo ([3bbdef7](https://github.com/llm-tools/embedJs/commit/3bbdef7))
-
-
-### 🩹 Fixes
-
-- publish script and changelog typos ([c9efec1](https://github.com/llm-tools/embedJs/commit/c9efec1))
-
-
-### ❤️  Thank You
-
-- Adhityan K V @adhityan
+Temporarily disabled dynamic, url and local path loaders as they required install of all modules from the monorepo. They will be reenabled soon.
 
 ## 0.1.0 (2024-10-03)
 
