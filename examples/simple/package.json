@@ -3,8 +3,7 @@
     "version": "0.1.1",
     "type": "module",
     "dependencies": {
-        "dotenv": "^16.4.5",
-        "@llm-tools/embedjs-loader-confluence": "^0.1.1"
+        "dotenv": "^16.4.5"
     },
     "scripts": {
         "start": "nx run examples-simple:serve"
