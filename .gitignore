@@ -63,3 +63,7 @@ zookeeper/
 acme.json
 temp/
 storage/
+lmdb/
+
+#env
+.env

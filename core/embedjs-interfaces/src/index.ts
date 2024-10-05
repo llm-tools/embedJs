@@ -6,5 +6,6 @@ import { BaseModel } from './interfaces/base-model.js';
 import { BaseConversation } from './interfaces/base-conversations.js';
 
 export * from './types.js';
+export * from './loaders.js';
 export * from './constants.js';
 export { BaseDb, BaseCache, BaseLoader, BaseEmbeddings, BaseModel, BaseConversation };

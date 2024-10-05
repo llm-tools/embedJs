@@ -1,0 +1,17 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "files": [],
+    "include": [],
+    "references": [
+        {
+            "path": "./tsconfig.app.json"
+        }
+    ],
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "target": "ES2022",
+        "lib": ["ES2022", "ES2022.Object"],
+        "module": "NodeNext",
+        "moduleResolution": "nodenext"
+    }
+}

@@ -1,0 +1,57 @@
+{
+    "name": "examples-simple",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "examples/simple/src",
+    "projectType": "application",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/esbuild:esbuild",
+            "outputs": ["{options.outputPath}"],
+            "defaultConfiguration": "development",
+            "options": {
+                "platform": "node",
+                "outputPath": "dist/examples/simple",
+                "format": ["esm"],
+                "bundle": true,
+                "main": "examples/simple/src/main.ts",
+                "tsConfig": "examples/simple/tsconfig.app.json",
+                "generatePackageJson": false,
+                "esbuildOptions": {
+                    "sourcemap": true,
+                    "outExtension": {
+                        ".js": ".js"
+                    }
+                }
+            },
+            "configurations": {
+                "development": {},
+                "production": {
+                    "esbuildOptions": {
+                        "sourcemap": false,
+                        "outExtension": {
+                            ".js": ".js"
+                        }
+                    }
+                }
+            }
+        },
+        "serve": {
+            "executor": "@nx/js:node",
+            "defaultConfiguration": "development",
+            "dependsOn": ["build"],
+            "options": {
+                "buildTarget": "examples-simple:build",
+                "runBuildTargetDependencies": true
+            },
+            "configurations": {
+                "development": {
+                    "buildTarget": "examples-simple:build:development"
+                },
+                "production": {
+                    "buildTarget": "examples-simple:build:production"
+                }
+            }
+        }
+    }
+}
