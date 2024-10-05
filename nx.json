@@ -30,6 +30,11 @@
             "options": {
                 "packageRoot": "dist/esm/{projectName}"
             }
+        },
+        "@nx/esbuild:esbuild": {
+            "cache": true,
+            "dependsOn": ["^build"],
+            "inputs": ["default", "^default"]
         }
     },
     "release": {
