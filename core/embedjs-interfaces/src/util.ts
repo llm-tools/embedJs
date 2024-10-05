@@ -2,7 +2,9 @@ import createDebugMessages from 'debug';
 import { BaseLoader } from './interfaces/base-loader.js';
 
 export async function importBaseLoader(moduleName: string, modulePath: string): Promise<BaseLoader> {
-    createDebugMessages('embedjs:interfaces:importBaseLoader')(`Starting import of ${moduleName}`);
+    createDebugMessages('embedjs:interfaces:importBaseLoader')(
+        `Starting import of ${moduleName} from path ${modulePath}`,
+    );
 
     try {
         const importedModule = await import(modulePath);
@@ -16,8 +18,8 @@ export async function importBaseLoader(moduleName: string, modulePath: string): 
         }
 
         return importedModule[moduleName];
-    } catch {
-        createDebugMessages('embedjs:interfaces:importBaseLoader')(`Module ${modulePath} not installed...`);
+    } catch (e) {
+        createDebugMessages('embedjs:interfaces:importBaseLoader')(`Module ${modulePath} not installed!`, e);
         return null;
     }
 }

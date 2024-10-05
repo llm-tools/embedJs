@@ -1,8 +1,7 @@
 // import { BaseLoader } from './interfaces/base-loader.js';
 import { importBaseLoader } from './util.js';
 
-const ConfluenceLoader = await importBaseLoader('ConfluenceLoader', '@llm-tools/embedjs-loader-confluence');
-console.log(ConfluenceLoader);
+await importBaseLoader('ConfluenceLoader', '@llm-tools/embedjs-loader-confluence');
 // export type ConfluenceLoaderParam = ConstructorParameters<typeof ConfluenceLoader>[0];
 
 // export type LoaderParam = string | BaseLoader | ({ type: 'Confluence' } & ConfluenceLoaderParam);
