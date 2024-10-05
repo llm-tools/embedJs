@@ -18,9 +18,6 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
-            - name: Validate commits from PR
-              run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
-
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v3
               with:
