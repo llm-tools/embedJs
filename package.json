@@ -33,7 +33,7 @@
         "@typescript-eslint/eslint-plugin": "^8.8.0",
         "@typescript-eslint/parser": "^8.8.0",
         "arg": "^5.0.2",
-        "esbuild": "^0.24.0",
+        "esbuild": "^0.19.2",
         "eslint": "~9.12.0",
         "eslint-config-prettier": "^9.1.0",
         "husky": "^9.1.6",
