@@ -76,7 +76,7 @@ async function createRelease(dryRun, version, generateChangelog) {
         else console.log(`Skipping '${pkgName}' version update as it's already up to date`);
     }
 
-    if (!generateChangelog) {
+    if (generateChangelog) {
         await releaseChangelog({
             firstRelease: true,
             versionData: projectsVersionData,
