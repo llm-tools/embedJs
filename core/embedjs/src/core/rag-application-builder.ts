@@ -6,19 +6,20 @@ import {
     BaseEmbeddings,
     BaseLoader,
     BaseModel,
+    SIMPLE_MODELS,
 } from '@llm-tools/embedjs-interfaces';
 
 export class RAGApplicationBuilder {
     private temperature: number;
-    private queryTemplate: string;
+    private model: BaseModel | SIMPLE_MODELS | null;
+    private loaders: BaseLoader[];
+    private vectorDb: BaseDb;
     private cache?: BaseCache;
-    private model: BaseModel | null;
+    private conversations: BaseConversation;
+    private queryTemplate: string;
     private searchResultCount: number;
     private embeddingModel: BaseEmbeddings;
     private embeddingRelevanceCutOff: number;
-    private loaders: BaseLoader[];
-    private vectorDb: BaseDb;
-    private conversations: BaseConversation;
 
     constructor() {
         this.loaders = [];
@@ -33,9 +34,13 @@ export class RAGApplicationBuilder {
         this.embeddingRelevanceCutOff = 0;
     }
 
+    /**
+     * The `build` function creates a new `RAGApplication` entity and initializes it asynchronously based on provided parameters.
+     * @returns An instance of the `RAGApplication` class after it has been initialized asynchronously.
+     */
     async build() {
         const entity = new RAGApplication(this);
-        await entity.init();
+        await entity.init(this);
         return entity;
     }
 
@@ -44,11 +49,23 @@ export class RAGApplicationBuilder {
         return this;
     }
 
+    /**
+     * The setSearchResultCount function sets the search result count
+     * @param {number} searchResultCount - The `searchResultCount` parameter
+     * represents the count of search results picked up from the vector store per query.
+     * @returns The `this` object is being returned, which allows for method chaining.
+     */
     setSearchResultCount(searchResultCount: number) {
         this.searchResultCount = searchResultCount;
         return this;
     }
 
+    /**
+     * The function setVectorDb sets a BaseDb object
+     * @param {BaseDb} vectorDb - The `vectorDb` parameter is an instance of the `BaseDb` class, which
+     * is used to store vectors in a database.
+     * @returns The `this` object is being returned, which allows for method chaining.
+     */
     setVectorDb(vectorDb: BaseDb) {
         this.vectorDb = vectorDb;
         return this;
@@ -83,9 +100,13 @@ export class RAGApplicationBuilder {
         return this;
     }
 
-    setModel(model: 'NO_MODEL' | BaseModel) {
+    setModel(model: 'NO_MODEL' | SIMPLE_MODELS | BaseModel) {
         if (typeof model === 'object') this.model = model;
-        else this.model = null;
+        else {
+            if (model === 'NO_MODEL') this.model = null;
+            else this.model = model;
+        }
+
         return this;
     }
 

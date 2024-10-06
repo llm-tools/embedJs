@@ -28,13 +28,14 @@ export abstract class BaseModel {
         return this._temperature ?? BaseModel.defaultTemperature;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     public async init(): Promise<void> {}
 
     public async query(
         system: string,
         userQuery: string,
         supportingContext: Chunk[],
-        conversationId: string = 'default',
+        conversationId = 'default',
     ): Promise<QueryResponse> {
         const conversation = await BaseModel.conversations.getConversation(conversationId);
         this.baseDebug(`${conversation.entries.length} history entries found for conversationId '${conversationId}'`);
