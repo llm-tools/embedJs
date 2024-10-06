@@ -1,3 +1,22 @@
+## 0.1.3 (2024-10-06)
+
+
+### 🚀 Features
+
+- readded local-path and url loaders ([303133c](https://github.com/llm-tools/embedJs/commit/303133c))
+
+
+### 🩹 Fixes
+
+- exclude examples from release process ([1382185](https://github.com/llm-tools/embedJs/commit/1382185))
+
+- downgrade esbuild version to match nx requirements ([183308f](https://github.com/llm-tools/embedJs/commit/183308f))
+
+
+### ❤️  Thank You
+
+- Adhityan K V @adhityan
+
 ## 0.1.2 (2024-10-06)
 
 

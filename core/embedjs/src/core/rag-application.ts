@@ -14,31 +14,23 @@ import {
     InsertChunkData,
     LoaderChunk,
     QueryResponse,
+    SIMPLE_MODELS,
 } from '@llm-tools/embedjs-interfaces';
 import { cleanString, getUnique } from '@llm-tools/embedjs-utils';
 
 export class RAGApplication {
     private readonly debug = createDebugMessages('embedjs:core');
-    private readonly queryTemplate: string;
+    private readonly embeddingRelevanceCutOff: number;
     private readonly searchResultCount: number;
+    private readonly queryTemplate: string;
     private readonly cache?: BaseCache;
     private readonly vectorDb: BaseDb;
-    private readonly model: BaseModel;
-    private readonly embeddingRelevanceCutOff: number;
-
-    private readonly rawLoaders: BaseLoader[];
     private loaders: BaseLoader[];
+    private model: BaseModel;
 
     constructor(llmBuilder: RAGApplicationBuilder) {
         this.cache = llmBuilder.getCache();
         BaseLoader.setCache(this.cache);
-
-        this.model = llmBuilder.getModel();
-        if (!this.model) this.debug('No base model set; query function unavailable!');
-        else {
-            BaseModel.setDefaultTemperature(llmBuilder.getTemperature());
-            BaseModel.setConversations(llmBuilder.getConversationsEngine() || new InMemoryConversation());
-        }
 
         this.queryTemplate = cleanString(llmBuilder.getQueryTemplate());
         this.debug(`Using system query template - "${this.queryTemplate}"`);
@@ -46,11 +38,74 @@ export class RAGApplication {
         this.vectorDb = llmBuilder.getVectorDb();
         if (!this.vectorDb) throw new SyntaxError('VectorDb not set');
 
-        this.rawLoaders = llmBuilder.getLoaders();
         this.searchResultCount = llmBuilder.getSearchResultCount();
         this.embeddingRelevanceCutOff = llmBuilder.getEmbeddingRelevanceCutOff();
 
         RAGEmbedding.init(llmBuilder.getEmbeddingModel());
+    }
+
+    /**
+     * The function initializes various components of a language model using provided configurations
+     * and data. This is an internal method and does not need to be invoked manually.
+     * @param {RAGApplicationBuilder} llmBuilder - The `llmBuilder` parameter in the `init` function is
+     * an instance of the `RAGApplicationBuilder` class. It is used to build and configure a Language
+     * Model (LLM) for a conversational AI system. The function initializes various components of the
+     * LLM based on the configuration provided
+     */
+    public async init(llmBuilder: RAGApplicationBuilder) {
+        this.model = await this.getModel(llmBuilder.getModel());
+        if (!this.model) this.debug('No base model set; query function unavailable!');
+        else {
+            BaseModel.setDefaultTemperature(llmBuilder.getTemperature());
+            BaseModel.setConversations(llmBuilder.getConversationsEngine() || new InMemoryConversation());
+        }
+
+        this.loaders = llmBuilder.getLoaders();
+
+        if (this.model) {
+            await this.model.init();
+            this.debug('Initialized LLM class');
+        }
+
+        await this.vectorDb.init({ dimensions: await RAGEmbedding.getEmbedding().getDimensions() });
+        this.debug('Initialized vector database');
+
+        if (this.cache) {
+            await this.cache.init();
+            this.debug('Initialized cache');
+        }
+
+        this.loaders = getUnique(this.loaders, 'getUniqueId');
+        for await (const loader of this.loaders) {
+            await this.addLoader(loader);
+        }
+        this.debug('Initialized pre-loaders');
+    }
+
+    /**
+     * The function getModel retrieves a specific BaseModel or SIMPLE_MODEL based on the input provided.
+     * @param {BaseModel | SIMPLE_MODELS | null} model - The `getModel` function you provided is an
+     * asynchronous function that takes a parameter `model` of type `BaseModel`, `SIMPLE_MODELS`, or
+     * `null`.
+     * @returns The `getModel` function returns a Promise that resolves to a `BaseModel` object. If the
+     * `model` parameter is an object, it returns the object itself. If the `model` parameter is
+     * `null`, it returns `null`. If the `model` parameter is a specific value from the `SIMPLE_MODELS`
+     * enum, it creates a new `BaseModel` object based on the model name.
+     */
+    private async getModel(model: BaseModel | SIMPLE_MODELS | null): Promise<BaseModel> {
+        if (typeof model === 'object') return model;
+        else if (model === null) return null;
+        else {
+            const { OpenAi } = await import('@llm-tools/embedjs-openai').catch(() => {
+                throw new Error('Package `@llm-tools/embedjs-openai` needs to be installed to use OpenAI models');
+            });
+            this.debug('Dynamically imported OpenAi');
+
+            if (model === SIMPLE_MODELS.OPENAI_GPT4_O) return new OpenAi({ modelName: 'gpt-4o' });
+            else if (model === SIMPLE_MODELS['OPENAI_GPT4_TURBO']) return new OpenAi({ modelName: 'gpt-4-turbo' });
+            else if (model === SIMPLE_MODELS['OPENAI_GPT3.5_TURBO']) return new OpenAi({ modelName: 'gpt-3.5-turbo' });
+            else throw new Error('Invalid model name');
+        }
     }
 
     /**
@@ -75,33 +130,6 @@ export class RAGApplication {
      */
     private getChunkUniqueId(loaderUniqueId: string, incrementId: number) {
         return `${loaderUniqueId}_${incrementId}`;
-    }
-
-    /**
-     * This async function initializes various components such as loaders, model, vector database,
-     * cache, and pre-loaders.
-     */
-    public async init() {
-        this.loaders = this.rawLoaders;
-
-        if (this.model) {
-            await this.model.init();
-            this.debug('Initialized LLM class');
-        }
-
-        await this.vectorDb.init({ dimensions: await RAGEmbedding.getEmbedding().getDimensions() });
-        this.debug('Initialized vector database');
-
-        if (this.cache) {
-            await this.cache.init();
-            this.debug('Initialized cache');
-        }
-
-        this.loaders = getUnique(this.loaders, 'getUniqueId');
-        for await (const loader of this.loaders) {
-            await this.addLoader(loader);
-        }
-        this.debug('Initialized pre-loaders');
     }
 
     /**

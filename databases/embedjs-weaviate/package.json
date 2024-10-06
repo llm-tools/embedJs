@@ -1,9 +1,9 @@
 {
     "name": "@llm-tools/embedjs-weaviate",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "description": "Add Weaviate support to embedjs",
     "dependencies": {
-        "@llm-tools/embedjs-interfaces": "0.1.2",
+        "@llm-tools/embedjs-interfaces": "0.1.3",
         "compute-cosine-similarity": "^1.1.0",
         "debug": "^4.3.7",
         "weaviate-ts-client": "^2.2.0"
