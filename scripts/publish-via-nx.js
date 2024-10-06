@@ -61,7 +61,7 @@ async function updatePackageVersion(pkgName, version, versionMap, dryRun) {
 async function createRelease(dryRun, version) {
     const { workspaceVersion, projectsVersionData } = await releaseVersion({
         specifier: version,
-        verbose: false,
+        verbose: true,
         dryRun,
     });
 
@@ -80,6 +80,7 @@ async function createRelease(dryRun, version) {
         firstRelease: true,
         versionData: projectsVersionData,
         version: workspaceVersion,
+        verbose: true,
         dryRun,
     });
 

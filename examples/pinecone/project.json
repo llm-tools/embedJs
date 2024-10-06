@@ -1,0 +1,57 @@
+{
+    "name": "examples-pinecone",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "examples/pinecone/src",
+    "projectType": "application",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/esbuild:esbuild",
+            "outputs": ["{options.outputPath}"],
+            "defaultConfiguration": "development",
+            "options": {
+                "platform": "node",
+                "outputPath": "dist/examples/pinecone",
+                "format": ["esm"],
+                "bundle": true,
+                "main": "examples/pinecone/src/main.ts",
+                "tsConfig": "examples/pinecone/tsconfig.app.json",
+                "generatePackageJson": false,
+                "esbuildOptions": {
+                    "sourcemap": true,
+                    "outExtension": {
+                        ".js": ".js"
+                    }
+                }
+            },
+            "configurations": {
+                "development": {},
+                "production": {
+                    "esbuildOptions": {
+                        "sourcemap": false,
+                        "outExtension": {
+                            ".js": ".js"
+                        }
+                    }
+                }
+            }
+        },
+        "serve": {
+            "executor": "@nx/js:node",
+            "defaultConfiguration": "development",
+            "dependsOn": ["build"],
+            "options": {
+                "buildTarget": "examples-pinecone:build",
+                "runBuildTargetDependencies": true
+            },
+            "configurations": {
+                "development": {
+                    "buildTarget": "examples-pinecone:build:development"
+                },
+                "production": {
+                    "buildTarget": "examples-pinecone:build:production"
+                }
+            }
+        }
+    }
+}
