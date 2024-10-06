@@ -38,7 +38,7 @@
         }
     },
     "release": {
-        "projects": ["*"],
+        "projects": ["*", "!examples-*"],
         "changelog": {
             "projectChangelogs": {
                 "renderOptions": {
