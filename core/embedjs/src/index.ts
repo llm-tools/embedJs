@@ -4,5 +4,6 @@ import { LocalPathLoader } from './loaders/local-path-loader.js';
 import { TextLoader } from './loaders/text-loader.js';
 import { JsonLoader } from './loaders/json-loader.js';
 import { UrlLoader } from './loaders/url-loader.js';
+import { SIMPLE_MODELS } from '@llm-tools/embedjs-interfaces';
 
-export { RAGApplication, RAGApplicationBuilder, TextLoader, JsonLoader, LocalPathLoader, UrlLoader };
+export { RAGApplication, RAGApplicationBuilder, TextLoader, JsonLoader, LocalPathLoader, UrlLoader, SIMPLE_MODELS };

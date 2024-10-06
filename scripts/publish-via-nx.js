@@ -58,7 +58,7 @@ async function updatePackageVersion(pkgName, version, versionMap, dryRun) {
     if (!found) console.error(`Could not find '${pkgName}' in any of the folders`);
 }
 
-async function createRelease(dryRun, version) {
+async function createRelease(dryRun, version, generateChangelog) {
     const { workspaceVersion, projectsVersionData } = await releaseVersion({
         specifier: version,
         verbose: true,
@@ -76,13 +76,15 @@ async function createRelease(dryRun, version) {
         else console.log(`Skipping '${pkgName}' version update as it's already up to date`);
     }
 
-    await releaseChangelog({
-        firstRelease: true,
-        versionData: projectsVersionData,
-        version: workspaceVersion,
-        verbose: true,
-        dryRun,
-    });
+    if (generateChangelog) {
+        await releaseChangelog({
+            firstRelease: true,
+            versionData: projectsVersionData,
+            version: workspaceVersion,
+            verbose: true,
+            dryRun,
+        });
+    }
 
     process.exit(0);
 }
@@ -120,7 +122,8 @@ async function startReleasePipeline() {
         }
     } else version = args['--version'];
 
-    await createRelease(dryRun, version);
+    const generateChangelog = args['--ci'] ? false : true;
+    await createRelease(dryRun, version, generateChangelog);
 }
 
 await startReleasePipeline();
