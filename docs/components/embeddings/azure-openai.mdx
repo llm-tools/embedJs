@@ -1,0 +1,24 @@
+---
+title: 'Azure OpenAI'
+---
+
+In order to be able to use an OpenAI model on Azure, it first needs to be deployed.
+Refer to the [Azure OpenAI LLM install documentation](/components/llms/azure-openai) for more information.
+
+## Install OpenAI addon
+
+```bash
+npm install @llm-tools/embedjs-openai
+```
+
+## Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+
+const app = await new RAGApplicationBuilder()
+.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+```
+

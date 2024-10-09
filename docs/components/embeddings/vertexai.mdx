@@ -1,0 +1,25 @@
+---
+title: 'Vertex AI'
+---
+
+The libaray supports the Gecko Embedding model on [VertexAI](https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-text-embeddings) with 768 dimensions.
+
+To use this model, you need to authenticate to Vertex AI on GCP. Refer [here](/components/llms/azure-openai) on how to do this. Once done, follow these steps -
+
+## Install VertexAi addon
+
+```bash
+npm install @llm-tools/embedjs-vertexai
+```
+
+## Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { GeckoEmbeddings } from '@llm-tools/embedjs-vertexai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+
+const app = await new RAGApplicationBuilder()
+.setEmbeddingModel(new GeckoEmbeddings())
+```
+

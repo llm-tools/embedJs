@@ -1,0 +1,52 @@
+---
+title: '📰 PDF'
+---
+
+You can load any pdf file from your local file system or through a URL.
+
+## Install PDF addon
+
+```bash
+npm install @llm-tools/embedjs-loader-pdf
+```
+
+## Usage
+
+### Load from a local file
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+import { PdfLoader } from '@llm-tools/embedjs-loader-pdf';
+
+const app = await new RAGApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setVectorDb(new HNSWDb())
+.build();
+
+app.addLoader(new PdfLoader({ filePathOrUrl: '/path/to/file.pdf' }))
+```
+
+### Load from URL
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+import { PdfLoader } from '@llm-tools/embedjs-loader-pdf';
+
+const app = await new RAGApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setVectorDb(new HNSWDb())
+.build();
+
+await app.addLoader(new PdfLoader({ filePathOrUrl: 'https://arxiv.org/pdf/1706.03762.pdf' }))
+await app.query("What is the paper 'attention is all you need' about?");
+```
+
+<Note>
+Note that we do not support password protected pdf files.
+</Note>

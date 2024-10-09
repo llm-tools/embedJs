@@ -1,0 +1,96 @@
+---
+title: '❓ query'
+---
+
+The `.query()` method empowers developers to ask questions and receive relevant answers through a user-friendly query API.
+Function signature is given below:
+
+### Parameters
+
+<ParamField path="userQuery" type="string" required>
+    Question to ask
+</ParamField>
+<ParamField path="conversationId" type="bool" optional>
+    The conversation ID to which the query belongs in case this is a chatbot scenario
+</ParamField>
+<ParamField path="customContext" type="Chunk[]" optional>
+    In case you want to pass along your own context information. Passing this parameter disables the default context generation.
+    <Expandable title="Chunk properties">
+        <ParamField name="pageContent" type="string">
+            The context text that is passed to the LLM
+        </ParamField>
+        <ParamField name="metadata" type="Metadata">
+            The metadata that is passed to EmbedJs
+            <Expandable title="Metadata">
+                <ParamField name="id" type="string">
+                    Unique identifier for the bit of information
+                </ParamField>
+                <ParamField name="uniqueLoaderId" type="string">
+                    The unique identifier for the group of information bits
+                </ParamField>
+                <ParamField name="source" type="string">
+                    The source string returned if this piece of info was used by the LLM
+                </ParamField>
+            </Expandable>
+        </ParamField>
+    </Expandable>
+</ParamField>
+
+### Returns
+
+<ResponseField name="id" type="string">
+    Unique identifier for the query response in a conversation
+</ResponseField>
+<ResponseField name="timestamp" type="Date">
+    Unique identifier for the query response in a conversation
+</ResponseField>
+<ResponseField name="content" type="string">
+    Unique identifier for the query response in a conversation
+</ResponseField>
+<ResponseField name="sources" type="SourceDetail[]">
+    The individual sources that were used to generate the answer
+    <Expandable title="SourceDetail properties">
+        <ResponseField name="loaderId" type="string">
+            Unique identifier for the loader
+        </ResponseField>
+        <ResponseField name="source" type="string">
+            The source of the information
+        </ResponseField>
+    </Expandable>
+</ResponseField>
+<ResponseField name="tokenUse" type="object">
+    The number of tokens used to answer the query
+    <Expandable title="properties">
+        <ResponseField name="inputTokens" type="number | 'UNKNOWN'">
+            The number of input tokens used to process the query
+        </ResponseField>
+        <ResponseField name="outputTokens" type="number | 'UNKNOWN'">
+            The number of output tokens used to process the query
+        </ResponseField>
+    </Expandable>
+</ResponseField>
+
+## Usage
+
+If you want to get the answer to question and return both answer and citations, use the following code snippet:
+
+```ts Code Example
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OllamaEmbeddings } from '@llm-tools/embedjs-ollama';
+import { WebLoader } from '@llm-tools/embedjs-loader-web';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+
+const ragApplication = await new RAGApplicationBuilder()
+.setModel(new Ollama({ modelName: "llama3.2", baseUrl: 'http://localhost:11434' }))
+.setEmbeddingModel(new OllamaEmbeddings({ model: 'nomic-embed-text', baseUrl: 'http://localhost:11434' }))
+.setVectorDb(new HNSWDb())
+.build();
+
+ragApplication.addLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-musk' })
+ragApplication.addLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Elon_Musk' })
+
+await ragApplication.query('What is the net worth of Elon Musk today?')
+/*
+
+*/
+```

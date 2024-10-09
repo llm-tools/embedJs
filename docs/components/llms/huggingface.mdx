@@ -1,0 +1,27 @@
+---
+title: 'Hugging Face'
+---
+
+Hugging face needs no introduction. They host a variety of open source LLMs and you can use most of them for free. To run hugging face inference based LLMs with this library, you will need a free hugging face token.
+
+You can get an API Token by signing up for hugging face and generate a token from [this page](https://huggingface.co/settings/tokens). Once you get the token, set it to the environment like so -
+
+```bash
+HUGGINGFACEHUB_API_KEY="<Your hf key>"
+```
+
+## Install Huggingface addon
+
+```bash
+npm install @llm-tools/embedjs-huggingface
+```
+
+## Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { HuggingFace } from '@llm-tools/embedjs-huggingface';
+
+const app = await new RAGApplicationBuilder()
+.setModel(new HuggingFace({ modelName: "..." }))
+```

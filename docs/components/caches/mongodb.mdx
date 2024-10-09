@@ -1,0 +1,28 @@
+---
+title: MongoDB
+---
+
+You can use MongoDB as a cache / datastore. This creates two new collections in the database - which are configureable.
+
+<Note>
+MongoDB is also supported as a store for the vector data. This is separate from that.
+</Note>
+
+## Install MongoDB addon
+
+```bash
+npm install @llm-tools/embedjs-mongodb
+```
+
+## Usage
+<CodeGroup>
+```ts Partial example
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { MongoCache } from '@llm-tools/embedjs-mongodb';
+
+const app = await new RAGApplicationBuilder()
+.setCache(new MongoCache({ ... }))
+```
+</CodeGroup>
+
+<Snippet file="missing-cache-tip.mdx" />

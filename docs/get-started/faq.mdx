@@ -1,0 +1,76 @@
+---
+title: ❓ FAQs
+description: 'Collections of all the frequently asked questions'
+---
+<AccordionGroup>
+<Accordion title="How to use MistralAI language model?">
+Use the model `gpt-4o` provided my openai.
+
+<CodeGroup>
+```ts index.ts
+import 'dotenv/config';
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { Mistral } from '@llm-tools/embedjs-mistral';
+import { WebLoader } from '@llm-tools/embedjs-loader-web';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+
+const llmApplication = await new RAGApplicationBuilder()
+    .setModel(new Mistral({ modelName: 'mistral-medium' }))
+    .setVectorDb(new HNSWDb())
+    .build();
+
+await llmApplication.addLoader(new WebLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Tesla,_Inc.' }));
+
+console.log(await llmApplication.query('Who founded Tesla?'));
+```
+</CodeGroup>
+</Accordion>
+
+<Accordion title="How to use GPT-4o as the Language model?">
+<CodeGroup>
+```ts index.ts
+import 'dotenv/config';
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi, OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { WebLoader } from '@llm-tools/embedjs-loader-web';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+
+const llmApplication = await new RAGApplicationBuilder()
+    .setModel(new OpenAi({ modelName: 'gpt-4o' }))
+    .setEmbeddingModel(new OpenAi3SmallEmbeddings())
+    .setVectorDb(new HNSWDb())
+    .build();
+
+await llmApplication.addLoader(new WebLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Tesla,_Inc.' }));
+
+console.log(await llmApplication.query('Who founded Tesla?'));
+```
+</CodeGroup>
+</Accordion>
+
+<Accordion title="I don't have OpenAI credits. How can I use a local model?">
+<CodeGroup>
+```ts index.ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OllamaEmbeddings } from '@llm-tools/embedjs-ollama';
+import { WebLoader } from '@llm-tools/embedjs-loader-web';
+
+const ragApplication = await new RAGApplicationBuilder()
+.setModel(new Ollama({ modelName: "llama3.2", baseUrl: 'http://localhost:11434' }))
+.setEmbeddingModel(new OllamaEmbeddings({ model: 'nomic-embed-text', baseUrl: 'http://localhost:11434' }))
+.build();
+
+ragApplication.addLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-musk' })
+ragApplication.addLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Elon_Musk' })
+
+await ragApplication.query('What is the net worth of Elon Musk today?')
+```
+</CodeGroup>
+
+</Accordion>
+</AccordionGroup>
+
+#### Still have questions?
+If docs aren't sufficient, please feel free to reach out to us using one of the following methods:
+
+<Snippet file="get-help.mdx" />

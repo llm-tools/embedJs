@@ -1,0 +1,52 @@
+---
+title: Pinecone
+---
+
+To get started, create an account with [Pinecone](https://www.pinecone.io/) if you don't have one already. There is a free tier.
+Once you have an account, get an API key from the **API Keys** section on the Pinecone dashboard.
+
+Add the API Key to your environment variables.
+
+```bash
+PINECONE_API_KEY=<your api key>
+```
+
+## Install Pinecone addon
+
+```bash
+npm install @llm-tools/embedjs-pinecone
+```
+
+## Usage
+<CodeGroup>
+```ts Example
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { LanceDb } from '@llm-tools/embedjs-pinecone';
+
+// set OPENAI_API_KEY in your env
+process.env.OPENAI_API_KEY = "sk-xxx";
+
+const app = await new RAGApplicationBuilder()
+.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setVectorDb(new PineconeDb({
+    projectName: '<name>',
+    namespace: '<name>',
+    indexSpec: {
+        pod: {
+            podType: 'p1.x1',
+            environment: 'us-east1-gcp',
+        },
+    },
+}))
+.build();
+
+
+//add data source and start query in
+await app.add("https://www.forbes.com/profile/elon-musk");
+await app.query('Tell me about Elon Musk');
+```
+</CodeGroup>
+
+<Snippet file="missing-vector-db-tip.mdx" />

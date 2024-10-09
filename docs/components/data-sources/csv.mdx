@@ -1,0 +1,48 @@
+---
+title: '📊 CSV'
+---
+
+You can load any csv file from your local file system or through a URL.
+Headers are included for each line, so if you have an `age` column, `18` will be added as `age: 18`.
+
+## Install CSV addon
+
+```bash
+npm install @llm-tools/embedjs-loader-csv
+```
+
+## Usage
+
+### Load from a local file
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+import { DocxLoader } from '@llm-tools/embedjs-loader-csv';
+
+const app = await new RAGApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setVectorDb(new HNSWDb())
+.build();
+
+app.addLoader(new CsvLoader({ filePathOrUrl: '/path/to/file.csv' }))
+```
+
+### Load from URL
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+import { DocxLoader } from '@llm-tools/embedjs-loader-csv';
+
+const app = await new RAGApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setVectorDb(new HNSWDb())
+.build();
+
+app.addLoader(new CsvLoader({ filePathOrUrl: 'https://people.sc.fsu.edu/~jburkardt/data/csv/airtravel.csv' }))
+```

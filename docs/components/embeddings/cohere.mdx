@@ -1,0 +1,32 @@
+---
+title: 'Cohere'
+---
+
+The library supports usage of [Cohere-AI](https://cohere.com) `embed-english-v2.0` embedding model out of the box. This model returns vectors with dimension 4096.
+
+Here's what you have to do to use it -
+
+-   Sign up for an account with Cohere-AI, go to the [API Keys](https://dashboard.cohere.ai/api-keys) section and copy / create an API_KEY.
+
+-   Set the key in the environment variable `COHERE_API_KEY`
+
+```bash
+COHERE_API_KEY="<YOUR_KEY>"
+```
+
+## Install Cohere addon
+
+```bash
+npm install @llm-tools/embedjs-cohere
+```
+
+## Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { CohereEmbeddings } from '@llm-tools/embedjs-cohere';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+
+const app = await new RAGApplicationBuilder()
+.setEmbeddingModel(new CohereEmbeddings())
+```
