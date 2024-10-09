@@ -1,4 +1,4 @@
-# Contributing to embedJs
+# Contributing to EmbedJs
 
 To make a contribution, please follow these steps:
 
