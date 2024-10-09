@@ -1,0 +1,38 @@
+---
+title: 'Vertex AI'
+---
+
+You to use Gemini LLM and other models on Google Cloud Platform via [VertexAI](https://cloud.google.com/vertex-ai?hl=en).
+Read more about all the supported [LLMs](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models).
+
+To get started, you need to set the right access credentials to google cloud. You have two options here -
+
+-   Authenticate by using `gcloud` CLI:
+
+```
+gcloud auth application-default login
+```
+
+-   Authentication using Service Account with JSON key and environment variable:
+
+```bash
+GOOGLE_APPLICATION_CREDENTIALS="<Path to credentials.json>"
+```
+
+Once this is done, you can configure your embedJs app -
+
+## Install VertexAi addon
+
+```bash
+npm install @llm-tools/embedjs-vertexai
+```
+
+## Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { Ollama } from '@llm-tools/embedjs-vertexai';
+
+const app = await new RAGApplicationBuilder()
+.setModel(new VertexAI({ modelName: 'gemini-1.5-pro-preview-0409'}))
+```

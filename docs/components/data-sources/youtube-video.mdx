@@ -1,0 +1,28 @@
+---
+title: '📺 Youtube Video'
+---
+
+To add any youtube video to your app, use the `YoutubeLoader`.
+
+## Install Youtube addon
+
+```bash
+npm install @llm-tools/embedjs-loader-youtube
+```
+
+## Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+import { YoutubeLoader } from '@llm-tools/embedjs-loader-youtube';
+
+const app = await new RAGApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setVectorDb(new HNSWDb())
+.build();
+
+app.addLoader(new YoutubeLoader({ videoIdOrUrl: '...' }))
+```

@@ -1,4 +1,4 @@
-import { BaseCache } from '@llm-tools/embedjs-interfaces';
+import { BaseCache, Conversation, Message } from '@llm-tools/embedjs-interfaces';
 import { Redis, RedisOptions } from 'ioredis';
 
 export class RedisCache implements BaseCache {
@@ -50,5 +50,34 @@ export class RedisCache implements BaseCache {
 
     async loaderCustomDelete(loaderCombinedId: string): Promise<void> {
         await this.redis.del(loaderCombinedId);
+    }
+
+    async addConversation(conversationId: string): Promise<void> {
+        await this.redis.set(`conversation_${conversationId}`, JSON.stringify({ conversationId, entries: [] }));
+    }
+
+    async getConversation(conversationId: string): Promise<Conversation> {
+        const result = await this.redis.get(`conversation_${conversationId}`);
+
+        if (!result) throw new Error('Conversation not found');
+        return JSON.parse(result);
+    }
+
+    async hasConversation(conversationId: string): Promise<boolean> {
+        return !!(await this.redis.get(`conversation_${conversationId}`));
+    }
+
+    async deleteConversation(conversationId: string): Promise<void> {
+        await this.redis.del(`conversation_${conversationId}`);
+    }
+
+    async addEntryToConversation(conversationId: string, entry: Message): Promise<void> {
+        const conversation = await this.getConversation(conversationId);
+        conversation.entries.push(entry);
+        await this.redis.set(`conversation_${conversationId}`, JSON.stringify(conversation));
+    }
+
+    clearConversations(): Promise<void> {
+        throw new Error('Method not implemented.');
     }
 }

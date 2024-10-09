@@ -1,0 +1,72 @@
+---
+title: '❓ Question Answering'
+---
+
+Utilizing large language models (LLMs) for question answering is a transformative application, bringing significant benefits to various real-world situations. EmbedJs extensively supports tasks related to question answering, including summarization, content creation, language translation, and data analysis. The versatility of question answering with LLMs enables solutions for numerous practical applications such as:
+
+- **Educational Aid**: Enhancing learning experiences and aiding with homework
+- **Customer Support**: Addressing and resolving customer queries efficiently
+- **Research Assistance**: Facilitating academic and professional research endeavors
+- **Healthcare Information**: Providing fundamental medical knowledge
+- **Technical Support**: Resolving technology-related inquiries
+- **Legal Information**: Offering basic legal advice and information
+- **Business Insights**: Delivering market analysis and strategic business advice
+- **Language Learning** Assistance: Aiding in understanding and translating languages
+- **Travel Guidance**: Supplying information on travel and hospitality
+- **Content Development**: Assisting authors and creators with research and idea generation
+
+## Example: Build a Q&A System with EmbedJs for Next.JS
+
+Quickly create a RAG pipeline to answer queries about the [Next.JS Framework](https://nextjs.org/) using EmbedJs tools.
+
+### Step 1: Set Up Your RAG Pipeline
+
+First, let's create your RAG pipeline. Open your NodeJs application and add the following code:
+
+```ts Create pipeline
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+
+const app = await new RAGApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setVectorDb(new HNSWDb())
+.build();
+```
+
+This initializes your application.
+
+### Step 2: Populate Your Pipeline with Data
+
+Now, let's add data to your pipeline. We'll include the Next.JS website and its documentation:
+
+```ts Ingest data sources
+import { SitemapLoader } from '@llm-tools/embedjs-loader-sitemap';
+
+//Add Next.JS Website and docs
+app.addLoader(new SitemapLoader({ url: "https://nextjs.org/sitemap.xml" }))
+
+//Add Next.JS Forum data
+app.addLoader(new SitemapLoader({ url: "https://nextjs-forum.com/sitemap.xml" }))
+```
+
+This step incorporates over **15K pages** from the Next.JS website and forum into your pipeline. For more data source options, check the [EmbedJs data sources overview](/components/data-sources/overview).
+
+### Step 3: Local Testing of Your Pipeline
+
+Test the pipeline on your local machine:
+
+```ts Query App
+app.query("Summarize the features of Next.js 14?")
+```
+
+Run this query to see how your pipeline responds with information about Next.js 14.
+
+## Need help?
+
+If you are looking to configure the RAG pipeline further, feel free to checkout the [API reference](/api-reference/pipeline/query).
+
+In case you run into issues, feel free to contact us via any of the following methods:
+
+<Snippet file="get-help.mdx" />

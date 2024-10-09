@@ -1,0 +1,37 @@
+---
+title: '⚙️ Custom'
+---
+
+You can load any data from your own custom data source by implementing the `BaseLoader` interface. For example -
+
+```ts
+class CustomLoader extends BaseLoader<{ customChunkMetadata: string }> {
+    constructor() {
+        super('uniqueId');
+    }
+
+    async *getChunks() {
+        throw new Error('Method not implemented.');
+    }
+}
+```
+
+### Customizing the chunk size and overlap
+
+If you want to customize the chunk size or the chunk overlap on an existing loader, all built-in loaders take an additional parameter `chunkSize` and `chunkOverlap`
+in their constructor. For example -
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+import { DocxLoader } from '@llm-tools/embedjs-loader-msoffice';
+
+const app = await new RAGApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setVectorDb(new HNSWDb())
+.build();
+
+app.addLoader(new DocxLoader({ filePathOrUrl: '...', chunkOverlap: 100, chunkSize: 20 }))
+```

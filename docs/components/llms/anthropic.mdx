@@ -1,0 +1,26 @@
+---
+title: 'Anthropic'
+---
+
+To use Anthropic's Claude models, you will need to get an API Key from Anthropic.
+You can do this from their [console](https://console.anthropic.com/settings/keys). Once you obtain a key, set it in the environment variable, like so -
+
+```bash
+ANTHROPIC_API_KEY="<Your key>"
+```
+
+## Install Anthtopic addon
+
+```bash
+npm install @llm-tools/embedjs-anthropic
+```
+
+## Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { Anthropic } from '@llm-tools/embedjs-anthropic';
+
+const app = await new RAGApplicationBuilder()
+.setModel(new Anthropic({ modelName: "..." }))
+```

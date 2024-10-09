@@ -1,0 +1,27 @@
+---
+title: 'Ollama'
+---
+
+EmbedJs supports local embeddings via `Ollama`. Read more here [Ollama embeddings](https://ollama.com/blog/embedding-models).
+
+To use this, you need to setup and have Ollama working locally. Refer to their Github [here](https://github.com/ollama/ollama) to understand how to do this.
+Once done, follow these steps -
+
+## Install Ollama addon
+
+```bash
+npm install @llm-tools/embedjs-ollama
+```
+
+## Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OllamaEmbeddings } from '@llm-tools/embedjs-ollama';
+
+const app = await new RAGApplicationBuilder()
+.setEmbeddingModel(new OllamaEmbeddings({
+    modelName: "...",
+    baseUrl: 'http://localhost:11434'
+}))
+```

@@ -1,0 +1,36 @@
+---
+title: HNSWLib
+---
+
+[HNSWLib](https://github.com/nmslib/hnswlib) is an high performance in-memory vectorstore.
+It is great for testing since you do not need access to the file system or a cloud service.
+
+## Install HNSWLib addon
+
+```bash
+npm install @llm-tools/embedjs-hnswlib
+```
+
+## Usage
+<CodeGroup>
+```ts Example
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+
+// set OPENAI_API_KEY in your env
+process.env.OPENAI_API_KEY = "sk-xxx";
+
+const app = await new RAGApplicationBuilder()
+.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setVectorDb(new HNSWDb())
+.build();
+
+//add data source and start query in
+await app.add("https://www.forbes.com/profile/elon-musk");
+await app.query('Tell me about Elon Musk');
+```
+</CodeGroup>
+
+<Snippet file="missing-vector-db-tip.mdx" />

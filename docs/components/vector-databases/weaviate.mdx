@@ -1,0 +1,36 @@
+---
+title: Weaviate
+---
+
+[Weaviate](https://weaviate.io/) is an open source vector store. You can deploy it locally on docker or use their managed cloud offering.
+
+## Install Qdrant addon
+
+```bash
+npm install @llm-tools/embedjs-weaviate
+```
+
+## Usage
+<CodeGroup>
+```ts Example
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { WeaviateDb } from '@llm-tools/embedjs-weaviate';
+
+// set OPENAI_API_KEY in your env
+process.env.OPENAI_API_KEY = "sk-xxx";
+
+const app = await new RAGApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setVectorDb(new WeaviateDb({ host: '...', apiKey: '...', className: '...', scheme: '...' }))
+.build();
+
+
+//add data source and start query in
+await app.add("https://www.forbes.com/profile/elon-musk");
+await app.query('Tell me about Elon Musk');
+```
+</CodeGroup>
+
+<Snippet file="missing-vector-db-tip.mdx" />

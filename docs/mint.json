@@ -1,91 +1,207 @@
 {
-  "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
-  "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
-  },
-  "favicon": "/favicon.svg",
-  "colors": {
-    "primary": "#0D9373",
-    "light": "#07C983",
-    "dark": "#0D9373",
-    "anchors": {
-      "from": "#0D9373",
-      "to": "#07C983"
-    }
-  },
-  "topbarLinks": [
-    {
-      "name": "Support",
-      "url": "mailto:hi@mintlify.com"
-    }
-  ],
-  "topbarCtaButton": {
-    "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
-  },
-  "tabs": [
-    {
-      "name": "API Reference",
-      "url": "api-reference"
-    }
-  ],
-  "anchors": [
-    {
-      "name": "Documentation",
-      "icon": "book-open-cover",
-      "url": "https://mintlify.com/docs"
+    "$schema": "https://mintlify.com/schema.json",
+    "name": "EmbedJs",
+    "logo": {
+        "dark": "/logo/dark.webp",
+        "light": "/logo/light.webp",
+        "href": "https://github.com/llm-tools/embedjs"
     },
-    {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://mintlify.com/community"
+    "favicon": "/favicon.png",
+    "colors": {
+        "primary": "#8B0000",
+        "light": "#FF7F7F",
+        "dark": "#8B0000",
+        "background": {
+            "dark": "#000",
+            "light": "#fff"
+        }
     },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://mintlify.com/blog"
-    }
-  ],
-  "navigation": [
-    {
-      "group": "Get Started",
-      "pages": [
-        "introduction",
-        "quickstart",
-        "development"
-      ]
+    "modeToggle": {
+        "default": "dark"
     },
-    {
-      "group": "Essentials",
-      "pages": [
-        "essentials/markdown",
-        "essentials/code",
-        "essentials/images",
-        "essentials/settings",
-        "essentials/navigation",
-        "essentials/reusable-snippets"
-      ]
+    "tabs": [
+        {
+            "name": "API Reference",
+            "url": "api-reference"
+        },
+        {
+            "name": "Examples",
+            "url": "examples"
+        }
+    ],
+    "anchors": [],
+    "topbarLinks": [
+        {
+            "name": "GitHub",
+            "url": "https://github.com/llm-tools/embedJs"
+        }
+    ],
+    "topbarCtaButton": {
+        "name": "Install",
+        "url": "https://www.npmjs.com/package/@llm-tools/embedjs"
     },
-    {
-      "group": "API Documentation",
-      "pages": [
-        "api-reference/introduction"
-      ]
+    "primaryTab": {
+        "name": "📘 Documentation"
     },
-    {
-      "group": "Endpoint Examples",
-      "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
-      ]
-    }
-  ],
-  "footerSocials": {
-    "x": "https://x.com/mintlify",
-    "github": "https://github.com/mintlify",
-    "linkedin": "https://www.linkedin.com/company/mintsearch"
-  }
+    "navigation": [
+        {
+            "group": "Get Started",
+            "pages": ["get-started/introduction", "get-started/quickstart", "get-started/faq"]
+        },
+        {
+            "group": "Use cases",
+            "pages": [
+                "use-cases/introduction",
+                "use-cases/chatbots",
+                "use-cases/question-answering",
+                "use-cases/semantic-search"
+            ]
+        },
+        {
+            "group": "Components",
+            "pages": [
+                "components/introduction",
+                {
+                    "group": "🗂️ Data sources",
+                    "pages": [
+                        "components/data-sources/overview",
+                        {
+                            "group": "Built in",
+                            "pages": [
+                                "components/data-sources/pdf",
+                                "components/data-sources/csv",
+                                "components/data-sources/json",
+                                "components/data-sources/text",
+                                "components/data-sources/web-page",
+                                "components/data-sources/youtube-video",
+                                "components/data-sources/youtube-channel",
+                                "components/data-sources/youtube-search",
+                                "components/data-sources/docx",
+                                "components/data-sources/ppt",
+                                "components/data-sources/excel",
+                                "components/data-sources/sitemap",
+                                "components/data-sources/directory",
+                                "components/data-sources/custom"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "group": "🗄️ Vector databases",
+                    "pages": [
+                        "components/vector-databases/overview",
+                        {
+                            "group": "Built in",
+                            "pages": [
+                                "components/vector-databases/lancedb",
+                                "components/vector-databases/mongodb",
+                                "components/vector-databases/pinecone",
+                                "components/vector-databases/hnswlib",
+                                "components/vector-databases/astradb",
+                                "components/vector-databases/qdrant",
+                                "components/vector-databases/weaviate"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "group": "🤖 Large language models",
+                    "pages": [
+                        "components/llms/overview",
+                        {
+                            "group": "Built in",
+                            "pages": [
+                                "components/llms/anthropic",
+                                "components/llms/openai",
+                                "components/llms/azure-openai",
+                                "components/llms/huggingface",
+                                "components/llms/mistral",
+                                "components/llms/ollama",
+                                "components/llms/vertexai"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "group": "🧩 Embedding models",
+                    "pages": [
+                        "components/embeddings/overview",
+                        {
+                            "group": "Built in",
+                            "pages": [
+                                "components/embeddings/openai",
+                                "components/embeddings/azure-openai",
+                                "components/embeddings/cohere",
+                                "components/embeddings/ollama",
+                                "components/embeddings/vertexai"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "group": "⚡ Caches",
+                    "pages": [
+                        "components/caches/overview",
+                        {
+                            "group": "Built in",
+                            "pages": ["components/caches/lmdb", "components/caches/mongodb", "components/caches/redis"]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "group": "Integrations",
+            "pages": ["integration/langsmith"]
+        },
+        {
+            "group": "Chatbots",
+            "pages": ["examples/slack_bot"]
+        },
+        {
+            "group": "API Reference",
+            "pages": [
+                "api-reference/overview",
+                {
+                    "group": "RAGApplication methods",
+                    "pages": [
+                        "api-reference/methods/query",
+                        "api-reference/methods/search",
+                        "api-reference/methods/add-loader",
+                        "api-reference/methods/get-loaders",
+                        "api-reference/methods/delete-loader",
+                        "api-reference/methods/reset"
+                    ]
+                }
+            ]
+        },
+        {
+            "group": "Contributing",
+            "pages": ["contribution/guidelines", "contribution/dev", "contribution/docs"]
+        },
+        {
+            "group": "Product",
+            "pages": ["product/release-notes"]
+        }
+    ],
+    "footerSocials": {
+        "website": "https://ragkit.ai",
+        "github": "https://github.com/llm-tools/embedJs",
+        "linkedin": "https://www.linkedin.com/in/adhityan/"
+    },
+    "isWhiteLabeled": true,
+    "feedback": {
+        "suggestEdit": true,
+        "raiseIssue": true,
+        "thumbsRating": true
+    },
+    "search": {
+        "prompt": "✨ Search embedJs docs..."
+    },
+    "redirects": [
+        {
+            "source": "/changelog/command-line",
+            "destination": "/get-started/introduction"
+        }
+    ]
 }

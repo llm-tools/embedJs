@@ -1,0 +1,21 @@
+---
+title: 'Mistral'
+---
+
+To use Mirstal's models, you will need to get an API Key from Mistral. You can do this from their [console](https://console.mistral.ai/user/api-keys/).
+
+## Install Mistral addon
+
+```bash
+npm install @llm-tools/embedjs-mistral
+```
+
+## Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { Anthropic } from '@llm-tools/embedjs-mistral';
+
+const app = await new RAGApplicationBuilder()
+.setModel(new Mistral({ accessToken: "<YOUR_MISTRAL_TOKEN_HERE>", modelName: "..." }))
+```

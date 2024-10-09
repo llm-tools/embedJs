@@ -1,0 +1,89 @@
+---
+title: '🔍 search'
+---
+
+The `.search()` enables you to uncover the most pertinent context by performing a semantic search across your data sources based on a given query.
+Refer to the function signature below:
+
+### Parameters
+
+<ParamField path="query" type="str">
+    Question
+</ParamField>
+
+### Returns
+
+<ResponseField name="answer" type="Chunk[]">
+    The list of relevant information
+    <Expandable title="Chunk properties">
+        <ResponseField name="pageContent" type="string">
+            The context text that is passed to the LLM
+        </ResponseField>
+        <ResponseField name="metadata" type="Metadata">
+            The metadata that was passed to EmbedJs
+            <Expandable title="Metadata">
+                <ResponseField name="id" type="string">
+                    Unique identifier for the bit of information
+                </ResponseField>
+                <ResponseField name="uniqueLoaderId" type="string">
+                    The unique identifier for the group of information bits
+                </ResponseField>
+                <ResponseField name="source" type="string">
+                    The source string
+                </ResponseField>
+            </Expandable>
+        </ResponseField>
+    </Expandable>
+</ResponseField>
+
+## Usage
+
+Refer to the following example on how to use the search api:
+
+```ts Code example
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OllamaEmbeddings } from '@llm-tools/embedjs-ollama';
+import { WebLoader } from '@llm-tools/embedjs-loader-web';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+import { SitemapLoader } from '@llm-tools/embedjs-loader-sitemap';
+
+const ragApplication = await new RAGApplicationBuilder()
+.setModel(new Ollama({ modelName: "llama3.2", baseUrl: 'http://localhost:11434' }))
+.setEmbeddingModel(new OllamaEmbeddings({ model: 'nomic-embed-text', baseUrl: 'http://localhost:11434' }))
+.setVectorDb(new HNSWDb())
+.build();
+
+//Add Next.JS Website and docs
+app.addLoader(new SitemapLoader({ url: "https://nextjs.org/sitemap.xml" }))
+
+app.search("Summarize the features of Next.js 14?")
+/*[
+  {
+    'score': 0.99,
+    'pageContent': 'Next.js 14 | Next.jsBack to BlogThursday, October 26th 2023Next.js 14Posted byLee Robinson@leeerobTim Neutkens@timneutkensAs we announced at Next.js Conf, Next.js 14 is our most focused release with: Turbopack: 5,000 tests passing for App & Pages Router 53% faster local server startup 94% faster code updates with Fast Refresh Server Actions (Stable): Progressively enhanced mutations Integrated with caching & revalidating Simple function calls, or works natively with forms Partial Prerendering',
+    'metadata': {
+      'id': '6c8d1a7b-ea34-4927-8823-daa29dcfc5af',
+      'uniqueLoaderId': '6c8d1a7b-ea34-4927-8823-xba29dcfc5ac',
+      'source': 'https://nextjs.org/blog/next-14'
+    }
+  },
+  {
+    'score': 0.98,
+    'pageContent': 'Next.js 13.3 | Next.jsBack to BlogThursday, April 6th 2023Next.js 13.3Posted byDelba de Oliveira@delba_oliveiraTim Neutkens@timneutkensNext.js 13.3 adds popular community-requested features, including: File-Based Metadata API: Dynamically generate sitemaps, robots, favicons, and more. Dynamic Open Graph Images: Generate OG images using JSX, HTML, and CSS. Static Export for App Router: Static / Single-Page Application (SPA) support for Server Components. Parallel Routes and Interception: Advanced',
+    'metadata': {
+      'id': '6c8d1a7b-ea34-4927-8823-daa29dcfc5a1',
+      'uniqueLoaderId': '6c8d1a7b-ea34-4927-8823-xba29dcfc5ae',
+      'source': 'https://nextjs.org/blog/next-13-3'
+    }
+  },
+  {
+    'score': 0.98,
+    'pageContent': 'Upgrading: Version 14 | Next.js MenuUsing App RouterFeatures available in /appApp Router.UpgradingVersion 14Version 14 Upgrading from 13 to 14 To update to Next.js version 14, run the following command using your preferred package manager: Terminalnpm i next@latest react@latest react-dom@latest eslint-config-next@latest Terminalyarn add next@latest react@latest react-dom@latest eslint-config-next@latest Terminalpnpm up next react react-dom eslint-config-next -latest Terminalbun add next@latest',
+    'metadata': {
+      'id': '6c8d1a7b-ea34-4927-8823-daa29dcfc5a2',
+      'uniqueLoaderId': '6c8d1a7b-ea34-4927-8823-xba29dcfc5ad',
+      'source': 'https://nextjs.org/docs/app/building-your-application/upgrading/version-14'
+    }
+  }
+]*/
+```

@@ -1,0 +1,22 @@
+---
+title: 🔄 reset
+---
+
+The `reset()` method allows you to wipe the data from your RAG application and start from scratch.
+
+## Usage
+
+```ts Code example
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+import { WebLoader } from '@llm-tools/embedjs-loader-web';
+
+const app = await new RAGApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setVectorDb(new HNSWDb())
+.build();
+
+await app.reset();
+```

@@ -1,21 +1,21 @@
 import createDebugMessages from 'debug';
 import { v4 as uuidv4 } from 'uuid';
 
-import { BaseConversation } from './base-conversations.js';
 import { Chunk, QueryResponse, Message, SourceDetail, ModelResponse } from '../types.js';
+import { BaseCache } from './base-cache.js';
 
 export abstract class BaseModel {
     private readonly baseDebug = createDebugMessages('embedjs:model:BaseModel');
 
-    private static conversations: BaseConversation;
+    private static cache: BaseCache;
     private static defaultTemperature: number;
 
     public static setDefaultTemperature(temperature?: number) {
         BaseModel.defaultTemperature = temperature;
     }
 
-    public static setConversations(conversations: BaseConversation) {
-        BaseModel.conversations = conversations;
+    public static setCache(cache: BaseCache) {
+        BaseModel.cache = cache;
     }
 
     private readonly _temperature?: number;
@@ -37,11 +37,11 @@ export abstract class BaseModel {
         supportingContext: Chunk[],
         conversationId = 'default',
     ): Promise<QueryResponse> {
-        const conversation = await BaseModel.conversations.getConversation(conversationId);
+        const conversation = await BaseModel.cache.getConversation(conversationId);
         this.baseDebug(`${conversation.entries.length} history entries found for conversationId '${conversationId}'`);
 
         // Add user query to history
-        await BaseModel.conversations.addEntryToConversation(conversationId, {
+        await BaseModel.cache.addEntryToConversation(conversationId, {
             id: uuidv4(),
             timestamp: new Date(),
             actor: 'HUMAN',
@@ -61,7 +61,7 @@ export abstract class BaseModel {
         };
 
         // Add AI response to history
-        await BaseModel.conversations.addEntryToConversation(conversationId, newEntry);
+        await BaseModel.cache.addEntryToConversation(conversationId, newEntry);
         return {
             ...newEntry,
             tokenUse: {

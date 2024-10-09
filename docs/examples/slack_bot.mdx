@@ -1,0 +1,36 @@
+---
+title: '💼 Slack Bot'
+---
+
+### 🖼️ Setup
+
+1. Create a workspace on Slack if you don't have one already by clicking [here](https://slack.com/intl/en-in/).
+2. Create a new App on your Slack account by going [here](https://api.slack.com/apps).
+3. Select `From Scratch`, then enter the Bot Name and select your workspace.
+4. On the left Sidebar, go to `OAuth and Permissions` and add the following scopes under `Bot Token Scopes`:
+```text
+app_mentions:read
+channels:read
+chat:write
+```
+5. Now select the option `Install to Workspace` and after it's done, copy the `Bot User OAuth Token` and set it in your secrets as `SLACK_BOT_TOKEN`.
+6. Clone the example slack repo from [here](https://github.com/llm-tools/slack-bot-template).
+7. Run NPM install and start the server. The application starts and prints by default a `NGROK reverse proxy URL` to the console.
+8. On the Slack API website go to `Event Subscriptions` on the left Sidebar and turn on `Enable Events`.
+9. In `Request URL`, enter your server or ngrok address.
+10. After it gets verified, click on `Subscribe to bot events`, add `message.channels` Bot User Event and click on `Save Changes`.
+11. Now go to your workspace, right click on the bot name in the sidebar, click `view app details`, then `add this app to a channel`.
+
+### 🚀 Usage Instructions
+
+- Go to the channel where you have added your bot.
+- To add data sources to the bot, use the command:
+```text
+/learnfrom web <url>
+```
+- To ask queries from the bot, just tag the bot and ask your question.
+```text
+@botname <question>
+```
+
+🎉 Happy Chatting! 🎉

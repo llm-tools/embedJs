@@ -1,0 +1,29 @@
+---
+title: 'OpenAI'
+---
+
+To use the OpenAI LLM models, you need a API key from OpenAI.
+You can alternatively use Azure OpenAI to run most of the OpenAI LLMs. Read the [Azure OpenAI](/components/llms/azure-openai) section to learn more about this.
+
+To get started, obtain an API Key from OpenAI. You can do this by visiting their [API Portal](https://platform.openai.com/api-keys).
+Once you obtain a key, set it in an environment variable, like so -
+
+```bash
+OPENAI_API_KEY="<Your key>"
+```
+
+## Install OpenAI addon
+
+```bash
+npm install @llm-tools/embedjs-openai
+```
+
+## Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi } from '@llm-tools/embedjs-openai';
+
+const app = await new RAGApplicationBuilder()
+.setModel(new OpenAi({ modelName: "text-davinci-003" }))
+```

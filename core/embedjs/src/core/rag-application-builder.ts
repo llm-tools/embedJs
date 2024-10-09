@@ -1,21 +1,13 @@
+import { BaseCache, BaseDb, BaseEmbeddings, BaseLoader, BaseModel, SIMPLE_MODELS } from '@llm-tools/embedjs-interfaces';
+import { MemoryCache } from '../cache/memory-cache.js';
 import { RAGApplication } from './rag-application.js';
-import {
-    BaseCache,
-    BaseConversation,
-    BaseDb,
-    BaseEmbeddings,
-    BaseLoader,
-    BaseModel,
-    SIMPLE_MODELS,
-} from '@llm-tools/embedjs-interfaces';
 
 export class RAGApplicationBuilder {
     private temperature: number;
     private model: BaseModel | SIMPLE_MODELS | null;
     private loaders: BaseLoader[];
     private vectorDb: BaseDb;
-    private cache?: BaseCache;
-    private conversations: BaseConversation;
+    private cache: BaseCache;
     private queryTemplate: string;
     private searchResultCount: number;
     private embeddingModel: BaseEmbeddings;
@@ -32,6 +24,7 @@ export class RAGApplicationBuilder {
         Do not use words like context or training data when responding. You can say you do not have all the information but do not indicate that you are not a reliable source.`;
 
         this.embeddingRelevanceCutOff = 0;
+        this.cache = new MemoryCache();
     }
 
     /**
@@ -44,22 +37,6 @@ export class RAGApplicationBuilder {
         return entity;
     }
 
-    addLoader(loader: BaseLoader) {
-        this.loaders.push(loader);
-        return this;
-    }
-
-    /**
-     * The setSearchResultCount function sets the search result count
-     * @param {number} searchResultCount - The `searchResultCount` parameter
-     * represents the count of search results picked up from the vector store per query.
-     * @returns The `this` object is being returned, which allows for method chaining.
-     */
-    setSearchResultCount(searchResultCount: number) {
-        this.searchResultCount = searchResultCount;
-        return this;
-    }
-
     /**
      * The function setVectorDb sets a BaseDb object
      * @param {BaseDb} vectorDb - The `vectorDb` parameter is an instance of the `BaseDb` class, which
@@ -68,30 +45,6 @@ export class RAGApplicationBuilder {
      */
     setVectorDb(vectorDb: BaseDb) {
         this.vectorDb = vectorDb;
-        return this;
-    }
-
-    setTemperature(temperature: number) {
-        this.temperature = temperature;
-        if (this.model) this.setModel(this.model);
-        return this;
-    }
-
-    setEmbeddingRelevanceCutOff(embeddingRelevanceCutOff: number) {
-        this.embeddingRelevanceCutOff = embeddingRelevanceCutOff;
-        return this;
-    }
-
-    setQueryTemplate(queryTemplate: string) {
-        // if (!queryTemplate.includes('{0}'))
-        //     throw new Error('queryTemplate must include a placeholder for the query using {0}');
-
-        this.queryTemplate = queryTemplate;
-        return this;
-    }
-
-    setCache(cache: BaseCache) {
-        this.cache = cache;
         return this;
     }
 
@@ -107,6 +60,46 @@ export class RAGApplicationBuilder {
             else this.model = model;
         }
 
+        return this;
+    }
+
+    setCache(cache: BaseCache) {
+        this.cache = cache;
+        return this;
+    }
+
+    setTemperature(temperature: number) {
+        this.temperature = temperature;
+        if (this.model) this.setModel(this.model);
+        return this;
+    }
+
+    setQueryTemplate(queryTemplate: string) {
+        // if (!queryTemplate.includes('{0}'))
+        //     throw new Error('queryTemplate must include a placeholder for the query using {0}');
+
+        this.queryTemplate = queryTemplate;
+        return this;
+    }
+
+    setEmbeddingRelevanceCutOff(embeddingRelevanceCutOff: number) {
+        this.embeddingRelevanceCutOff = embeddingRelevanceCutOff;
+        return this;
+    }
+
+    addLoader(loader: BaseLoader) {
+        this.loaders.push(loader);
+        return this;
+    }
+
+    /**
+     * The setSearchResultCount function sets the search result count
+     * @param {number} searchResultCount - The `searchResultCount` parameter
+     * represents the count of search results picked up from the vector store per query.
+     * @returns The `this` object is being returned, which allows for method chaining.
+     */
+    setSearchResultCount(searchResultCount: number) {
+        this.searchResultCount = searchResultCount;
         return this;
     }
 
@@ -144,14 +137,5 @@ export class RAGApplicationBuilder {
 
     getModel() {
         return this.model;
-    }
-
-    setConversationEngine(conversations: BaseConversation) {
-        this.conversations = conversations;
-        return this;
-    }
-
-    getConversationsEngine() {
-        return this.conversations;
     }
 }

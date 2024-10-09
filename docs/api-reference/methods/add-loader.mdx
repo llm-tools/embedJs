@@ -1,0 +1,51 @@
+---
+title: '📊 addLoader'
+---
+
+The `addLoader()` method is used to load the data sources from different data sources to a RAG pipeline. You can find the signature below:
+
+### Parameters
+
+<ParamField path="loaderParam" type="string" required>
+    The data to embed, can be a URL, local file or raw content, depending on the data type.. You can find the full list of supported data sources [here](/components/data-sources/overview).
+</ParamField>
+
+## Usage
+
+### Load data from webpage
+
+```ts Code example
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+import { WebLoader } from '@llm-tools/embedjs-loader-web';
+
+const app = await new RAGApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setVectorDb(new HNSWDb())
+.build();
+
+await app.addLoader(new WebLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-musk' }));
+//Add loader completed with 4 new entries for 6c8d1a7b-ea34-4927-8823-xba29dcfc5ac
+```
+
+### Load data from sitemap
+
+```ts Code example
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+import { SitemapLoader } from '@llm-tools/embedjs-loader-sitemap';
+
+const app = await new RAGApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setVectorDb(new HNSWDb())
+.build();
+
+await app.addLoader(new SitemapLoader({ url: '"https://js.langchain.com/sitemap.xml' }));
+//Add loader completed with 11024 new entries for 6c8d1a7b-ea34-4927-8823-xba29dcfc5ad
+```
+
+You can find complete list of supported data sources [here](/components/data-sources/overview).

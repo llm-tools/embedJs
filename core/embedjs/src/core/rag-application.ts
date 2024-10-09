@@ -2,7 +2,6 @@ import createDebugMessages from 'debug';
 
 import { RAGEmbedding } from './rag-embedding.js';
 import { RAGApplicationBuilder } from './rag-application-builder.js';
-import { InMemoryConversation } from '../conversation/memory-conversations.js';
 import {
     AddLoaderReturn,
     BaseCache,
@@ -23,7 +22,7 @@ export class RAGApplication {
     private readonly embeddingRelevanceCutOff: number;
     private readonly searchResultCount: number;
     private readonly queryTemplate: string;
-    private readonly cache?: BaseCache;
+    private readonly cache: BaseCache;
     private readonly vectorDb: BaseDb;
     private loaders: BaseLoader[];
     private model: BaseModel;
@@ -31,6 +30,7 @@ export class RAGApplication {
     constructor(llmBuilder: RAGApplicationBuilder) {
         this.cache = llmBuilder.getCache();
         BaseLoader.setCache(this.cache);
+        BaseModel.setCache(this.cache);
 
         this.queryTemplate = cleanString(llmBuilder.getQueryTemplate());
         this.debug(`Using system query template - "${this.queryTemplate}"`);
@@ -55,10 +55,7 @@ export class RAGApplication {
     public async init(llmBuilder: RAGApplicationBuilder) {
         this.model = await this.getModel(llmBuilder.getModel());
         if (!this.model) this.debug('No base model set; query function unavailable!');
-        else {
-            BaseModel.setDefaultTemperature(llmBuilder.getTemperature());
-            BaseModel.setConversations(llmBuilder.getConversationsEngine() || new InMemoryConversation());
-        }
+        else BaseModel.setDefaultTemperature(llmBuilder.getTemperature());
 
         this.loaders = llmBuilder.getLoaders();
 
@@ -158,7 +155,7 @@ export class RAGApplication {
      */
     private async _addLoader(loader: BaseLoader): Promise<AddLoaderReturn> {
         const uniqueId = loader.getUniqueId();
-        this.debug('Add loader called for', uniqueId);
+        this.debug('Adding loader', uniqueId);
         await loader.init();
 
         const chunks = await loader.getChunks();
@@ -167,7 +164,7 @@ export class RAGApplication {
 
             this.debug(`Loader previously run. Deleting previous ${previousChunkCount} keys`, uniqueId);
             if (previousChunkCount > 0) {
-                await this.deleteLoader(uniqueId, true);
+                await this.deleteLoader(uniqueId);
             }
         }
 
@@ -210,28 +207,6 @@ export class RAGApplication {
      */
     public async getLoaders() {
         return BaseLoader.getLoadersList();
-    }
-
-    /**
-     * The function `deleteLoader` deletes embeddings from a loader after confirming the action.
-     * @param {string} uniqueLoaderId - The `uniqueLoaderId` parameter is a string that represents the
-     * identifier of the loader that you want to delete.
-     * @param {boolean} [areYouSure=false] - The `areYouSure` parameter is a boolean flag that
-     * indicates whether the user has confirmed their intention to delete embeddings from a loader. If
-     * `areYouSure` is `true`, the function proceeds with the deletion process. If `areYouSure` is
-     * `false`, a warning message is logged and no action is taken
-     * @returns The `deleteLoader` method returns a boolean value indicating the success of the operation.
-     */
-    public async deleteLoader(uniqueLoaderId: string, areYouSure = false) {
-        if (!areYouSure) {
-            console.warn('Delete embeddings from loader called without confirmation. No action taken.');
-            return false;
-        }
-
-        const deleteResult = await this.vectorDb.deleteKeys(uniqueLoaderId);
-        if (this.cache && deleteResult) await this.cache.deleteLoader(uniqueLoaderId);
-        this.loaders = this.loaders.filter((x) => x.getUniqueId() != uniqueLoaderId);
-        return deleteResult;
     }
 
     /**
@@ -318,20 +293,24 @@ export class RAGApplication {
     }
 
     /**
-     * The function `deleteAllEmbeddings` deletes all embeddings from the vector database if a
-     * confirmation is provided.
-     * @param {boolean} [areYouSure=false] - The `areYouSure` parameter is a boolean parameter that
-     * serves as a confirmation flag. It is used to ensure that the deletion of all embeddings is
-     * intentional and requires the caller to explicitly confirm by passing `true` as the value. If
-     * `areYouSure` is `false`, a warning message is logged.
-     * @returns The `deleteAllEmbeddings` function returns a boolean value indicating the result.
+     * The function `deleteLoader` deletes embeddings from a loader after confirming the action.
+     * @param {string} uniqueLoaderId - The `uniqueLoaderId` parameter is a string that represents the
+     * identifier of the loader that you want to delete.
+     * @returns The `deleteLoader` method returns a boolean value indicating the success of the operation.
      */
-    public async deleteAllEmbeddings(areYouSure = false) {
-        if (!areYouSure) {
-            console.warn('Reset embeddings called without confirmation. No action taken.');
-            return false;
-        }
+    public async deleteLoader(uniqueLoaderId: string) {
+        const deleteResult = await this.vectorDb.deleteKeys(uniqueLoaderId);
+        if (this.cache && deleteResult) await this.cache.deleteLoader(uniqueLoaderId);
+        this.loaders = this.loaders.filter((x) => x.getUniqueId() != uniqueLoaderId);
+        return deleteResult;
+    }
 
+    /**
+     * The function `reset` deletes all embeddings from the vector database if a
+     * confirmation is provided.
+     * @returns The `reset` function returns a boolean value indicating the result.
+     */
+    public async reset() {
         await this.vectorDb.reset();
         return true;
     }
@@ -359,12 +338,12 @@ export class RAGApplication {
     }
 
     /**
-     * The getContext function retrieves the unique embeddings for a given query without calling a LLM.
+     * The `search` function retrieves the unique embeddings for a given query without calling a LLM.
      * @param {string} query - The `query` parameter is a string that represents the input query that
      * needs to be processed.
      * @returns An array of unique page content items / chunks.
      */
-    public async getContext(query: string) {
+    public async search(query: string) {
         const cleanQuery = cleanString(query);
         const rawContext = await this.getEmbeddings(cleanQuery);
 
@@ -394,7 +373,7 @@ export class RAGApplication {
         }
 
         if (!customContext) {
-            customContext = await this.getContext(userQuery);
+            customContext = await this.search(userQuery);
         }
 
         const sources = [...new Set(customContext.map((chunk) => chunk.metadata.source))];

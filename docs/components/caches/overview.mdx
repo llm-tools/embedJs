@@ -1,0 +1,21 @@
+---
+title: Overview
+---
+
+EmbedJs comes with built-in support for data persistance beyond vector embeddings. The kind of data that can be persisted includes -
+
+-   Loaders and chunks loaded and their metadata
+-   Loader specific caching
+-   Conversation history
+
+The library handles the complexity of being able to swap the data persistance layer by the abstraction of caching. The following caches are supported -
+
+<CardGroup cols={4}>
+    <Card title="LMDB" href="/components/caches/lmdb" />
+    <Card title="MongoDB" href="/components/caches/mongodb" />
+    <Card title="Redis" href="/components/caches/redis" />
+</CardGroup>
+
+<br/ >
+
+<Snippet file="missing-cache-tip.mdx" />

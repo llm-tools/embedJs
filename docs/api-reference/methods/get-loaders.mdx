@@ -1,0 +1,54 @@
+---
+title: 📄 getLoaders
+---
+
+The `getLoaders()` method returns a list of all the data sources / loaders added so far.
+This data comes from the cache and if the cache is inMemory, then the list will not include the loaders from before the restart.
+
+
+### Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+import { RedisCache } from '@llm-tools/embedjs-redis';
+import { WebLoader } from '@llm-tools/embedjs-loader-web';
+import { SitemapLoader } from '@llm-tools/embedjs-loader-sitemap';
+
+const app = await new RAGApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setVectorDb(new HNSWDb())
+.setCache(
+    new RedisCache({
+        host: this.configService.get('REDIS_HOST'),
+        port: this.configService.get('REDIS_PORT'),
+        password: this.configService.get('REDIS_PASSWORD'),
+    }),
+)
+.build();
+
+await app.addLoader(new WebLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-musk' }));
+await app.addLoader(new SitemapLoader({ url: '"https://js.langchain.com/sitemap.xml' }));
+
+console.log(await app.getLoaders())
+/*
+[
+    {
+        "uniqueId": "6c8d1a7b-ea34-4927-8823-xba29dcfc5ac",
+        "type": "WebLoader",
+        loaderMetadata: {
+            urlOrContent: "https://www.forbes.com/profile/elon-musk"
+        }
+    },
+    {
+        "uniqueId": "6c8d1a7b-ea34-4927-8823-xba29dcfc5ad",
+        "type": "SitemapLoader",
+        loaderMetadata: {
+            url: "https://www.forbes.com/profile/elon-musk"
+        }
+    }
+]
+*/
+```

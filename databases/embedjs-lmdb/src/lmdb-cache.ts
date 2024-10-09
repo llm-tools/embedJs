@@ -1,4 +1,4 @@
-import { BaseCache } from '@llm-tools/embedjs-interfaces';
+import { BaseCache, Conversation, Message } from '@llm-tools/embedjs-interfaces';
 import * as lmdb from 'lmdb';
 
 export class LmdbCache implements BaseCache {
@@ -46,5 +46,31 @@ export class LmdbCache implements BaseCache {
 
     async loaderCustomDelete(loaderCombinedId: string): Promise<void> {
         await this.database.remove(loaderCombinedId);
+    }
+
+    async addConversation(conversationId: string): Promise<void> {
+        await this.database.put(`conversation_${conversationId}`, { conversationId, entries: [] });
+    }
+
+    async getConversation(conversationId: string): Promise<Conversation> {
+        return <Conversation>this.database.get(`conversation_${conversationId}`);
+    }
+
+    async hasConversation(conversationId: string): Promise<boolean> {
+        return this.database.doesExist(`conversation_${conversationId}`);
+    }
+
+    async deleteConversation(conversationId: string): Promise<void> {
+        await this.database.remove(`conversation_${conversationId}`);
+    }
+
+    async addEntryToConversation(conversationId: string, entry: Message): Promise<void> {
+        const conversation = await this.getConversation(`conversation_${conversationId}`);
+        conversation.entries.push(entry);
+        await this.database.put(`conversation_${conversationId}`, conversation);
+    }
+
+    async clearConversations(): Promise<void> {
+        throw new Error('Method not implemented.');
     }
 }

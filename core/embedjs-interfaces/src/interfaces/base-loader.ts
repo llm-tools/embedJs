@@ -9,13 +9,13 @@ export abstract class BaseLoader<
     T extends Record<string, string | number | boolean> = Record<string, string | number | boolean>,
     M extends Record<string, unknown> = Record<string, null>,
 > extends EventEmitter {
-    private static cache?: Pick<
+    private static cache: Pick<
         BaseCache,
         'loaderCustomDelete' | 'loaderCustomGet' | 'loaderCustomHas' | 'loaderCustomSet'
     >;
     private static readonly LOADERS_LIST_CACHE_KEY = 'LOADERS_LIST_CACHE_KEY';
 
-    public static setCache(cache?: BaseCache) {
+    public static setCache(cache: BaseCache) {
         BaseLoader.cache = cache;
     }
 
@@ -72,9 +72,9 @@ export abstract class BaseLoader<
     constructor(
         uniqueId: string,
         loaderMetadata: Record<string, unknown>,
-        chunkSize: number = 5,
-        chunkOverlap: number = 0,
-        canIncrementallyLoad: boolean = false,
+        chunkSize = 5,
+        chunkOverlap = 0,
+        canIncrementallyLoad = false,
     ) {
         super();
 
@@ -87,6 +87,7 @@ export abstract class BaseLoader<
         createDebugMessages('embedjs:loader:BaseLoader')(`New loader class initalized with key ${uniqueId}`);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     public async init(): Promise<void> {}
 
     public get canIncrementallyLoad() {

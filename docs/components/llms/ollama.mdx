@@ -1,0 +1,25 @@
+---
+title: 'Ollama'
+---
+
+You can also use locally running Ollama models. Installation instructions for Ollama can be found [here](https://ollama.com/).
+Once Ollama is installed, you can start a local LLM by executing `ollama run <modelname>`.
+
+## Install Ollama addon
+
+```bash
+npm install @llm-tools/embedjs-ollama
+```
+
+## Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { Ollama } from '@llm-tools/embedjs-ollama';
+
+const app = await new RAGApplicationBuilder()
+.setModel(new Ollama({
+    modelName: "llama3",
+    baseUrl: 'http://localhost:11434'
+}))
+```

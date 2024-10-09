@@ -1,0 +1,36 @@
+---
+title: Qdrant
+---
+
+[Qdrant](https://qdrant.tech/) is a Vector Search Engine written in Rust. You will need to sign up to get an API key and URL to use Qdrant.
+
+## Install Qdrant addon
+
+```bash
+npm install @llm-tools/embedjs-pinecone
+```
+
+## Usage
+<CodeGroup>
+```ts Example
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { QdrantDb } from '@llm-tools/embedjs-qdrant';
+
+// set OPENAI_API_KEY in your env
+process.env.OPENAI_API_KEY = "sk-xxx";
+
+const app = await new RAGApplicationBuilder()
+.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setVectorDb(new QdrantDb({ apiKey: '...'; url: '...'; clusterName: '...' }))
+.build();
+
+
+//add data source and start query in
+await app.add("https://www.forbes.com/profile/elon-musk");
+await app.query('Tell me about Elon Musk');
+```
+</CodeGroup>
+
+<Snippet file="missing-vector-db-tip.mdx" />

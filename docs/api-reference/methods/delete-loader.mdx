@@ -1,0 +1,44 @@
+---
+title: 🗑 deleteLoader
+---
+
+The `deleteLoader()` method allows you to delete the data loaded by a loader previously added to the app.
+
+### Parameters
+
+<ParamField path="uniqueLoaderId" type="BaseLoader" required>
+    The loader unique id that is generated when the loader is added to the app.
+</ParamField>
+
+### Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+import { RedisCache } from '@llm-tools/embedjs-redis';
+import { WebLoader } from '@llm-tools/embedjs-loader-web';
+import { SitemapLoader } from '@llm-tools/embedjs-loader-sitemap';
+
+const app = await new RAGApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setVectorDb(new HNSWDb())
+.setCache(
+    new RedisCache({
+        host: this.configService.get('REDIS_HOST'),
+        port: this.configService.get('REDIS_PORT'),
+        password: this.configService.get('REDIS_PASSWORD'),
+    }),
+)
+.build();
+
+const { uniqueId: forbesId } = await app.addLoader(new WebLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-musk' }));
+const { uniqueId: sitemapId } = await app.addLoader(new SitemapLoader({ url: '"https://js.langchain.com/sitemap.xml' }));
+
+await app.deleteLoader(forbesId);
+```
+
+<Note>
+    If you do not have the uniqueId, you can use `app.getLoaders()` method to get all the loaders and extract the `uniqueId` from it.
+</Note>

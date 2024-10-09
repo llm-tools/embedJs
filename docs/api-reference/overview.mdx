@@ -1,0 +1,55 @@
+---
+title: "RAGApplicationBuilder"
+---
+
+Create a EmbedJs `RAGApplication` using `RAGApplicationBuilder`. `RAGApplication` is the main entrypoint for a developer to interact with EmbedJs APIs.
+`RAGApplicationBuilder` configures the LLM, vector database and embedding model of your choice and return a `RAGApplication` at the end.
+
+### Attributes
+
+<ParamField path="setModel" type="'NO_MODEL' | SIMPLE_MODELS | BaseModel" required>
+    This configures the LLM for the RAG application. Setting `NO_MODEL` will not load any LLM - in this case, you can only use semantic search and there will be no no LLM powered Q&A.
+    `SIMPLE_MODELS` are predefined models with sane defaults available in EmbedJs.
+    All predefined models inherit from `BaseModel`. You can therefore pass a custom model that extends `BaseModel` / provide a custom set of parameters for a predefined model.
+    For a list of predefined LLMs, refer the section on [LLMs](/components/llms).
+</ParamField>
+<ParamField path="setEmbeddingModel" type="BaseEmbeddings" required>
+     This configures the embedding model for use with the RAG application. Embedding models are used to convert text into vectors.
+     For a list of predefined embedding models, refer the section on [embedding models](/components/embedding-models).
+</ParamField>
+<ParamField path="setVectorDb" type="BaseDb" required>
+    This configures the vector database to be used with RAG application.
+    For a list of available vector databases, refer the section on [vector databases](/components/vector-databases).
+</ParamField>
+<ParamField path="setCache" type="BaseCache">
+    This configures a cache that is used internally by the appliation to keep track of what sources and data have been previously processed.
+    Previously processed data is not reprocessed - thus removing the need for this logic to be implemented at your end.
+    If this is not provided, the application will maintain in memory this cache which will be lost on app restart.
+    For a list of available caches, refer the section on [caches](/components/caches).
+</ParamField>
+<ParamField path="setTemperature" type="number">
+    This configures a temperature to be used with the LLM. This controls the randomness of the LLM output.
+    By default, the application sets the temperature to 0.1.
+</ParamField>
+<ParamField path="setEmbeddingRelevanceCutOff" type="number">
+    This parameter is used to control what amounts to a relevant / contextual document when retrieving documents from the vector database.
+    Documents below this cut off are not discarded. EmbedJs uses sane defaults for this parameter but you can customize.
+</ParamField>
+<ParamField path="setQueryTemplate" type="string">
+    This allows you to customize the query template used when querying the LLM.
+</ParamField>
+
+## Usage
+
+```ts Code Example
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+
+//app is of type RAGApplication
+const app = await new RAGApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setVectorDb(new HNSWDb())
+.build();
+```
