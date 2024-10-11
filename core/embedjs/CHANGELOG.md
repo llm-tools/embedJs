@@ -1,25 +1,22 @@
 ## 0.1.4 (2024-10-09)
 
-
 ### 🚀 Features
 
-- new doc website + merged conversations with cache ([28d918a](https://github.com/llm-tools/embedJs/commit/28d918a))
-
+-   new doc website + merged conversations with cache ([28d918a](https://github.com/llm-tools/embedJs/commit/28d918a))
 
 ### 🩹 Fixes
 
-- fixed debug message string fro createLoaderFromMimeType ([abf5901](https://github.com/llm-tools/embedJs/commit/abf5901))
+-   fixed debug message string fro createLoaderFromMimeType ([abf5901](https://github.com/llm-tools/embedJs/commit/abf5901))
 
-- remove changelog generation from github release ([87abd2b](https://github.com/llm-tools/embedJs/commit/87abd2b))
+-   remove changelog generation from github release ([87abd2b](https://github.com/llm-tools/embedJs/commit/87abd2b))
 
-- remove changelog generation from github release ([4aa3f18](https://github.com/llm-tools/embedJs/commit/4aa3f18))
+-   remove changelog generation from github release ([4aa3f18](https://github.com/llm-tools/embedJs/commit/4aa3f18))
 
-- capitalization on contributing.md ([0381453](https://github.com/llm-tools/embedJs/commit/0381453))
+-   capitalization on contributing.md ([0381453](https://github.com/llm-tools/embedJs/commit/0381453))
 
+### ❤️ Thank You
 
-### ❤️  Thank You
-
-- Adhityan K V @adhityan
+-   Adhityan K V @adhityan
 
 ## 0.1.3 (2024-10-06)
 
