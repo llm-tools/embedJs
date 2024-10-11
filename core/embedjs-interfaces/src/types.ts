@@ -1,3 +1,5 @@
+import { IterableReadableStream } from '@langchain/core/utils/stream';
+
 export type LoaderMetadata<T> = T & { source: string };
 export type LoaderChunk<
     Meta extends Record<string, string | number | boolean> = Record<string, string | number | boolean>,
@@ -49,19 +51,22 @@ export type LoaderList = {
     loaderMetadata: Record<string, unknown>;
 }[];
 
-export type Message = {
+type CoreMessage = {
     id: string;
     timestamp: Date;
+};
+
+export type Message = CoreMessage & {
     content: string;
 } & (
-    | {
-          actor: 'HUMAN' | 'SYSTEM';
-      }
-    | {
-          actor: 'AI';
-          sources: SourceDetail[];
-      }
-);
+        | {
+              actor: 'HUMAN' | 'SYSTEM';
+          }
+        | {
+              actor: 'AI';
+              sources: SourceDetail[];
+          }
+    );
 
 export type Conversation = {
     conversationId: string;
@@ -82,3 +87,9 @@ export type QueryResponse = Extract<Message, { actor: 'AI' }> & {
         outputTokens: number | 'UNKNOWN';
     };
 };
+
+export type ModelStreamResponse = {
+    result: IterableReadableStream<string>;
+};
+
+export type QueryStreamResponse = CoreMessage & { result: IterableReadableStream<string>; sources: SourceDetail[] };

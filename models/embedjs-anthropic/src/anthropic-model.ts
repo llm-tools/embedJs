@@ -1,7 +1,7 @@
 import createDebugMessages from 'debug';
 import { ChatAnthropic } from '@langchain/anthropic';
 import { HumanMessage, AIMessage, SystemMessage } from '@langchain/core/messages';
-import { BaseModel, Chunk, Message, ModelResponse } from '@llm-tools/embedjs-interfaces';
+import { BaseModel, ModelResponse } from '@llm-tools/embedjs-interfaces';
 
 export class Anthropic extends BaseModel {
     private readonly debug = createDebugMessages('embedjs:model:Anthropic');
@@ -17,29 +17,9 @@ export class Anthropic extends BaseModel {
         this.model = new ChatAnthropic({ temperature: this.temperature, model: this.modelName });
     }
 
-    override async runQuery(
-        system: string,
-        userQuery: string,
-        supportingContext: Chunk[],
-        pastConversations: Message[],
-    ): Promise<ModelResponse> {
-        const pastMessages: (AIMessage | SystemMessage | HumanMessage)[] = [
-            new SystemMessage(
-                `${system}. Supporting context: ${supportingContext.map((s) => s.pageContent).join('; ')}`,
-            ),
-        ];
-
-        pastMessages.push(
-            ...pastConversations.map((c) => {
-                if (c.actor === 'AI') return new AIMessage({ content: c.content });
-                else if (c.actor === 'SYSTEM') return new SystemMessage({ content: c.content });
-                else return new HumanMessage({ content: c.content });
-            }),
-        );
-        pastMessages.push(new HumanMessage(`${userQuery}?`));
-
-        this.debug('Executing anthropic model with prompt -', userQuery);
-        const result = await this.model.invoke(pastMessages);
+    override async runQuery(messages: (AIMessage | SystemMessage | HumanMessage)[]): Promise<ModelResponse> {
+        this.debug('Executing anthropic model with prompt -', messages[messages.length - 1].content);
+        const result = await this.model.invoke(messages);
         this.debug('Anthropic response -', result);
 
         return {
