@@ -1,10 +1,10 @@
 {
     "name": "@llm-tools/embedjs-loader-web",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "description": "Web page loader for embedjs",
     "dependencies": {
-        "@llm-tools/embedjs-interfaces": "0.1.4",
-        "@llm-tools/embedjs-utils": "0.1.4",
+        "@llm-tools/embedjs-interfaces": "0.1.5",
+        "@llm-tools/embedjs-utils": "0.1.5",
         "axios": "^1.7.7",
         "debug": "^4.3.7",
         "html-to-text": "^9.0.5",

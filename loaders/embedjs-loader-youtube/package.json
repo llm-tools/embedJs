@@ -1,10 +1,10 @@
 {
     "name": "@llm-tools/embedjs-loader-youtube",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "description": "Youtube transcript and channel recursive loader for embedjs",
     "dependencies": {
-        "@llm-tools/embedjs-interfaces": "0.1.4",
-        "@llm-tools/embedjs-utils": "0.1.4",
+        "@llm-tools/embedjs-interfaces": "0.1.5",
+        "@llm-tools/embedjs-utils": "0.1.5",
         "debug": "^4.3.7",
         "md5": "^2.3.0",
         "usetube": "^2.2.7",
