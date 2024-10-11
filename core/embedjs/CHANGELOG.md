@@ -1,3 +1,15 @@
+## 0.1.5 (2024-10-11)
+
+
+### 🩹 Fixes
+
+- minor changelog double lines removed ([7e3509a](https://github.com/llm-tools/embedJs/commit/7e3509a))
+
+
+### ❤️  Thank You
+
+- Adhityan K V @adhityan
+
 ## 0.1.4 (2024-10-09)
 
 ### 🚀 Features
