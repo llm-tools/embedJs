@@ -1,7 +1,7 @@
 import createDebugMessages from 'debug';
 import { ChatMistralAI } from '@langchain/mistralai';
 import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages';
-import { BaseModel, Chunk, Message, ModelResponse } from '@llm-tools/embedjs-interfaces';
+import { BaseModel, ModelResponse } from '@llm-tools/embedjs-interfaces';
 
 export class Mistral extends BaseModel {
     private readonly debug = createDebugMessages('embedjs:model:Mistral');
@@ -20,28 +20,9 @@ export class Mistral extends BaseModel {
         this.model = new ChatMistralAI({ apiKey: accessToken, model: modelName ?? 'mistral-medium' });
     }
 
-    override async runQuery(
-        system: string,
-        userQuery: string,
-        supportingContext: Chunk[],
-        pastConversations: Message[],
-    ): Promise<ModelResponse> {
-        const pastMessages: (AIMessage | SystemMessage | HumanMessage)[] = [new SystemMessage(system)];
-        pastMessages.push(
-            new SystemMessage(`Supporting context: ${supportingContext.map((s) => s.pageContent).join('; ')}`),
-        );
-
-        pastMessages.push(
-            ...pastConversations.map((c) => {
-                if (c.actor === 'AI') return new AIMessage({ content: c.content });
-                else if (c.actor === 'SYSTEM') return new SystemMessage({ content: c.content });
-                else return new HumanMessage({ content: c.content });
-            }),
-        );
-        pastMessages.push(new HumanMessage(`${userQuery}?`));
-
-        this.debug('Executing mistral model with prompt -', userQuery);
-        const result = await this.model.invoke(pastMessages);
+    override async runQuery(messages: (AIMessage | SystemMessage | HumanMessage)[]): Promise<ModelResponse> {
+        this.debug('Executing mistral model with prompt -', messages[messages.length - 1].content);
+        const result = await this.model.invoke(messages);
         this.debug('Mistral response -', result);
 
         return {
