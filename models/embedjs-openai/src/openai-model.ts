@@ -1,8 +1,7 @@
 import createDebugMessages from 'debug';
 import { ChatOpenAI, ClientOptions } from '@langchain/openai';
-import { StringOutputParser } from '@langchain/core/output_parsers';
 import { HumanMessage, AIMessage, SystemMessage } from '@langchain/core/messages';
-import { BaseModel, ModelResponse, ModelStreamResponse } from '@llm-tools/embedjs-interfaces';
+import { BaseModel, ModelResponse } from '@llm-tools/embedjs-interfaces';
 
 export class OpenAi extends BaseModel {
     private readonly debug = createDebugMessages('embedjs:model:OpenAi');
@@ -44,13 +43,5 @@ export class OpenAi extends BaseModel {
                 outputTokens: result.response_metadata.tokenUsage.completionTokens,
             },
         };
-    }
-
-    async runStreamingQuery(messages: (AIMessage | SystemMessage | HumanMessage)[]): Promise<ModelStreamResponse> {
-        this.debug('Executing streaming openai model with prompt -', messages[messages.length - 1].content);
-
-        const parser = new StringOutputParser();
-        const result = await this.model.pipe(parser).stream(messages);
-        return { result };
     }
 }

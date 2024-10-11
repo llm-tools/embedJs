@@ -13,7 +13,6 @@ import {
     InsertChunkData,
     LoaderChunk,
     QueryResponse,
-    QueryStreamResponse,
     SIMPLE_MODELS,
 } from '@llm-tools/embedjs-interfaces';
 import { cleanString, getUnique } from '@llm-tools/embedjs-utils';
@@ -351,14 +350,6 @@ export class RAGApplication {
         return [...new Map(rawContext.map((item) => [item.pageContent, item])).values()];
     }
 
-    public async query(
-        userQuery: string,
-        options?: { stream?: false; conversationId?: string; customContext?: Chunk[] },
-    ): Promise<QueryResponse>;
-    public async query(
-        userQuery: string,
-        options: { stream: true; conversationId?: string; customContext?: Chunk[] },
-    ): Promise<QueryStreamResponse>;
     /**
      * This function takes a user query, retrieves relevant context, identifies unique sources, and
      * returns the query result along with the list of sources.
@@ -367,11 +358,11 @@ export class RAGApplication {
      * result based on the query.
      * @param [options] - The `options` parameter in the `query` function is an optional object that
      * can have the following properties:
-     * [conversationId] - The `conversationId` parameter in the `query` method is an
+     * - conversationId - The `conversationId` parameter in the `query` method is an
      * optional parameter that represents the unique identifier for a conversation. It allows you to
      * track and associate the query with a specific conversation thread if needed. If provided, it can be
      * used to maintain context or history related to the conversation.
-     * [customContext] - You can pass in custom context from your own RAG stack. Passing.
+     * - customContext - You can pass in custom context from your own RAG stack. Passing.
      * your own context will disable the inbuilt RAG retrieval for that specific query
      * @returns The `query` method returns a Promise that resolves to an object with two properties:
      * `result` and `sources`. The `result` property is a string representing the result of querying
@@ -380,8 +371,8 @@ export class RAGApplication {
      */
     public async query(
         userQuery: string,
-        options?: { stream?: boolean; conversationId?: string; customContext?: Chunk[] },
-    ): Promise<QueryResponse | QueryStreamResponse> {
+        options?: { conversationId?: string; customContext?: Chunk[] },
+    ): Promise<QueryResponse> {
         if (!this.model) {
             throw new Error('LLM Not set; query method not available');
         }
@@ -394,8 +385,6 @@ export class RAGApplication {
             `Query resulted in ${context.length} chunks after filteration; chunks from ${sources.length} unique sources.`,
         );
 
-        if (options?.stream)
-            return this.model.query(this.queryTemplate, userQuery, context, options?.conversationId, true);
-        else return this.model.query(this.queryTemplate, userQuery, context, options?.conversationId, false);
+        return this.model.query(this.queryTemplate, userQuery, context, options?.conversationId);
     }
 }

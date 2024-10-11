@@ -2,15 +2,7 @@ import { HumanMessage, AIMessage, SystemMessage } from '@langchain/core/messages
 import createDebugMessages from 'debug';
 import { v4 as uuidv4 } from 'uuid';
 
-import {
-    Chunk,
-    QueryResponse,
-    Message,
-    SourceDetail,
-    ModelResponse,
-    ModelStreamResponse,
-    QueryStreamResponse,
-} from '../types.js';
+import { Chunk, QueryResponse, Message, SourceDetail, ModelResponse } from '../types.js';
 import { BaseCache } from './base-cache.js';
 
 export abstract class BaseModel {
@@ -86,23 +78,8 @@ export abstract class BaseModel {
         system: string,
         userQuery: string,
         supportingContext: Chunk[],
-        conversationId: string,
-        stream: false,
-    ): Promise<QueryResponse>;
-    public async query(
-        system: string,
-        userQuery: string,
-        supportingContext: Chunk[],
-        conversationId: string,
-        stream: true,
-    ): Promise<QueryStreamResponse>;
-    public async query(
-        system: string,
-        userQuery: string,
-        supportingContext: Chunk[],
         conversationId = 'default',
-        stream = false,
-    ): Promise<QueryResponse | QueryStreamResponse> {
+    ): Promise<QueryResponse> {
         const conversation = await BaseModel.cache.getConversation(conversationId);
         this.baseDebug(`${conversation.entries.length} history entries found for conversationId '${conversationId}'`);
 
@@ -119,43 +96,27 @@ export abstract class BaseModel {
         const timestamp = new Date();
         const id = uuidv4();
 
-        if (stream) {
-            // Run LLM implementation in subclass
-            const response = await this.runStreamingQuery(messages);
-            return {
-                id,
-                timestamp,
-                result: response.result,
-                sources: uniqueSources,
-            };
-        } else {
-            // Run LLM implementation in subclass
-            const response = await this.runQuery(messages);
+        // Run LLM implementation in subclass
+        const response = await this.runQuery(messages);
 
-            const newEntry: Message = {
-                id,
-                timestamp,
-                content: response.result,
-                actor: 'AI',
-                sources: uniqueSources,
-            };
+        const newEntry: Message = {
+            id,
+            timestamp,
+            content: response.result,
+            actor: 'AI',
+            sources: uniqueSources,
+        };
 
-            // Add AI response to history
-            await BaseModel.cache.addEntryToConversation(conversationId, newEntry);
-            return {
-                ...newEntry,
-                tokenUse: {
-                    inputTokens: response.tokenUse?.inputTokens ?? 'UNKNOWN',
-                    outputTokens: response.tokenUse?.outputTokens ?? 'UNKNOWN',
-                },
-            };
-        }
+        // Add AI response to history
+        await BaseModel.cache.addEntryToConversation(conversationId, newEntry);
+        return {
+            ...newEntry,
+            tokenUse: {
+                inputTokens: response.tokenUse?.inputTokens ?? 'UNKNOWN',
+                outputTokens: response.tokenUse?.outputTokens ?? 'UNKNOWN',
+            },
+        };
     }
 
     protected abstract runQuery(messages: (AIMessage | SystemMessage | HumanMessage)[]): Promise<ModelResponse>;
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    protected runStreamingQuery(_messages: (AIMessage | SystemMessage | HumanMessage)[]): Promise<ModelStreamResponse> {
-        throw new Error('Streaming not supported by this model');
-    }
 }
