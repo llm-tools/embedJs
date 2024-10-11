@@ -1,7 +1,7 @@
 import createDebugMessages from 'debug';
 import { ChatOpenAI, ClientOptions } from '@langchain/openai';
 import { HumanMessage, AIMessage, SystemMessage } from '@langchain/core/messages';
-import { BaseModel, Chunk, Message, ModelResponse } from '@llm-tools/embedjs-interfaces';
+import { BaseModel, ModelResponse } from '@llm-tools/embedjs-interfaces';
 
 export class OpenAi extends BaseModel {
     private readonly debug = createDebugMessages('embedjs:model:OpenAi');
@@ -31,28 +31,9 @@ export class OpenAi extends BaseModel {
         });
     }
 
-    override async runQuery(
-        system: string,
-        userQuery: string,
-        supportingContext: Chunk[],
-        pastConversations: Message[],
-    ): Promise<ModelResponse> {
-        const pastMessages: (AIMessage | SystemMessage | HumanMessage)[] = [new SystemMessage(system)];
-        pastMessages.push(
-            new SystemMessage(`Supporting context: ${supportingContext.map((s) => s.pageContent).join('; ')}`),
-        );
-
-        pastMessages.push(
-            ...pastConversations.map((c) => {
-                if (c.actor === 'AI') return new AIMessage({ content: c.content });
-                else if (c.actor === 'SYSTEM') return new SystemMessage({ content: c.content });
-                else return new HumanMessage({ content: c.content });
-            }),
-        );
-        pastMessages.push(new HumanMessage(`${userQuery}?`));
-
-        this.debug('Executing openai model with prompt -', userQuery);
-        const result = await this.model.invoke(pastMessages);
+    override async runQuery(messages: (AIMessage | SystemMessage | HumanMessage)[]): Promise<ModelResponse> {
+        this.debug('Executing openai model with prompt -', messages[messages.length - 1].content);
+        const result = await this.model.invoke(messages);
         this.debug('OpenAI response -', result);
 
         return {

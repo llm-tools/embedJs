@@ -1,3 +1,4 @@
+import { HumanMessage, AIMessage, SystemMessage } from '@langchain/core/messages';
 import createDebugMessages from 'debug';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -31,46 +32,6 @@ export abstract class BaseModel {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     public async init(): Promise<void> {}
 
-    public async query(
-        system: string,
-        userQuery: string,
-        supportingContext: Chunk[],
-        conversationId = 'default',
-    ): Promise<QueryResponse> {
-        const conversation = await BaseModel.cache.getConversation(conversationId);
-        this.baseDebug(`${conversation.entries.length} history entries found for conversationId '${conversationId}'`);
-
-        // Add user query to history
-        await BaseModel.cache.addEntryToConversation(conversationId, {
-            id: uuidv4(),
-            timestamp: new Date(),
-            actor: 'HUMAN',
-            content: userQuery,
-        });
-
-        // Run LLM implementation in subclass
-        const response = await this.runQuery(system, userQuery, supportingContext, conversation.entries.slice(0, -1));
-
-        const uniqueSources = this.extractUniqueSources(supportingContext);
-        const newEntry: Message = {
-            id: uuidv4(),
-            timestamp: new Date(),
-            content: response.result,
-            actor: 'AI',
-            sources: uniqueSources,
-        };
-
-        // Add AI response to history
-        await BaseModel.cache.addEntryToConversation(conversationId, newEntry);
-        return {
-            ...newEntry,
-            tokenUse: {
-                inputTokens: response.tokenUse?.inputTokens ?? 'UNKNOWN',
-                outputTokens: response.tokenUse?.outputTokens ?? 'UNKNOWN',
-            },
-        };
-    }
-
     private extractUniqueSources(supportingContext: Chunk[]): SourceDetail[] {
         const uniqueSources = new Map<string, SourceDetail>(); // Use a Map to track unique sources by URL
 
@@ -91,10 +52,71 @@ export abstract class BaseModel {
         return Array.from(uniqueSources.values());
     }
 
-    protected abstract runQuery(
+    public async prepare(
         system: string,
         userQuery: string,
         supportingContext: Chunk[],
         pastConversations: Message[],
-    ): Promise<ModelResponse>;
+    ): Promise<(AIMessage | SystemMessage | HumanMessage)[]> {
+        const messages: (AIMessage | SystemMessage | HumanMessage)[] = [new SystemMessage(system)];
+        messages.push(
+            new SystemMessage(`Supporting context: ${supportingContext.map((s) => s.pageContent).join('; ')}`),
+        );
+
+        messages.push(
+            ...pastConversations.map((c) => {
+                if (c.actor === 'AI') return new AIMessage({ content: c.content });
+                else if (c.actor === 'SYSTEM') return new SystemMessage({ content: c.content });
+                else return new HumanMessage({ content: c.content });
+            }),
+        );
+        messages.push(new HumanMessage(`${userQuery}?`));
+        return messages;
+    }
+
+    public async query(
+        system: string,
+        userQuery: string,
+        supportingContext: Chunk[],
+        conversationId = 'default',
+    ): Promise<QueryResponse> {
+        const conversation = await BaseModel.cache.getConversation(conversationId);
+        this.baseDebug(`${conversation.entries.length} history entries found for conversationId '${conversationId}'`);
+
+        // Add user query to history
+        await BaseModel.cache.addEntryToConversation(conversationId, {
+            id: uuidv4(),
+            timestamp: new Date(),
+            actor: 'HUMAN',
+            content: userQuery,
+        });
+
+        const messages = await this.prepare(system, userQuery, supportingContext, conversation.entries.slice(0, -1));
+        const uniqueSources = this.extractUniqueSources(supportingContext);
+        const timestamp = new Date();
+        const id = uuidv4();
+
+        // Run LLM implementation in subclass
+        const response = await this.runQuery(messages);
+
+        const newEntry: Message = {
+            id,
+            timestamp,
+            content: response.result,
+            actor: 'AI',
+            sources: uniqueSources,
+        };
+
+        // Add AI response to history
+        await BaseModel.cache.addEntryToConversation(conversationId, newEntry);
+        return {
+            ...newEntry,
+            tokenUse: {
+                inputTokens: response.tokenUse?.inputTokens ?? 'UNKNOWN',
+                outputTokens: response.tokenUse?.outputTokens ?? 'UNKNOWN',
+            },
+        };
+    }
+
+    protected abstract runQuery(messages: (AIMessage | SystemMessage | HumanMessage)[]): Promise<ModelResponse>;
 }
