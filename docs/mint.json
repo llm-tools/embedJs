@@ -133,6 +133,7 @@
                                 "components/embeddings/azure-openai",
                                 "components/embeddings/cohere",
                                 "components/embeddings/ollama",
+                                "components/embeddings/huggingface",
                                 "components/embeddings/vertexai"
                             ]
                         }

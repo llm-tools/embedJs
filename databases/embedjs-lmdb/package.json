@@ -1,9 +1,9 @@
 {
     "name": "@llm-tools/embedjs-lmdb",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "description": "Add LMDB support to embedjs",
     "dependencies": {
-        "@llm-tools/embedjs-interfaces": "0.1.5",
+        "@llm-tools/embedjs-interfaces": "0.1.6",
         "lmdb": "^3.1.3"
     },
     "type": "module",

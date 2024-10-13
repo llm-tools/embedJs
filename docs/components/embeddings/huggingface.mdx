@@ -1,0 +1,31 @@
+---
+title: 'Hugging Face'
+---
+
+The library supports generating embeddings using the Hugging Face Inference API.
+By default it uses the `sentence-transformers/distilbert-base-nli-mean-tokens` model but you can pass it a model parameter to use any other model available on the Hugging Face model hub.
+
+To use Hugging face embedding models via its Inference API, you need to get a free token.
+You can get this API Token by signing up for hugging face and visiting [this page](https://huggingface.co/settings/tokens).
+Set it to the environment like so -
+
+```bash
+HUGGINGFACEHUB_API_KEY="<Your hf key>"
+```
+
+## Install Huggingface addon
+
+```bash
+npm install @llm-tools/embedjs-huggingface
+```
+
+## Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { HuggingFaceEmbeddings } from '@llm-tools/embedjs-huggingface';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+
+const app = await new RAGApplicationBuilder()
+.setEmbeddingModel(new HuggingFaceEmbeddings())
+```
