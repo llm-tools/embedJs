@@ -37,7 +37,7 @@ import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
 
 const llmApplication = await new RAGApplicationBuilder()
     .setModel(new OpenAi({ modelName: 'gpt-4o' }))
-    .setEmbeddingModel(new OpenAiEmbeddings({ model: 'text-embedding-3-small' }))
+    .setEmbeddingModel(new OpenAiEmbeddings())
     .setVectorDb(new HNSWDb())
     .build();
 

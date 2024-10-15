@@ -22,7 +22,7 @@ import { PdfLoader } from '@llm-tools/embedjs-loader-pdf';
 
 const app = await new RAGApplicationBuilder()
 .setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
-.setEmbeddingModel(new OpenAiEmbeddings({ model: 'text-embedding-3-small' }))
+.setEmbeddingModel(new OpenAiEmbeddings())
 .setVectorDb(new HNSWDb())
 .build();
 
@@ -39,7 +39,7 @@ import { PdfLoader } from '@llm-tools/embedjs-loader-pdf';
 
 const app = await new RAGApplicationBuilder()
 .setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
-.setEmbeddingModel(new OpenAiEmbeddings({ model: 'text-embedding-3-small' }))
+.setEmbeddingModel(new OpenAiEmbeddings())
 .setVectorDb(new HNSWDb())
 .build();
 

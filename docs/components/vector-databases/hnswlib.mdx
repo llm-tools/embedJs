@@ -22,7 +22,7 @@ import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
 process.env.OPENAI_API_KEY = "sk-xxx";
 
 const app = await new RAGApplicationBuilder()
-.setEmbeddingModel(new OpenAiEmbeddings({ model: 'text-embedding-3-small' }))
+.setEmbeddingModel(new OpenAiEmbeddings())
 .setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
 .setVectorDb(new HNSWDb())
 .build();

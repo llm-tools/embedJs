@@ -20,7 +20,7 @@ import { YoutubeSearchLoader } from '@llm-tools/embedjs-loader-youtube';
 
 const app = await new RAGApplicationBuilder()
 .setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
-.setEmbeddingModel(new OpenAiEmbeddings({ model: 'text-embedding-3-small' }))
+.setEmbeddingModel(new OpenAiEmbeddings())
 .setVectorDb(new HNSWDb())
 .build();
 
