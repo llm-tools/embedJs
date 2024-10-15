@@ -73,6 +73,7 @@
                                 "components/data-sources/json",
                                 "components/data-sources/text",
                                 "components/data-sources/web-page",
+                                "components/data-sources/confluence",
                                 "components/data-sources/youtube-video",
                                 "components/data-sources/youtube-channel",
                                 "components/data-sources/youtube-search",
