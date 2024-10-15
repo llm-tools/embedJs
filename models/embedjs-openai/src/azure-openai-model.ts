@@ -1,24 +1,24 @@
 import createDebugMessages from 'debug';
-import { ChatOpenAI } from '@langchain/openai';
+import { AzureChatOpenAI } from '@langchain/openai';
 import { HumanMessage, AIMessage, SystemMessage } from '@langchain/core/messages';
 import { BaseModel, ModelResponse } from '@llm-tools/embedjs-interfaces';
 
-export class OpenAi extends BaseModel {
+export class AzureOpenAi extends BaseModel {
     private readonly debug = createDebugMessages('embedjs:model:OpenAi');
-    private model: ChatOpenAI;
+    private model: AzureChatOpenAI;
 
-    constructor(private readonly configuration: ConstructorParameters<typeof ChatOpenAI>[0]) {
+    constructor(private readonly configuration: ConstructorParameters<typeof AzureChatOpenAI>[0]) {
         super(configuration.temperature);
     }
 
     override async init(): Promise<void> {
-        this.model = new ChatOpenAI(this.configuration);
+        this.model = new AzureChatOpenAI(this.configuration);
     }
 
     override async runQuery(messages: (AIMessage | SystemMessage | HumanMessage)[]): Promise<ModelResponse> {
-        this.debug('Executing OpenAI model with prompt -', messages[messages.length - 1].content);
+        this.debug('Executing Azure OpenAI model with prompt -', messages[messages.length - 1].content);
         const result = await this.model.invoke(messages);
-        this.debug('OpenAI response -', result);
+        this.debug('Azure OpenAI response -', result);
 
         return {
             result: result.content.toString(),

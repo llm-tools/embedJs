@@ -25,5 +25,5 @@ import { RAGApplicationBuilder } from '@llm-tools/embedjs';
 import { OpenAi } from '@llm-tools/embedjs-openai';
 
 const app = await new RAGApplicationBuilder()
-.setModel(new OpenAi({ modelName: "text-davinci-003" }))
+.setModel(new OpenAi({ model: "text-davinci-003" }))
 ```

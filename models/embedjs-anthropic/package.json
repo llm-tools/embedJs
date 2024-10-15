@@ -1,11 +1,11 @@
 {
     "name": "@llm-tools/embedjs-anthropic",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "description": "Enable usage of Anthropic models with embedjs",
     "dependencies": {
         "@langchain/anthropic": "^0.3.3",
         "@langchain/core": "^0.3.9",
-        "@llm-tools/embedjs-interfaces": "0.1.6",
+        "@llm-tools/embedjs-interfaces": "0.1.7",
         "debug": "^4.3.7"
     },
     "type": "module",

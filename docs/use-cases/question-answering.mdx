@@ -25,12 +25,12 @@ First, let's create your RAG pipeline. Open your NodeJs application and add the 
 
 ```ts Create pipeline
 import { RAGApplicationBuilder } from '@llm-tools/embedjs';
-import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { OpenAi } from '@llm-tools/embedjs-openai';
 import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
 
 const app = await new RAGApplicationBuilder()
 .setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
-.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setEmbeddingModel(new OpenAiEmbeddings())
 .setVectorDb(new HNSWDb())
 .build();
 ```

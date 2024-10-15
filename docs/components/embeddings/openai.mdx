@@ -12,12 +12,6 @@ Once you obtain a key, set it in an environment variable, like so -
 OPENAI_API_KEY="<Your key>"
 ```
 
-The EmbedJs OpenAI addon provides the following embedding models -
-
--   OpenAi3LargeEmbeddings
--   OpenAi3SmallEmbeddings
--   AdaEmbeddings
-
 ## Install OpenAI addon
 
 ```bash
@@ -28,9 +22,21 @@ npm install @llm-tools/embedjs-openai
 
 ```ts
 import { RAGApplicationBuilder } from '@llm-tools/embedjs';
-import { OpenAi3LargeEmbeddings } from '@llm-tools/embedjs-openai';
+import { OpenAiEmbeddings } from '@llm-tools/embedjs-openai';
 import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
 
 const app = await new RAGApplicationBuilder()
-.setEmbeddingModel(new OpenAi3LargeEmbeddings())
+.setEmbeddingModel(new OpenAiEmbeddings({
+    model: 'text-embedding-3-large'
+}))
 ```
+
+<Note>
+The following embedding models do not require you to pass a dimension parameter -
+
+-   `text-embedding-3-large`
+-   `text-embedding-3-small`
+-   `text-embedding-ada-002`
+
+All other models require you provide one.
+</Note>

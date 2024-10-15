@@ -1,3 +1,8 @@
+## 0.1.7 (2024-10-15)
+
+The OpenAI models were refactored to allow better support for Azure. New Azure specific models are now exposed.
+Further, the different embedding models are now combined and are configureable based on the `model` constructor parameter.
+
 ## 0.1.6 (2024-10-13)
 
 This was a version bump only for embedjs-openai to align it with other projects, there were no code changes.

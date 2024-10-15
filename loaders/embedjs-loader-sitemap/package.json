@@ -1,10 +1,10 @@
 {
     "name": "@llm-tools/embedjs-loader-sitemap",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "description": "Sitemap recursive loader for embedjs",
     "dependencies": {
-        "@llm-tools/embedjs-interfaces": "0.1.6",
-        "@llm-tools/embedjs-loader-web": "0.1.6",
+        "@llm-tools/embedjs-interfaces": "0.1.7",
+        "@llm-tools/embedjs-loader-web": "0.1.7",
         "debug": "^4.3.7",
         "md5": "^2.3.0",
         "sitemapper": "^3.2.12"
