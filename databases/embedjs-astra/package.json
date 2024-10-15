@@ -1,10 +1,10 @@
 {
     "name": "@llm-tools/embedjs-astradb",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "description": "Add AstraDB support to embedjs",
     "dependencies": {
         "@datastax/astra-db-ts": "^1.5.0",
-        "@llm-tools/embedjs-interfaces": "0.1.6",
+        "@llm-tools/embedjs-interfaces": "0.1.7",
         "debug": "^4.3.7"
     },
     "type": "module",
