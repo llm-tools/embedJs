@@ -30,14 +30,14 @@ npm install @llm-tools/embedjs-mongodb
 <CodeGroup>
 ```ts Example
 import { RAGApplicationBuilder } from '@llm-tools/embedjs';
-import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { OpenAiEmbeddings } from '@llm-tools/embedjs-openai';
 import { MongoDb } from '@llm-tools/embedjs-mongodb';
 
 // set OPENAI_API_KEY in your env
 process.env.OPENAI_API_KEY = "sk-xxx";
 
 const app = await new RAGApplicationBuilder()
-.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setEmbeddingModel(new OpenAiEmbeddings({ model: 'text-embedding-3-small' }))
 .setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
 new MongoDb({
     connectionString: 'mongodb+srv://<username>:<password>@<url>',

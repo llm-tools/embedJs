@@ -2,8 +2,19 @@
 title: 'Azure OpenAI'
 ---
 
-In order to be able to use an OpenAI model on Azure, it first needs to be deployed.
-Refer to the [Azure OpenAI LLM install documentation](/components/llms/azure-openai) for more information.
+In order to be able to use OpenAI models on Azure, they first need to be deployed.
+Please refer to [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/) on how to deploy a model on Azure.
+
+Once these models are deployed, using Azure OpenAI is easy to do. Just follow these steps -
+
+-   Set the following environment variables -
+
+```bash
+AZURE_OPENAI_API_INSTANCE_NAME=<YOUR_INSTANCE_NAME>
+AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME=<YOUR_EMBEDDINGS_DEPLOYMENT_NAME>
+AZURE_OPENAI_API_VERSION="2024-02-01" #or a newer version
+AZURE_OPENAI_API_KEY=<YOUR_KEY>
+```
 
 ## Install OpenAI addon
 
@@ -15,10 +26,47 @@ npm install @llm-tools/embedjs-openai
 
 ```ts
 import { RAGApplicationBuilder } from '@llm-tools/embedjs';
-import { OpenAi3SmallEmbeddings } from '@llm-tools/embedjs-openai';
+import { AzureOpenAiEmbeddings } from '@llm-tools/embedjs-openai';
 import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
 
 const app = await new RAGApplicationBuilder()
-.setEmbeddingModel(new OpenAi3SmallEmbeddings())
+.setEmbeddingModel(new AzureOpenAiEmbeddings({
+    model: 'text-embedding-3-large'
+}))
 ```
 
+<Note>
+The following embedding models do not require you to pass a dimension parameter -
+
+-   `text-embedding-3-large`
+-   `text-embedding-3-small`
+-   `text-embedding-ada-002`
+
+All other models require you provide one.
+</Note>
+
+<Note>
+To use Azure Managed Identity, you can use something similar to the following code snippet -
+
+```ts
+import {
+  DefaultAzureCredential,
+  getBearerTokenProvider,
+} from "@azure/identity";
+import { AzureOpenAiEmbeddings } from '@llm-tools/embedjs-openai';
+
+const credentials = new DefaultAzureCredential();
+const azureADTokenProvider = getBearerTokenProvider(
+  credentials,
+  "https://cognitiveservices.azure.com/.default"
+);
+
+const app = await new RAGApplicationBuilder()
+.setEmbeddingModel(new AzureOpenAiEmbeddings({
+    azureADTokenProvider,
+    azureOpenAIApiInstanceName: "<your_instance_name>",
+    azureOpenAIApiEmbeddingsDeploymentName: "<your_embeddings_deployment_name>",
+    azureOpenAIApiVersion: "<api_version>",
+}))
+```
+</Note>

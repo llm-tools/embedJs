@@ -2,35 +2,19 @@
 title: 'Azure OpenAI'
 ---
 
-In order to be able to use an OpenAI model on Azure, it first needs to be deployed.
+In order to be able to use OpenAI models on Azure, they first need to be deployed.
 Please refer to [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/) on how to deploy a model on Azure.
-To run this library, you will need to deploy both an LLM and an embedding model. For example -
 
--   text-embedding-ada (or any of the newer models)
--   GPT-3.5-turbo (or the 4 series)
-
-Once these models are deployed, using Azure OpenAI instead of the regular OpenAI is easy to do. Just follow these steps -
-
--   Remove the `OPENAI_API_KEY` environment variable if you have set it already.
+Once these models are deployed, using Azure OpenAI is easy to do. Just follow these steps -
 
 -   Set the following environment variables -
 
 ```bash
-# Set this to `azure`
-OPENAI_API_TYPE=azure
-# The API version you want to use
-AZURE_OPENAI_API_VERSION=2023-05-15
-# The base URL for your Azure OpenAI resource.  You can find this in the Azure portal under your Azure OpenAI resource.
-export AZURE_OPENAI_BASE_PATH=https://your-resource-name.openai.azure.com/openai/deployments
-# The API key1 or key2 for your Azure OpenAI resource
-export AZURE_OPENAI_API_KEY=<Your Azure OpenAI API key>
-# The deployment name you used for your embedding model
-AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME=text-embedding-ada-002
-# The deployment name you used for your llm
-AZURE_OPENAI_API_DEPLOYMENT_NAME=gpt-35-turbo
+AZURE_OPENAI_API_INSTANCE_NAME=<YOUR_INSTANCE_NAME>
+AZURE_OPENAI_API_DEPLOYMENT_NAME=<YOUR_DEPLOYMENT_NAME>
+AZURE_OPENAI_API_VERSION="2024-02-01" #or a newer version
+AZURE_OPENAI_API_KEY=<YOUR_KEY>
 ```
-
-The OpenAi addon can now be used as is and will automatically use the Azure OpenAI endpoint.
 
 ## Install OpenAI addon
 
@@ -42,8 +26,33 @@ npm install @llm-tools/embedjs-openai
 
 ```ts
 import { RAGApplicationBuilder } from '@llm-tools/embedjs';
-import { OpenAi } from '@llm-tools/embedjs-openai';
+import { AzureOpenAi } from '@llm-tools/embedjs-openai';
 
 const app = await new RAGApplicationBuilder()
-.setModel(new OpenAi({ modelName: "gpt-4o" }))
+.setModel(new AzureOpenAi({ model: "gpt-4o" }))
 ```
+
+<Note>
+To use Azure Managed Identity, you can use something similar to the following code snippet -
+
+```ts
+import {
+  DefaultAzureCredential,
+  getBearerTokenProvider,
+} from "@azure/identity";
+import { AzureOpenAi } from '@llm-tools/embedjs-openai';
+
+const credentials = new DefaultAzureCredential();
+const azureADTokenProvider = getBearerTokenProvider(
+  credentials,
+  "https://cognitiveservices.azure.com/.default"
+);
+
+const app = new AzureOpenAI({
+  azureADTokenProvider,
+  azureOpenAIApiInstanceName: "<your_instance_name>",
+  azureOpenAIApiDeploymentName: "<your_deployment_name>",
+  azureOpenAIApiVersion: "<api_version>",
+});
+```
+</Note>
