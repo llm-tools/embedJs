@@ -62,7 +62,7 @@ async function createRelease(dryRun, version, generateChangelog) {
     const { workspaceVersion, projectsVersionData } = await releaseVersion({
         specifier: version,
         verbose: true,
-        dryRun: true,
+        dryRun,
     });
 
     const versionMap = new Map();
