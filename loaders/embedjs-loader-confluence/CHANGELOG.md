@@ -1,3 +1,15 @@
+## 0.1.9 (2024-10-21)
+
+
+### 🩹 Fixes
+
+- fixed changelog for confluence loader ([2f66b17](https://github.com/llm-tools/embedJs/commit/2f66b17))
+
+
+### ❤️  Thank You
+
+- Adhityan K V @adhityan
+
 ## 0.1.8 (2024-10-21)
 
 Updated conflunece loader to leverage better caching and skip processing pages with no updates
