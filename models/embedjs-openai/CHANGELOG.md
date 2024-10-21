@@ -1,3 +1,7 @@
+## 0.1.8 (2024-10-21)
+
+This was a version bump only for embedjs-openai to align it with other projects, there were no code changes.
+
 ## 0.1.7 (2024-10-15)
 
 The OpenAI models were refactored to allow better support for Azure. New Azure specific models are now exposed.

@@ -78,7 +78,6 @@ async function createRelease(dryRun, version, generateChangelog) {
 
     if (generateChangelog) {
         await releaseChangelog({
-            firstRelease: true,
             versionData: projectsVersionData,
             version: workspaceVersion,
             verbose: true,

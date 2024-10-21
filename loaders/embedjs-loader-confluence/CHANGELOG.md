@@ -1,3 +1,7 @@
+## 0.1.8 (2024-10-21)
+
+Updated conflunece loader to leverage better caching and skip processing pages with no updates
+
 ## 0.1.7 (2024-10-15)
 
 This was a version bump only for embedjs-loader-confluence to align it with other projects, there were no code changes.
