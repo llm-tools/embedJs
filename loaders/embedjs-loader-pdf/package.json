@@ -1,10 +1,10 @@
 {
     "name": "@llm-tools/embedjs-loader-pdf",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "description": "PDF loader for embedjs",
     "dependencies": {
-        "@llm-tools/embedjs-interfaces": "0.1.8",
-        "@llm-tools/embedjs-utils": "0.1.8",
+        "@llm-tools/embedjs-interfaces": "0.1.9",
+        "@llm-tools/embedjs-utils": "0.1.9",
         "langchain": "^0.3.2",
         "md5": "^2.3.0",
         "office-text-extractor": "^3.0.3"

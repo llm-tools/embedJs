@@ -1,10 +1,10 @@
 {
     "name": "@llm-tools/embedjs-loader-confluence",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "description": "Confluence loader for embedjs",
     "dependencies": {
-        "@llm-tools/embedjs-interfaces": "0.1.8",
-        "@llm-tools/embedjs-loader-web": "0.1.8",
+        "@llm-tools/embedjs-interfaces": "0.1.9",
+        "@llm-tools/embedjs-loader-web": "0.1.9",
         "confluence.js": "^1.7.4",
         "debug": "^4.3.7",
         "md5": "^2.3.0"

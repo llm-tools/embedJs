@@ -7,7 +7,7 @@ import { LoaderList, LoaderChunk, UnfilteredLoaderChunk } from '../types.js';
 
 export abstract class BaseLoader<
     MetadataTemplate extends Record<string, string | number | boolean> = Record<string, string | number | boolean>,
-    CacheTemplate extends Record<string, unknown> = Record<string, null>,
+    CacheTemplate extends Record<string, unknown> = Record<string, unknown>,
 > extends EventEmitter {
     private static cache: Pick<
         BaseCache,
