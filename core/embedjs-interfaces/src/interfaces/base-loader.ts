@@ -6,8 +6,8 @@ import { BaseCache } from './base-cache.js';
 import { LoaderList, LoaderChunk, UnfilteredLoaderChunk } from '../types.js';
 
 export abstract class BaseLoader<
-    T extends Record<string, string | number | boolean> = Record<string, string | number | boolean>,
-    M extends Record<string, unknown> = Record<string, null>,
+    MetadataTemplate extends Record<string, string | number | boolean> = Record<string, string | number | boolean>,
+    CacheTemplate extends Record<string, unknown> = Record<string, null>,
 > extends EventEmitter {
     private static cache: Pick<
         BaseCache,
@@ -107,12 +107,12 @@ export abstract class BaseLoader<
         return BaseLoader.cache.loaderCustomHas(this.getCustomCacheKey(key));
     }
 
-    protected async getFromCache(key: string) {
+    protected async getFromCache(key: string): Promise<CacheTemplate> {
         if (!BaseLoader.cache) return null;
         return BaseLoader.cache.loaderCustomGet(this.getCustomCacheKey(key));
     }
 
-    protected async saveToCache(key: string, value: M) {
+    protected async saveToCache(key: string, value: CacheTemplate) {
         if (!BaseLoader.cache) return;
         await BaseLoader.cache.loaderCustomSet(this.getCustomCacheKey(key), value);
     }
@@ -122,7 +122,9 @@ export abstract class BaseLoader<
         return BaseLoader.cache.loaderCustomDelete(this.getCustomCacheKey(key));
     }
 
-    protected async loadIncrementalChunk(incrementalGenerator: AsyncGenerator<LoaderChunk<T>, void, void>) {
+    protected async loadIncrementalChunk(
+        incrementalGenerator: AsyncGenerator<LoaderChunk<MetadataTemplate>, void, void>,
+    ) {
         this.emit('incrementalChunkAvailable', incrementalGenerator);
     }
 
@@ -130,7 +132,7 @@ export abstract class BaseLoader<
      * This TypeScript function asynchronously processes chunks of data, cleans up the content,
      * calculates a content hash, and yields the modified chunks.
      */
-    public async *getChunks(): AsyncGenerator<LoaderChunk<T>, void, void> {
+    public async *getChunks(): AsyncGenerator<LoaderChunk<MetadataTemplate>, void, void> {
         const chunks = await this.getUnfilteredChunks();
 
         for await (const chunk of chunks) {
@@ -148,5 +150,5 @@ export abstract class BaseLoader<
         }
     }
 
-    abstract getUnfilteredChunks(): AsyncGenerator<UnfilteredLoaderChunk<T>, void, void>;
+    abstract getUnfilteredChunks(): AsyncGenerator<UnfilteredLoaderChunk<MetadataTemplate>, void, void>;
 }

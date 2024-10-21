@@ -1,4 +1,3 @@
-import { Content } from 'confluence.js/out/api/models/content.js';
 import { ConfluenceClient } from 'confluence.js';
 import createDebugMessages from 'debug';
 import md5 from 'md5';
@@ -6,7 +5,7 @@ import md5 from 'md5';
 import { BaseLoader } from '@llm-tools/embedjs-interfaces';
 import { WebLoader } from '@llm-tools/embedjs-loader-web';
 
-export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }> {
+export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, { version: number }> {
     private readonly debug = createDebugMessages('embedjs:loader:ConfluenceLoader');
 
     private readonly confluence: ConfluenceClient;
@@ -28,7 +27,12 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }> {
         chunkSize?: number;
         chunkOverlap?: number;
     }) {
-        super(`ConfluenceLoader_${md5(spaceNames.join(','))}`, { spaceNames }, chunkSize ?? 2000, chunkOverlap ?? 200);
+        super(
+            `ConfluenceLoader_${md5(spaceNames.sort().join(','))}`,
+            { spaceNames },
+            chunkSize ?? 2000,
+            chunkOverlap ?? 200,
+        );
 
         this.spaceNames = spaceNames;
         this.confluenceBaseUrl = confluenceBaseUrl ?? process.env.CONFLUENCE_BASE_URL;
@@ -46,56 +50,116 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }> {
 
     override async *getUnfilteredChunks() {
         for (const spaceKey of this.spaceNames) {
-            try {
-                const spaceContent = await this.confluence.space.getContentForSpace({ spaceKey });
-                this.debug(
-                    `Confluence space (length ${spaceContent['page'].results.length}) obtained for space`,
-                    spaceKey,
-                );
-
-                for await (const result of this.getContentChunks(spaceContent['page'].results)) {
-                    yield result;
-                }
-            } catch (e) {
-                this.debug('Could not get space details', spaceKey, e);
-                continue;
+            for await (const result of this.processSpace(spaceKey)) {
+                yield result;
             }
         }
     }
 
-    private async *getContentChunks(contentArray: Content[]) {
-        for (const { id } of contentArray) {
-            const content = await this.confluence.content.getContentById({
-                id: id,
-                expand: ['body', 'children.page', 'body.view'],
-            });
+    private async *processSpace(spaceKey: string) {
+        this.debug('Processing space', spaceKey);
+        try {
+            const spaceContent = await this.confluence.space.getContentForSpace({ spaceKey });
+            this.debug(`Confluence space '${spaceKey}' has '${spaceContent['page'].results.length}' root pages`);
 
-            if (!content.body.view.value) continue;
-            const webLoader = new WebLoader({
-                urlOrContent: content.body.view.value,
-                chunkSize: this.chunkSize,
-                chunkOverlap: this.chunkOverlap,
-            });
-
-            for await (const result of await webLoader.getUnfilteredChunks()) {
-                //remove all types of empty brackets from string
-                // eslint-disable-next-line no-useless-escape
-                result.pageContent = result.pageContent.replace(/[\[\]\(\)\{\}]/g, '');
-
-                yield {
-                    pageContent: result.pageContent,
-                    metadata: {
-                        type: 'ConfluenceLoader' as const,
-                        source: `${this.confluenceBaseUrl}/wiki${content._links.webui}`,
-                    },
-                };
-            }
-
-            if (content.children) {
-                for await (const result of this.getContentChunks(content.children.page.results)) {
+            for (const { id } of spaceContent['page'].results) {
+                for await (const result of this.processPage(id, spaceKey)) {
                     yield result;
                 }
             }
+        } catch (e) {
+            this.debug('Could not get space details', spaceKey, e);
+            return;
+        }
+    }
+
+    private async *processPage(pageId: string, spaceKey: string) {
+        let confluenceVersion = 0;
+        try {
+            const spaceProperties = await this.confluence.spaceProperties.getSpaceProperty({
+                spaceKey,
+                key: pageId,
+                expand: ['version'],
+            });
+
+            if (!spaceProperties.version.number) throw new Error('Version number not found in space properties...');
+            confluenceVersion = spaceProperties.version.number;
+        } catch (e) {
+            this.debug('Could not get space properties. Page will be SKIPPED...', pageId, e);
+            return;
+        }
+
+        let doProcess = false;
+        if (!this.checkInCache(pageId)) {
+            this.debug(`Processing '${pageId}' in space '${spaceKey}' for the FIRST time...`);
+            doProcess = true;
+        } else {
+            const cacheVersion = (await this.getFromCache(pageId)).version;
+            if (cacheVersion !== confluenceVersion) {
+                this.debug(
+                    `For page '${pageId}' - version in cache is ${cacheVersion} and confluence version is ${confluenceVersion}. This page will be PROCESSED.`,
+                );
+                doProcess = true;
+            } else
+                this.debug(
+                    `For page '${pageId}' - version in cache and confluence are the same ${confluenceVersion}. This page will be SKIPPED.`,
+                );
+        }
+
+        if (!doProcess) {
+            this.debug(`Skipping page '${pageId}' in space '${spaceKey}'`);
+            return;
+        }
+
+        try {
+            const content = await this.confluence.content.getContentById({
+                id: pageId,
+                expand: ['body', 'children.page', 'body.view'],
+            });
+
+            if (!content.body.view.value) {
+                this.debug(`Page '${pageId}' in space '${spaceKey}' has empty content. Skipping...`);
+                return;
+            }
+
+            for await (const result of this.getContentChunks(content.body.view.value, content._links.webui)) {
+                yield result;
+            }
+
+            await this.saveToCache(pageId, { version: confluenceVersion });
+
+            if (content.children) {
+                for (const { id } of content.children.page.results) {
+                    for await (const result of this.processPage(id, spaceKey)) {
+                        yield result;
+                    }
+                }
+            }
+        } catch (e) {
+            this.debug('Error! Could not process page content or children', pageId, e);
+            return;
+        }
+    }
+
+    private async *getContentChunks(pageBody: string, pageUrl: string) {
+        const webLoader = new WebLoader({
+            urlOrContent: pageBody,
+            chunkSize: this.chunkSize,
+            chunkOverlap: this.chunkOverlap,
+        });
+
+        for await (const result of await webLoader.getUnfilteredChunks()) {
+            //remove all types of empty brackets from string
+            // eslint-disable-next-line no-useless-escape
+            result.pageContent = result.pageContent.replace(/[\[\]\(\)\{\}]/g, '');
+
+            yield {
+                pageContent: result.pageContent,
+                metadata: {
+                    type: 'ConfluenceLoader' as const,
+                    source: `${this.confluenceBaseUrl}/wiki${pageUrl}`,
+                },
+            };
         }
     }
 }
