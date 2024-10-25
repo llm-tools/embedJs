@@ -1,3 +1,7 @@
+## 0.1.10 (2024-10-25)
+
+This was a version bump only for embedjs-interfaces to align it with other projects, there were no code changes.
+
 ## 0.1.9 (2024-10-21)
 
 This fixes a type bug in the base loader interface.
