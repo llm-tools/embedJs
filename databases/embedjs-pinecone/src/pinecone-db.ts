@@ -22,6 +22,7 @@ export class PineconeDb implements BaseDb {
         namespace: string;
         indexSpec: CreateIndexSpec;
     }) {
+        if (!process.env.PINECONE_API_KEY) throw new Error('PINECONE_API_KEY environment variable must be set!');
         this.client = new Pinecone();
 
         this.projectName = projectName;
@@ -98,7 +99,7 @@ export class PineconeDb implements BaseDb {
             return true;
         } catch {
             this.debug(
-                `Failed to delete keys for loader '${uniqueLoaderId}'. 
+                `Failed to delete keys for loader '${uniqueLoaderId}'.
 Pinecone does not allow deleting by metadata filtering in serverless and free (what they call starter) instances`,
             );
             return false;
