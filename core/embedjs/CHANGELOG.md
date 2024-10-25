@@ -1,6 +1,7 @@
 ## 0.1.10 (2024-10-25)
 
-This was a version bump only for embedjs to align it with other projects, there were no code changes.
+-   The library now shows more informative errors when embedding model is not set
+-   OpenAI 4o model is now used as default when no model is specified
 
 ## 0.1.9 (2024-10-21)
 

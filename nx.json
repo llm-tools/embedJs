@@ -42,6 +42,7 @@
         "changelog": {
             "projectChangelogs": {
                 "renderOptions": {
+                    "authors": false,
                     "commitReferences": true
                 }
             },
@@ -49,6 +50,7 @@
                 "file": false,
                 "createRelease": "github",
                 "renderOptions": {
+                    "authors": false,
                     "commitReferences": true
                 }
             }
@@ -57,7 +59,7 @@
             "preVersionCommand": "npm run build:pipeline",
             "generatorOptions": {
                 "currentVersionResolver": "registry",
-                "fallbackCurrentVersionResolver": "disk",
+                "fallbackCurrentVersionResolver": "github",
                 "packageRoot": "dist/esm/{projectName}"
             }
         }
