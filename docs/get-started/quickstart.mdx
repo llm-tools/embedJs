@@ -77,8 +77,8 @@ const ragApplication = await new RAGApplicationBuilder()
 .setVectorDb(new HNSWDb())
 .build();
 
-ragApplication.addLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-musk' })
-ragApplication.addLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Elon_Musk' })
+ragApplication.addLoader(new WebLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-musk' }));
+ragApplication.addLoader(new WebLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Elon_Musk' }));
 
 await ragApplication.query('What is the net worth of Elon Musk today?')
 //Answer: The net worth of Elon Musk today is $258.7 billion.
