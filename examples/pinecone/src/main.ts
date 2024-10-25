@@ -1,16 +1,18 @@
 import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAiEmbeddings } from '@llm-tools/embedjs-openai';
+import { WebLoader } from '@llm-tools/embedjs-loader-web';
 import { PineconeDb } from '@llm-tools/embedjs-pinecone';
-import { WebLoader } from 'loaders/embedjs-loader-web/src/web-loader.js';
 
 const llmApplication = await new RAGApplicationBuilder()
+    .setEmbeddingModel(new OpenAiEmbeddings())
     .setVectorDb(
         new PineconeDb({
             projectName: 'test',
             namespace: 'dev',
             indexSpec: {
-                pod: {
-                    podType: 'p1.x1',
-                    environment: 'us-east1-gcp',
+                serverless: {
+                    cloud: 'aws',
+                    region: 'us-east-1',
                 },
             },
         }),
@@ -18,5 +20,4 @@ const llmApplication = await new RAGApplicationBuilder()
     .build();
 
 await llmApplication.addLoader(new WebLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Tesla,_Inc.' }));
-
 console.log(await llmApplication.query('Who founded Tesla?'));

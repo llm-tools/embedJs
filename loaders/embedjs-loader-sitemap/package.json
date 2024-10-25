@@ -7,7 +7,7 @@
         "@llm-tools/embedjs-loader-web": "0.1.9",
         "debug": "^4.3.7",
         "md5": "^2.3.0",
-        "sitemapper": "^3.2.12"
+        "sitemapper": "^3.2.14"
     },
     "type": "module",
     "main": "./src/index.js",

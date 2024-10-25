@@ -5,7 +5,7 @@
     "dependencies": {
         "@llm-tools/embedjs-interfaces": "0.1.9",
         "@llm-tools/embedjs-utils": "0.1.9",
-        "langchain": "^0.3.2",
+        "langchain": "^0.3.4",
         "md5": "^2.3.0",
         "office-text-extractor": "^3.0.3"
     },

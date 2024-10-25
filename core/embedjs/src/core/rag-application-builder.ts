@@ -17,6 +17,7 @@ export class RAGApplicationBuilder {
         this.loaders = [];
         this.temperature = 0.1;
         this.searchResultCount = 7;
+        this.model = SIMPLE_MODELS.OPENAI_GPT4_TURBO;
 
         this.queryTemplate = `You are a helpful human like chat bot. Use relevant provided context and chat history to answer the query at the end. Answer in full.
         If you don't know the answer, just say that you don't know, don't try to make up an answer.

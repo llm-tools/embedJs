@@ -28,6 +28,8 @@ export class RAGApplication {
     private model: BaseModel;
 
     constructor(llmBuilder: RAGApplicationBuilder) {
+        if (!llmBuilder.getEmbeddingModel()) throw new Error('Embedding model must be set!');
+
         this.cache = llmBuilder.getCache();
         BaseLoader.setCache(this.cache);
         BaseModel.setCache(this.cache);
