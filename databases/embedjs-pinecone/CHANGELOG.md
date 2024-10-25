@@ -1,3 +1,7 @@
+## 0.1.10 (2024-10-25)
+
+-   bumped pinecone library version to 4.x
+
 ## 0.1.9 (2024-10-21)
 
 This was a version bump only for embedjs-pinecone to align it with other projects, there were no code changes.

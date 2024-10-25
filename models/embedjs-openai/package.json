@@ -1,11 +1,11 @@
 {
     "name": "@llm-tools/embedjs-openai",
-    "version": "0.1.9",
+    "version": "0.1.10",
     "description": "Enable usage of OpenAI models with embedjs",
     "dependencies": {
         "@langchain/core": "^0.3.15",
         "@langchain/openai": "^0.3.11",
-        "@llm-tools/embedjs-interfaces": "0.1.9",
+        "@llm-tools/embedjs-interfaces": "0.1.10",
         "debug": "^4.3.7"
     },
     "type": "module",
