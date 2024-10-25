@@ -45,7 +45,7 @@ new MongoDb({
 .build();
 
 //add data source and start query in
-await app.add("https://www.forbes.com/profile/elon-musk");
+await app.addLoader(new WebLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-musk' }));
 await app.query('Tell me about Elon Musk');
 ```
 </CodeGroup>
