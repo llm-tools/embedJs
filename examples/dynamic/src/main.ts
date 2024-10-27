@@ -10,6 +10,6 @@ const llmApplication = await new RAGApplicationBuilder()
     .setSearchResultCount(30)
     .build();
 
-await llmApplication.addLoader(new UrlLoader({ url: 'https://github.com/axios/axios#request-config' }));
+await llmApplication.addLoader(new UrlLoader({ url: 'https://en.wikipedia.org/wiki/Tesla,_Inc.' }));
 
 console.log(await llmApplication.query('Who founded Tesla?'));

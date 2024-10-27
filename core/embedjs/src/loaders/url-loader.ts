@@ -1,10 +1,9 @@
 import { getMimeType } from 'stream-mime-type';
 import createDebugMessages from 'debug';
-import axios from 'axios';
 import md5 from 'md5';
 
+import { contentTypeToMimeType, truncateCenterString } from '@llm-tools/embedjs-utils';
 import { BaseLoader } from '@llm-tools/embedjs-interfaces';
-import { truncateCenterString } from '@llm-tools/embedjs-utils';
 import { createLoaderFromMimeType } from '../util/mime.js';
 
 export class UrlLoader extends BaseLoader<{ type: 'UrlLoader' }> {
@@ -18,22 +17,29 @@ export class UrlLoader extends BaseLoader<{ type: 'UrlLoader' }> {
     }
 
     override async *getUnfilteredChunks() {
-        const response = await axios.get(this.url.href, {
-            responseType: 'stream',
-        });
-        const { mime } = await getMimeType(response.data, { strict: true });
-        this.debug(`Loader type detected as '${mime}'`);
-        response.data.destroy();
+        const response = await fetch(this.url, { headers: { 'Accept-Encoding': '' } });
+        const stream = response.body as unknown as NodeJS.ReadableStream;
+        let { mime } = await getMimeType(stream, { strict: true });
+        this.debug(`Loader stream detected type '${mime}'`);
 
-        const loader = await createLoaderFromMimeType(this.url.href, mime);
-        for await (const result of await loader.getUnfilteredChunks()) {
-            yield {
-                pageContent: result.pageContent,
-                metadata: {
-                    type: <const>'UrlLoader',
-                    source: this.url.href,
-                },
-            };
+        if (!mime) {
+            mime = contentTypeToMimeType(response.headers.get('content-type'));
+            this.debug(`Using type '${mime}' from content-type header`);
+        }
+
+        try {
+            const loader = await createLoaderFromMimeType(this.url.href, mime);
+            for await (const result of await loader.getUnfilteredChunks()) {
+                yield {
+                    pageContent: result.pageContent,
+                    metadata: {
+                        type: <const>'UrlLoader',
+                        source: this.url.href,
+                    },
+                };
+            }
+        } catch (err) {
+            this.debug(`Error creating loader for mime type '${mime}'`, err);
         }
     }
 }
