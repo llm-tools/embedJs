@@ -11,7 +11,7 @@
     "scripts": {
         "build:esm": "nx run-many --t=build",
         "build:cjs": "nx run-many --t=build-cjs && node scripts/move-cjs-to-dist.js",
-        "build:ci": "nx affected -t=build --base=origin/main --head=$PR_BRANCH_NAME",
+        "build:ci": "nx run-many --t=build",
         "build:pipeline": "npm run build:esm && npm run build:cjs",
         "deploy": "node scripts/publish-via-nx.js",
         "prepare": "husky"
