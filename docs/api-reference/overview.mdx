@@ -36,7 +36,7 @@ Create a EmbedJs `RAGApplication` using `RAGApplicationBuilder`. `RAGApplication
     Documents below this cut off are not discarded. EmbedJs uses sane defaults for this parameter but you can customize.
 </ParamField>
 <ParamField path="setQueryTemplate" type="string">
-    This allows you to customize the query template used when querying the LLM.
+    This allows you to customize the system message used when querying the LLM. The system message is included with every call to the LLM besides the user query and chat history.
 </ParamField>
 
 ## Usage

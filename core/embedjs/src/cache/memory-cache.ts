@@ -20,7 +20,7 @@ export class MemoryCache implements BaseCache {
     }
 
     async hasLoader(loaderId: string): Promise<boolean> {
-        return this.loaderList.hasOwnProperty(loaderId);
+        return !!this.loaderList[loaderId];
     }
 
     async loaderCustomSet<T extends Record<string, unknown>>(loaderCombinedId: string, value: T): Promise<void> {
@@ -32,7 +32,7 @@ export class MemoryCache implements BaseCache {
     }
 
     async loaderCustomHas(loaderCombinedId: string): Promise<boolean> {
-        return this.loaderCustomValues.hasOwnProperty(loaderCombinedId);
+        return !!this.loaderCustomValues[loaderCombinedId];
     }
 
     async deleteLoader(loaderId: string): Promise<void> {

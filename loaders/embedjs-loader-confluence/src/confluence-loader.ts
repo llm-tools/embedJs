@@ -50,9 +50,14 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
 
     override async *getUnfilteredChunks() {
         for (const spaceKey of this.spaceNames) {
+            let count = 0;
+
             for await (const result of this.processSpace(spaceKey)) {
                 yield result;
+                count++;
             }
+
+            this.debug(`Space '${spaceKey}' had ${count} new pages`);
         }
     }
 
@@ -63,7 +68,7 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
             this.debug(`Confluence space '${spaceKey}' has '${spaceContent['page'].results.length}' root pages`);
 
             for (const { id } of spaceContent['page'].results) {
-                for await (const result of this.processPage(id, spaceKey)) {
+                for await (const result of this.processPage(id)) {
                     yield result;
                 }
             }
@@ -73,25 +78,24 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
         }
     }
 
-    private async *processPage(pageId: string, spaceKey: string) {
+    private async *processPage(pageId: string) {
         let confluenceVersion = 0;
         try {
-            const spaceProperties = await this.confluence.spaceProperties.getSpaceProperty({
-                spaceKey,
-                key: pageId,
+            const spaceProperties = await this.confluence.content.getContentById({
+                id: pageId,
                 expand: ['version'],
             });
 
             if (!spaceProperties.version.number) throw new Error('Version number not found in space properties...');
             confluenceVersion = spaceProperties.version.number;
         } catch (e) {
-            this.debug('Could not get space properties. Page will be SKIPPED...', pageId, e);
+            this.debug('Could not get page properties. Page will be SKIPPED!', pageId, e.response);
             return;
         }
 
         let doProcess = false;
-        if (!this.checkInCache(pageId)) {
-            this.debug(`Processing '${pageId}' in space '${spaceKey}' for the FIRST time...`);
+        if (!(await this.checkInCache(pageId))) {
+            this.debug(`Processing '${pageId}' for the FIRST time...`);
             doProcess = true;
         } else {
             const cacheVersion = (await this.getFromCache(pageId)).version;
@@ -107,7 +111,7 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
         }
 
         if (!doProcess) {
-            this.debug(`Skipping page '${pageId}' in space '${spaceKey}'`);
+            this.debug(`Skipping page '${pageId}'`);
             return;
         }
 
@@ -118,7 +122,7 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
             });
 
             if (!content.body.view.value) {
-                this.debug(`Page '${pageId}' in space '${spaceKey}' has empty content. Skipping...`);
+                this.debug(`Page '${pageId}' has empty content. Skipping...`);
                 return;
             }
 
@@ -130,7 +134,7 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
 
             if (content.children) {
                 for (const { id } of content.children.page.results) {
-                    for await (const result of this.processPage(id, spaceKey)) {
+                    for await (const result of this.processPage(id)) {
                         yield result;
                     }
                 }

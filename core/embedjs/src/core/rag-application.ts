@@ -21,7 +21,7 @@ export class RAGApplication {
     private readonly debug = createDebugMessages('embedjs:core');
     private readonly embeddingRelevanceCutOff: number;
     private readonly searchResultCount: number;
-    private readonly queryTemplate: string;
+    private readonly systemMessage: string;
     private readonly cache: BaseCache;
     private readonly vectorDb: BaseDb;
     private loaders: BaseLoader[];
@@ -34,8 +34,8 @@ export class RAGApplication {
         BaseLoader.setCache(this.cache);
         BaseModel.setCache(this.cache);
 
-        this.queryTemplate = cleanString(llmBuilder.getQueryTemplate());
-        this.debug(`Using system query template - "${this.queryTemplate}"`);
+        this.systemMessage = cleanString(llmBuilder.getSystemMessage());
+        this.debug(`Using system query template - "${this.systemMessage}"`);
 
         this.vectorDb = llmBuilder.getVectorDb();
         if (!this.vectorDb) throw new SyntaxError('VectorDb not set');
@@ -387,6 +387,6 @@ export class RAGApplication {
             `Query resulted in ${context.length} chunks after filteration; chunks from ${sources.length} unique sources.`,
         );
 
-        return this.model.query(this.queryTemplate, userQuery, context, options?.conversationId);
+        return this.model.query(this.systemMessage, userQuery, context, options?.conversationId);
     }
 }
