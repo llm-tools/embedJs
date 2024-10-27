@@ -8,7 +8,7 @@ export class RAGApplicationBuilder {
     private loaders: BaseLoader[];
     private vectorDb: BaseDb;
     private cache: BaseCache;
-    private queryTemplate: string;
+    private systemMessage: string;
     private searchResultCount: number;
     private embeddingModel: BaseEmbeddings;
     private embeddingRelevanceCutOff: number;
@@ -19,7 +19,7 @@ export class RAGApplicationBuilder {
         this.searchResultCount = 7;
         this.model = SIMPLE_MODELS.OPENAI_GPT4_TURBO;
 
-        this.queryTemplate = `You are a helpful human like chat bot. Use relevant provided context and chat history to answer the query at the end. Answer in full.
+        this.systemMessage = `You are a helpful human like chat bot. Use relevant provided context and chat history to answer the query at the end. Answer in full.
         If you don't know the answer, just say that you don't know, don't try to make up an answer.
 
         Do not use words like context or training data when responding. You can say you do not have all the information but do not indicate that you are not a reliable source.`;
@@ -75,11 +75,8 @@ export class RAGApplicationBuilder {
         return this;
     }
 
-    setQueryTemplate(queryTemplate: string) {
-        // if (!queryTemplate.includes('{0}'))
-        //     throw new Error('queryTemplate must include a placeholder for the query using {0}');
-
-        this.queryTemplate = queryTemplate;
+    setSystemMessage(systemMessage: string) {
+        this.systemMessage = systemMessage;
         return this;
     }
 
@@ -124,8 +121,8 @@ export class RAGApplicationBuilder {
         return this.embeddingRelevanceCutOff;
     }
 
-    getQueryTemplate() {
-        return this.queryTemplate;
+    getSystemMessage() {
+        return this.systemMessage;
     }
 
     getCache() {
