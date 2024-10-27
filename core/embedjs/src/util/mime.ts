@@ -78,8 +78,10 @@ export async function createLoaderFromMimeType(loader: string, mimeType: string)
             if (await SitemapLoader.test(loader)) {
                 return new SitemapLoader({ url: loader });
             }
-            throw new Error(`No processor found for generic xml`);
+            throw new Error(`No loader supported for generic xml`);
         }
+        case undefined:
+            throw new Error(`MIME type could not be detected. Please file an issue if you think this is a bug.`);
         default:
             throw new Error(`Unknown mime type '${mimeType}'`);
     }

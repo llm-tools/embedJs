@@ -1,4 +1,4 @@
-import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
+import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 import { YoutubeTranscript } from 'youtube-transcript';
 import createDebugMessages from 'debug';
 import md5 from 'md5';

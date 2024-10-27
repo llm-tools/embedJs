@@ -9,6 +9,7 @@
         "axios": "^1.7.7",
         "debug": "^4.3.7",
         "langchain": "^0.3.4",
+        "@langchain/textsplitters": "^0.1.0",
         "md5": "^2.3.0",
         "mime": "^4.0.4",
         "stream-mime-type": "^2.0.0"
@@ -16,7 +17,7 @@
     "devDependencies": {
         "@types/debug": "^4.1.12",
         "@types/md5": "^2.3.5",
-        "@types/node": "^22.8.0"
+        "@types/node": "^22.8.1"
     },
     "main": "./src/index.js",
     "license": "Apache-2.0",

@@ -1,0 +1,58 @@
+{
+    "name": "examples-dynamic",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "examples/dynamic/src",
+    "projectType": "application",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/esbuild:esbuild",
+            "outputs": ["{options.outputPath}"],
+            "defaultConfiguration": "development",
+            "options": {
+                "platform": "node",
+                "outputPath": "dist/examples/dynamic",
+                "format": ["esm"],
+                "bundle": true,
+                "main": "examples/dynamic/src/main.ts",
+                "tsConfig": "examples/dynamic/tsconfig.app.json",
+                "assets": ["examples/dynamic/src/assets"],
+                "generatePackageJson": false,
+                "esbuildOptions": {
+                    "sourcemap": true,
+                    "outExtension": {
+                        ".js": ".js"
+                    }
+                }
+            },
+            "configurations": {
+                "development": {},
+                "production": {
+                    "esbuildOptions": {
+                        "sourcemap": false,
+                        "outExtension": {
+                            ".js": ".js"
+                        }
+                    }
+                }
+            }
+        },
+        "serve": {
+            "executor": "@nx/js:node",
+            "defaultConfiguration": "development",
+            "dependsOn": ["build"],
+            "options": {
+                "buildTarget": "examples-dynamic:build",
+                "runBuildTargetDependencies": true
+            },
+            "configurations": {
+                "development": {
+                    "buildTarget": "examples-dynamic:build:development"
+                },
+                "production": {
+                    "buildTarget": "examples-dynamic:build:production"
+                }
+            }
+        }
+    }
+}

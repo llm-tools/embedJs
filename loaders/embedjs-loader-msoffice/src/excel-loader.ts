@@ -1,4 +1,4 @@
-import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
+import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 import { getTextExtractor } from 'office-text-extractor';
 import md5 from 'md5';
 import { BaseLoader } from '@llm-tools/embedjs-interfaces';

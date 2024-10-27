@@ -9,27 +9,29 @@ import { createLoaderFromMimeType } from '../util/mime.js';
 
 export class UrlLoader extends BaseLoader<{ type: 'UrlLoader' }> {
     private readonly debug = createDebugMessages('embedjs:loader:UrlLoader');
-    private readonly url: string;
+    private readonly url: URL;
 
     constructor({ url }: { url: string }) {
         super(`UrlLoader_${md5(url)}`, { url: truncateCenterString(url, 50) });
-        this.url = url;
+        this.url = new URL(url);
+        this.debug(`UrlLoader verified '${url}' is a valid URL!`);
     }
 
     override async *getUnfilteredChunks() {
-        this.debug('Loader is a valid URL!');
-        const stream = (await axios.get(this.url, { responseType: 'stream' })).data;
-        const { mime } = await getMimeType(stream);
+        const response = await axios.get(this.url.href, {
+            responseType: 'stream',
+        });
+        const { mime } = await getMimeType(response.data, { strict: true });
         this.debug(`Loader type detected as '${mime}'`);
-        stream.destroy();
+        response.data.destroy();
 
-        const loader = await createLoaderFromMimeType(this.url, mime);
+        const loader = await createLoaderFromMimeType(this.url.href, mime);
         for await (const result of await loader.getUnfilteredChunks()) {
             yield {
                 pageContent: result.pageContent,
                 metadata: {
                     type: <const>'UrlLoader',
-                    source: this.url,
+                    source: this.url.href,
                 },
             };
         }
