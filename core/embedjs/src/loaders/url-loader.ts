@@ -1,37 +1,45 @@
 import { getMimeType } from 'stream-mime-type';
 import createDebugMessages from 'debug';
-import axios from 'axios';
 import md5 from 'md5';
 
+import { contentTypeToMimeType, truncateCenterString } from '@llm-tools/embedjs-utils';
 import { BaseLoader } from '@llm-tools/embedjs-interfaces';
-import { truncateCenterString } from '@llm-tools/embedjs-utils';
 import { createLoaderFromMimeType } from '../util/mime.js';
 
 export class UrlLoader extends BaseLoader<{ type: 'UrlLoader' }> {
     private readonly debug = createDebugMessages('embedjs:loader:UrlLoader');
-    private readonly url: string;
+    private readonly url: URL;
 
     constructor({ url }: { url: string }) {
         super(`UrlLoader_${md5(url)}`, { url: truncateCenterString(url, 50) });
-        this.url = url;
+        this.url = new URL(url);
+        this.debug(`UrlLoader verified '${url}' is a valid URL!`);
     }
 
     override async *getUnfilteredChunks() {
-        this.debug('Loader is a valid URL!');
-        const stream = (await axios.get(this.url, { responseType: 'stream' })).data;
-        const { mime } = await getMimeType(stream);
-        this.debug(`Loader type detected as '${mime}'`);
-        stream.destroy();
+        const response = await fetch(this.url, { headers: { 'Accept-Encoding': '' } });
+        const stream = response.body as unknown as NodeJS.ReadableStream;
+        let { mime } = await getMimeType(stream, { strict: true });
+        this.debug(`Loader stream detected type '${mime}'`);
 
-        const loader = await createLoaderFromMimeType(this.url, mime);
-        for await (const result of await loader.getUnfilteredChunks()) {
-            yield {
-                pageContent: result.pageContent,
-                metadata: {
-                    type: <const>'UrlLoader',
-                    source: this.url,
-                },
-            };
+        if (!mime) {
+            mime = contentTypeToMimeType(response.headers.get('content-type'));
+            this.debug(`Using type '${mime}' from content-type header`);
+        }
+
+        try {
+            const loader = await createLoaderFromMimeType(this.url.href, mime);
+            for await (const result of await loader.getUnfilteredChunks()) {
+                yield {
+                    pageContent: result.pageContent,
+                    metadata: {
+                        type: <const>'UrlLoader',
+                        source: this.url.href,
+                    },
+                };
+            }
+        } catch (err) {
+            this.debug(`Error creating loader for mime type '${mime}'`, err);
         }
     }
 }

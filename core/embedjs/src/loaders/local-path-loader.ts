@@ -39,14 +39,18 @@ export class LocalPathLoader extends BaseLoader<{ type: 'LocalPathLoader' }> {
             this.debug(`File '${this.path}' has mime type '${mime}'`);
             stream.destroy();
 
-            const loader = await createLoaderFromMimeType(currentPath, mime);
-            for await (const result of await loader.getUnfilteredChunks()) {
-                yield {
-                    pageContent: result.pageContent,
-                    metadata: {
-                        source: currentPath,
-                    },
-                };
+            try {
+                const loader = await createLoaderFromMimeType(currentPath, mime);
+                for await (const result of await loader.getUnfilteredChunks()) {
+                    yield {
+                        pageContent: result.pageContent,
+                        metadata: {
+                            source: currentPath,
+                        },
+                    };
+                }
+            } catch (err) {
+                this.debug(`Error creating loader for mime type '${mime}'`, err);
             }
         } else {
             const files = fs.readdirSync(currentPath);

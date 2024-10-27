@@ -9,3 +9,9 @@ export async function stream2buffer(stream: Stream): Promise<Buffer> {
         stream.on('error', (err) => reject(`error converting stream - ${err}`));
     });
 }
+
+export function contentTypeToMimeType(contentType: string) {
+    if (!contentType) return contentType;
+    if (contentType.includes(';')) return contentType.split(';')[0];
+    else return contentType;
+}

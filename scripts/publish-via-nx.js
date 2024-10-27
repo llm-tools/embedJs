@@ -1,3 +1,4 @@
+import { simpleGit, CleanOptions } from 'simple-git';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { existsSync } from 'node:fs';
@@ -58,31 +59,45 @@ async function updatePackageVersion(pkgName, version, versionMap, dryRun) {
     if (!found) console.error(`Could not find '${pkgName}' in any of the folders`);
 }
 
-async function createRelease(dryRun, version, generateChangelog) {
+async function createRelease(dryRun, version, makeGitCommit) {
+    console.log('Running nx release');
     const { workspaceVersion, projectsVersionData } = await releaseVersion({
+        gitTag: false,
+        gitCommit: false,
         specifier: version,
         verbose: true,
         dryRun,
     });
 
     const versionMap = new Map();
+    console.log('Computing nx release version map');
     for (const [pkgName, { newVersion }] of Object.entries(projectsVersionData)) {
         versionMap.set(`@llm-tools/${pkgName}`, newVersion);
     }
 
-    console.log('Updating projects actual version to match NX computed values in dist');
+    console.log('Updating projects actual version to match NX computed values');
     for await (const [pkgName, { newVersion }] of Object.entries(projectsVersionData)) {
         if (newVersion !== null) await updatePackageVersion(pkgName, newVersion, versionMap, dryRun);
         else console.log(`Skipping '${pkgName}' version update as it's already up to date`);
     }
 
-    if (generateChangelog) {
-        await releaseChangelog({
-            versionData: projectsVersionData,
-            version: workspaceVersion,
-            verbose: true,
-            dryRun,
-        });
+    console.log('Running nx changelog');
+    await releaseChangelog({
+        gitTag: false,
+        gitCommit: false,
+        createRelease: false,
+        versionData: projectsVersionData,
+        version: workspaceVersion,
+        verbose: true,
+        dryRun,
+    });
+
+    if (makeGitCommit) {
+        console.log('Committing changes');
+        const git = simpleGit().clean(CleanOptions.FORCE);
+
+        await git.add('.');
+        await git.commit(`chore(release): create release ${workspaceVersion}`);
     }
 
     process.exit(0);
@@ -92,17 +107,15 @@ async function startReleasePipeline() {
     const args = arg({
         // Types
         '--ci': Boolean,
-        '--dryRun': String,
         '--version': String,
 
         // Aliases
-        '-d': '--dryRun',
         '-v': '--version',
     });
 
-    const dryRun =
-        args['--dryRun'] ??
-        (args['--ci'] ? false : await confirm({ message: 'Is this a dry run?', default: true, required: true }));
+    const isCi = args['--ci'] ? true : false;
+    const dryRun = isCi ? false : await confirm({ message: 'Is this a dry run?', default: true, required: true });
+    const makeGitCommit = isCi ? false : !dryRun;
 
     let version = 'patch';
     if (!args['--version']) {
@@ -121,8 +134,7 @@ async function startReleasePipeline() {
         }
     } else version = args['--version'];
 
-    const generateChangelog = args['--ci'] ? false : true;
-    await createRelease(dryRun, version, generateChangelog);
+    await createRelease(dryRun, version, makeGitCommit);
 }
 
 await startReleasePipeline();

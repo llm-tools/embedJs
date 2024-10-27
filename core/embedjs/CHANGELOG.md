@@ -1,3 +1,8 @@
+## 0.1.11 (2024-10-27)
+
+-   Improved URL Loader to better detect dynamic content mime type
+-   Url and Local path loaders do not throw an exception when a loader is missing. Only logs will be emitted.
+
 ## 0.1.10 (2024-10-25)
 
 -   The library now shows more informative errors when embedding model is not set

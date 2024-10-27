@@ -1,4 +1,4 @@
-import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
+import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 import createDebugMessages from 'debug';
 import { convert } from 'html-to-text';
 import axios from 'axios';
