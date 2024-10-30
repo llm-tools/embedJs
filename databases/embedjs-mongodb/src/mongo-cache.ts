@@ -99,20 +99,12 @@ export class MongoCache implements BaseCache {
     }
 
     async addConversation(conversationId: string): Promise<void> {
-        // Check if conversation already exists to prevent duplication
-        const exists = await this.hasConversation(conversationId);
-        if (!exists) {
-            await this.conversationCollection.insertOne({ conversationId, entries: [] });
-        }
+        await this.conversationCollection.insertOne({ conversationId, entries: [] });
     }
 
     async getConversation(conversationId: string): Promise<Conversation> {
         const document = await this.conversationCollection.findOne({ conversationId });
-        if (!document) {
-            // If not found, create a new one automatically
-            await this.addConversation(conversationId);
-            return { conversationId, entries: [] };
-        }
+
         return {
             conversationId: document.conversationId,
             entries: document.entries as Message[],
