@@ -50,12 +50,7 @@ export class MemoryCache implements BaseCache {
     }
 
     async getConversation(conversationId: string): Promise<Conversation> {
-        if (!this.conversations.has(conversationId)) {
-            // Automatically create a new conversation if it does not exist
-            this.conversations.set(conversationId, { conversationId, entries: [] });
-        }
-
-        return this.conversations.get(conversationId)!;
+        return this.conversations.get(conversationId);
     }
 
     async hasConversation(conversationId: string): Promise<boolean> {

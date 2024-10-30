@@ -67,6 +67,7 @@ export class LmdbCache implements BaseCache {
     async addEntryToConversation(conversationId: string, entry: Message): Promise<void> {
         const conversation = await this.getConversation(`conversation_${conversationId}`);
         conversation.entries.push(entry);
+
         await this.database.put(`conversation_${conversationId}`, conversation);
     }
 

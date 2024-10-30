@@ -1,3 +1,7 @@
+## 0.1.13 (2024-10-30)
+
+A small update made to how conversations are handled
+
 ## 0.1.11 (2024-10-27)
 
 -   Improved URL Loader to better detect dynamic content mime type

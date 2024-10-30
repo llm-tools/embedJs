@@ -1,3 +1,7 @@
+## 0.1.13 (2024-10-30)
+
+Updated how BaseModel handles conversations.
+
 ## 0.1.11 (2024-10-27)
 
 This was a version bump only for embedjs-interfaces to align it with other projects, there were no code changes.

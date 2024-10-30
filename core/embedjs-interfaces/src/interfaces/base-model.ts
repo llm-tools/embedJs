@@ -80,6 +80,11 @@ export abstract class BaseModel {
         supportingContext: Chunk[],
         conversationId = 'default',
     ): Promise<QueryResponse> {
+        if (!(await BaseModel.cache.hasConversation(conversationId))) {
+            this.baseDebug(`Conversation with id '${conversationId}' is new`);
+            await BaseModel.cache.addConversation(conversationId);
+        }
+
         const conversation = await BaseModel.cache.getConversation(conversationId);
         this.baseDebug(`${conversation.entries.length} history entries found for conversationId '${conversationId}'`);
 
