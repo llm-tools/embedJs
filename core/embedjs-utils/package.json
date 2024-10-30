@@ -1,9 +1,9 @@
 {
     "name": "@llm-tools/embedjs-utils",
-    "version": "0.1.11",
+    "version": "0.1.13",
     "description": "Useful util functions when extending the embedjs ecosystem",
     "dependencies": {
-        "@llm-tools/embedjs-interfaces": "0.1.11"
+        "@llm-tools/embedjs-interfaces": "0.1.13"
     },
     "type": "module",
     "main": "./src/index.js",
