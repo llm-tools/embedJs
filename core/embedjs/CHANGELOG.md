@@ -1,6 +1,6 @@
 ## 0.1.13 (2024-10-30)
 
-This was a version bump only for embedjs to align it with other projects, there were no code changes.
+A small update made to how conversations are handled
 
 ## 0.1.11 (2024-10-27)
 
