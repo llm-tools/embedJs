@@ -19,6 +19,7 @@ import { cleanString, getUnique } from '@llm-tools/embedjs-utils';
 
 export class RAGApplication {
     private readonly debug = createDebugMessages('embedjs:core');
+    private readonly storeConversationsToDefaultThread: boolean;
     private readonly embeddingRelevanceCutOff: number;
     private readonly searchResultCount: number;
     private readonly systemMessage: string;
@@ -30,6 +31,7 @@ export class RAGApplication {
     constructor(llmBuilder: RAGApplicationBuilder) {
         if (!llmBuilder.getEmbeddingModel()) throw new Error('Embedding model must be set!');
 
+        this.storeConversationsToDefaultThread = llmBuilder.getParamStoreConversationsToDefaultThread();
         this.cache = llmBuilder.getCache();
         BaseLoader.setCache(this.cache);
         BaseModel.setCache(this.cache);
@@ -382,11 +384,16 @@ export class RAGApplication {
         let context = options?.customContext;
         if (!context) context = await this.search(userQuery);
 
+        let conversationId = options?.conversationId;
+        if (!conversationId && this.storeConversationsToDefaultThread) {
+            conversationId = 'default';
+        }
+
         const sources = [...new Set(context.map((chunk) => chunk.metadata.source))];
         this.debug(
             `Query resulted in ${context.length} chunks after filteration; chunks from ${sources.length} unique sources.`,
         );
 
-        return this.model.query(this.systemMessage, userQuery, context, options?.conversationId);
+        return this.model.query(this.systemMessage, userQuery, context, conversationId);
     }
 }

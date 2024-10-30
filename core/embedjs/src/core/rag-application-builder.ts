@@ -12,6 +12,7 @@ export class RAGApplicationBuilder {
     private searchResultCount: number;
     private embeddingModel: BaseEmbeddings;
     private embeddingRelevanceCutOff: number;
+    private storeConversationsToDefaultThread: boolean;
 
     constructor() {
         this.loaders = [];
@@ -24,6 +25,7 @@ export class RAGApplicationBuilder {
 
         Do not use words like context or training data when responding. You can say you do not have all the information but do not indicate that you are not a reliable source.`;
 
+        this.storeConversationsToDefaultThread = true;
         this.embeddingRelevanceCutOff = 0;
         this.cache = new MemoryCache();
     }
@@ -101,6 +103,15 @@ export class RAGApplicationBuilder {
         return this;
     }
 
+    /**
+     * The setParamStoreConversationsToDefaultThread configures whether the conversation hisotry for queries made
+     * without a conversationId passed should be stored in the default thread. This is set to True by default.
+     */
+    setParamStoreConversationsToDefaultThread(storeConversationsToDefaultThread: boolean) {
+        this.storeConversationsToDefaultThread = storeConversationsToDefaultThread;
+        return this;
+    }
+
     getLoaders() {
         return this.loaders;
     }
@@ -135,5 +146,9 @@ export class RAGApplicationBuilder {
 
     getModel() {
         return this.model;
+    }
+
+    getParamStoreConversationsToDefaultThread() {
+        return this.storeConversationsToDefaultThread;
     }
 }
