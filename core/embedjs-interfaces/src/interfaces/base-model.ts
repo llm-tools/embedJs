@@ -2,7 +2,7 @@ import { HumanMessage, AIMessage, SystemMessage } from '@langchain/core/messages
 import createDebugMessages from 'debug';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Chunk, QueryResponse, Message, SourceDetail, ModelResponse } from '../types.js';
+import { Chunk, QueryResponse, Message, SourceDetail, ModelResponse, Conversation } from '../types.js';
 import { BaseCache } from './base-cache.js';
 
 export abstract class BaseModel {
@@ -78,23 +78,32 @@ export abstract class BaseModel {
         system: string,
         userQuery: string,
         supportingContext: Chunk[],
-        conversationId = 'default',
+        conversationId?: string,
     ): Promise<QueryResponse> {
-        if (!(await BaseModel.cache.hasConversation(conversationId))) {
-            this.baseDebug(`Conversation with id '${conversationId}' is new`);
-            await BaseModel.cache.addConversation(conversationId);
+        let conversation: Conversation;
+
+        if (conversationId) {
+            if (!(await BaseModel.cache.hasConversation(conversationId))) {
+                this.baseDebug(`Conversation with id '${conversationId}' is new`);
+                await BaseModel.cache.addConversation(conversationId);
+            }
+
+            conversation = await BaseModel.cache.getConversation(conversationId);
+            this.baseDebug(
+                `${conversation.entries.length} history entries found for conversationId '${conversationId}'`,
+            );
+
+            // Add user query to history
+            await BaseModel.cache.addEntryToConversation(conversationId, {
+                id: uuidv4(),
+                timestamp: new Date(),
+                actor: 'HUMAN',
+                content: userQuery,
+            });
+        } else {
+            this.baseDebug('Conversation history is disabled as no conversationId was provided');
+            conversation = { conversationId: 'default', entries: [] };
         }
-
-        const conversation = await BaseModel.cache.getConversation(conversationId);
-        this.baseDebug(`${conversation.entries.length} history entries found for conversationId '${conversationId}'`);
-
-        // Add user query to history
-        await BaseModel.cache.addEntryToConversation(conversationId, {
-            id: uuidv4(),
-            timestamp: new Date(),
-            actor: 'HUMAN',
-            content: userQuery,
-        });
 
         const messages = await this.prepare(system, userQuery, supportingContext, conversation.entries.slice(0, -1));
         const uniqueSources = this.extractUniqueSources(supportingContext);
@@ -112,8 +121,11 @@ export abstract class BaseModel {
             sources: uniqueSources,
         };
 
-        // Add AI response to history
-        await BaseModel.cache.addEntryToConversation(conversationId, newEntry);
+        if (conversationId) {
+            // Add AI response to history
+            await BaseModel.cache.addEntryToConversation(conversationId, newEntry);
+        }
+
         return {
             ...newEntry,
             tokenUse: {
