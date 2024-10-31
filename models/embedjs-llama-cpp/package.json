@@ -1,0 +1,42 @@
+{
+    "name": "@llm-tools/embedjs-llama-cpp",
+    "version": "0.0.1",
+    "description": "Enable usage of Node-Llama-Cpp with embedjs",
+    "dependencies": {
+        "@langchain/community": "^0.3.11",
+        "@langchain/core": "^0.3.15",
+        "@llm-tools/embedjs-interfaces": "0.1.13",
+        "debug": "^4.3.7",
+        "node-llama-cpp": "^3.2.0"
+    },
+    "type": "module",
+    "main": "./src/index.js",
+    "license": "Apache-2.0",
+    "publishConfig": {
+        "access": "public"
+    },
+    "keywords": [
+        "node-llama-cpp",
+        "llm",
+        "ai",
+        "gpt3",
+        "chain",
+        "prompt",
+        "prompt engineering",
+        "chatgpt",
+        "machine learning",
+        "ml",
+        "anthropic",
+        "embeddings",
+        "vectorstores"
+    ],
+    "author": "BingKui",
+    "bugs": {
+        "url": "https://github.com/llm-tools/embedjs/issues"
+    },
+    "homepage": "https://github.com/llm-tools/embedjs#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/llm-tools/embedjs.git"
+    }
+}
