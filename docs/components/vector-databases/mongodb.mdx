@@ -39,9 +39,9 @@ process.env.OPENAI_API_KEY = "sk-xxx";
 const app = await new RAGApplicationBuilder()
 .setEmbeddingModel(new OpenAiEmbeddings())
 .setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
-new MongoDb({
+.setVectorDatabase(new MongoDb({
     connectionString: 'mongodb+srv://<username>:<password>@<url>',
-}),
+})),
 .build();
 
 //add data source and start query in

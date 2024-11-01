@@ -23,7 +23,7 @@ import { WebLoader } from '@llm-tools/embedjs-loader-web';
 const app = await new RAGApplicationBuilder()
 .setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
 .setEmbeddingModel(new OpenAiEmbeddings())
-.setVectorDb(new HNSWDb())
+.setVectorDatabase(new HNSWDb())
 .build();
 
 await app.addLoader(new WebLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-musk' }));
@@ -41,7 +41,7 @@ import { SitemapLoader } from '@llm-tools/embedjs-loader-sitemap';
 const app = await new RAGApplicationBuilder()
 .setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
 .setEmbeddingModel(new OpenAiEmbeddings())
-.setVectorDb(new HNSWDb())
+.setVectorDatabase(new HNSWDb())
 .build();
 
 await app.addLoader(new SitemapLoader({ url: '"https://js.langchain.com/sitemap.xml' }));

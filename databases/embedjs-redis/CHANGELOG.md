@@ -1,3 +1,9 @@
+## 0.1.15 and 0.1.14 (2024-11-01)
+
+### 🚀 Features
+
+-   refactored caches into stores ([5aec5ed](https://github.com/llm-tools/embedJs/commit/5aec5ed))
+
 ## 0.1.13 (2024-10-30)
 
 Addressed bug with how conversations which prevented no new conversations to be created.

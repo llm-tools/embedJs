@@ -30,7 +30,7 @@ import { DocxLoader } from '@llm-tools/embedjs-loader-msoffice';
 const app = await new RAGApplicationBuilder()
 .setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
 .setEmbeddingModel(new OpenAiEmbeddings())
-.setVectorDb(new HNSWDb())
+.setVectorDatabase(new HNSWDb())
 .build();
 
 app.addLoader(new DocxLoader({ filePathOrUrl: '...', chunkOverlap: 100, chunkSize: 20 }))

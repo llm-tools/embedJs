@@ -23,7 +23,7 @@ import { SitemapLoader } from '@llm-tools/embedjs-loader-sitemap';
 const app = await new RAGApplicationBuilder()
 .setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
 .setEmbeddingModel(new OpenAiEmbeddings())
-.setVectorDb(new HNSWDb())
+.setVectorDatabase(new HNSWDb())
 .setStore(
     new RedisStore({
         host: this.configService.get('REDIS_HOST'),
