@@ -1,1 +1,1 @@
-export * from './lmdb-cache.js';
+export * from './lmdb-store.js';

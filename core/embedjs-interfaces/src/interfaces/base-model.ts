@@ -3,20 +3,20 @@ import createDebugMessages from 'debug';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Chunk, QueryResponse, Message, SourceDetail, ModelResponse, Conversation } from '../types.js';
-import { BaseCache } from './base-cache.js';
+import { BaseStore } from './base-store.js';
 
 export abstract class BaseModel {
     private readonly baseDebug = createDebugMessages('embedjs:model:BaseModel');
 
-    private static cache: BaseCache;
+    private static store: BaseStore;
     private static defaultTemperature: number;
 
     public static setDefaultTemperature(temperature?: number) {
         BaseModel.defaultTemperature = temperature;
     }
 
-    public static setCache(cache: BaseCache) {
-        BaseModel.cache = cache;
+    public static setStore(cache: BaseStore) {
+        BaseModel.store = cache;
     }
 
     private readonly _temperature?: number;
@@ -83,18 +83,18 @@ export abstract class BaseModel {
         let conversation: Conversation;
 
         if (conversationId) {
-            if (!(await BaseModel.cache.hasConversation(conversationId))) {
+            if (!(await BaseModel.store.hasConversation(conversationId))) {
                 this.baseDebug(`Conversation with id '${conversationId}' is new`);
-                await BaseModel.cache.addConversation(conversationId);
+                await BaseModel.store.addConversation(conversationId);
             }
 
-            conversation = await BaseModel.cache.getConversation(conversationId);
+            conversation = await BaseModel.store.getConversation(conversationId);
             this.baseDebug(
                 `${conversation.entries.length} history entries found for conversationId '${conversationId}'`,
             );
 
             // Add user query to history
-            await BaseModel.cache.addEntryToConversation(conversationId, {
+            await BaseModel.store.addEntryToConversation(conversationId, {
                 id: uuidv4(),
                 timestamp: new Date(),
                 actor: 'HUMAN',
@@ -123,7 +123,7 @@ export abstract class BaseModel {
 
         if (conversationId) {
             // Add AI response to history
-            await BaseModel.cache.addEntryToConversation(conversationId, newEntry);
+            await BaseModel.store.addEntryToConversation(conversationId, newEntry);
         }
 
         return {

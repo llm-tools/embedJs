@@ -1,9 +1,9 @@
 import { Collection, MongoClient } from 'mongodb';
 import createDebugMessages from 'debug';
 
-import { BaseDb, ExtractChunkData, InsertChunkData } from '@llm-tools/embedjs-interfaces';
+import { BaseVectorDatabase, ExtractChunkData, InsertChunkData } from '@llm-tools/embedjs-interfaces';
 
-export class MongoDb implements BaseDb {
+export class MongoDb implements BaseVectorDatabase {
     private readonly debug = createDebugMessages('embedjs:vector:MongoDb');
 
     private static readonly DEFAULT_DB_NAME = 'embedjs';

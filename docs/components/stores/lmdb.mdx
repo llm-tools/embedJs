@@ -2,7 +2,7 @@
 title: LMDB
 ---
 
-You can use [LMDB](https://dbdb.io/db/lmdb) to cache values locally on disk.
+You can use [LMDB](https://dbdb.io/db/lmdb) to store values locally on disk.
 
 ## Install LMDB addon
 
@@ -14,11 +14,11 @@ npm install @llm-tools/embedjs-lmdb
 <CodeGroup>
 ```ts Partial example
 import { RAGApplicationBuilder } from '@llm-tools/embedjs';
-import { LmdbCache } from '@llm-tools/embedjs-lmdb';
+import { LmdbStore } from '@llm-tools/embedjs-lmdb';
 
 const app = await new RAGApplicationBuilder()
-.setCache(new LmdbCache({ path: path.resolve('./cache') }))
+.setStore(new LmdbStore({ path: path.resolve('./store') }))
 ```
 </CodeGroup>
 
-<Snippet file="missing-cache-tip.mdx" />
+<Snippet file="missing-store-tip.mdx" />
