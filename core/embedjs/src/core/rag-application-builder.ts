@@ -48,7 +48,7 @@ export class RAGApplicationBuilder {
     }
 
     /**
-     * The function setVectorDb sets a BaseVectorDatabase object
+     * The function setVectorDatabase sets a BaseVectorDatabase object
      * @param {BaseVectorDatabase} vectorDatabase - The `vectorDatabase` parameter is an instance of the `BaseVectorDatabase` class, which
      * is used to store vectors in a database.
      * @returns The `this` object is being returned, which allows for method chaining.

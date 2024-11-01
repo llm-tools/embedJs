@@ -42,7 +42,7 @@ import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
 const ragApplication = await new RAGApplicationBuilder()
 .setModel(new Ollama({ modelName: "llama3.2", baseUrl: 'http://localhost:11434' }))
 .setEmbeddingModel(new OllamaEmbeddings({ model: 'nomic-embed-text', baseUrl: 'http://localhost:11434' }))
-.setVectorDb(new HNSWDb())
+.setVectorDatabase(new HNSWDb())
 .build();
 
 ragApplication.addLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-musk' })
@@ -74,7 +74,7 @@ process.env.OPENAI_API_KEY = "sk-xxxx"
 const ragApplication = await new RAGApplicationBuilder()
 .setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
 .setEmbeddingModel(new OpenAiEmbeddings())
-.setVectorDb(new HNSWDb())
+.setVectorDatabase(new HNSWDb())
 .build();
 
 ragApplication.addLoader(new WebLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-musk' }));

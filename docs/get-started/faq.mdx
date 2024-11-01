@@ -16,7 +16,7 @@ import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
 
 const llmApplication = await new RAGApplicationBuilder()
     .setModel(new Mistral({ modelName: 'mistral-medium' }))
-    .setVectorDb(new HNSWDb())
+    .setVectorDatabase(new HNSWDb())
     .build();
 
 await llmApplication.addLoader(new WebLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Tesla,_Inc.' }));
@@ -38,7 +38,7 @@ import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
 const llmApplication = await new RAGApplicationBuilder()
     .setModel(new OpenAi({ modelName: 'gpt-4o' }))
     .setEmbeddingModel(new OpenAiEmbeddings())
-    .setVectorDb(new HNSWDb())
+    .setVectorDatabase(new HNSWDb())
     .build();
 
 await llmApplication.addLoader(new WebLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Tesla,_Inc.' }));
