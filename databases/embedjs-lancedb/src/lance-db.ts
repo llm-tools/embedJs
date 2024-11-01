@@ -3,9 +3,9 @@ import * as fs from 'node:fs/promises';
 import similarity from 'compute-cosine-similarity';
 import { Table, connect } from '@lancedb/lancedb';
 
-import { BaseDb, ExtractChunkData, InsertChunkData } from '@llm-tools/embedjs-interfaces';
+import { BaseVectorDatabase, ExtractChunkData, InsertChunkData } from '@llm-tools/embedjs-interfaces';
 
-export class LanceDb implements BaseDb {
+export class LanceDb implements BaseVectorDatabase {
     private static readonly STATIC_DB_NAME = 'vectors';
     private readonly isTemp: boolean = true;
     private readonly path: string;

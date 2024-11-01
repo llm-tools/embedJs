@@ -1,9 +1,10 @@
 import { QdrantClient } from '@qdrant/js-client-rest';
 import createDebugMessages from 'debug';
 import { v4 as uuid } from 'uuid';
-import { BaseDb, ExtractChunkData, InsertChunkData } from '@llm-tools/embedjs-interfaces';
 
-export class QdrantDb implements BaseDb {
+import { BaseVectorDatabase, ExtractChunkData, InsertChunkData } from '@llm-tools/embedjs-interfaces';
+
+export class QdrantDb implements BaseVectorDatabase {
     private readonly debug = createDebugMessages('embedjs:vector:QdrantDb');
     private static readonly QDRANT_INSERT_CHUNK_SIZE = 500;
 

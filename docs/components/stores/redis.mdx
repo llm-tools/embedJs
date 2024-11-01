@@ -2,7 +2,7 @@
 title: Redis
 ---
 
-You can use redis as a cache / datastore.
+You can use redis as a data store.
 
 ## Install Redis addon
 
@@ -14,11 +14,11 @@ npm install @llm-tools/embedjs-redis
 <CodeGroup>
 ```ts Partial example
 import { RAGApplicationBuilder } from '@llm-tools/embedjs';
-import { RedisCache } from '@llm-tools/embedjs-redis';
+import { RedisStore } from '@llm-tools/embedjs-redis';
 
 const app = await new RAGApplicationBuilder()
-.setCache(new RedisCache({ ... }))
+.setStore(new RedisStore({ ... }))
 ```
 </CodeGroup>
 
-<Snippet file="missing-cache-tip.mdx" />
+<Snippet file="missing-store-tip.mdx" />

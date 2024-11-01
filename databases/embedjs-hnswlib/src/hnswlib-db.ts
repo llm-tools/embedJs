@@ -1,9 +1,9 @@
 import HNSWLib from 'hnswlib-node';
 import createDebugMessages from 'debug';
 
-import { BaseDb, ExtractChunkData, InsertChunkData, Metadata } from '@llm-tools/embedjs-interfaces';
+import { BaseVectorDatabase, ExtractChunkData, InsertChunkData, Metadata } from '@llm-tools/embedjs-interfaces';
 
-export class HNSWDb implements BaseDb {
+export class HNSWDb implements BaseVectorDatabase {
     private readonly debug = createDebugMessages('embedjs:vector:HNSWDb');
     private index: HNSWLib.HierarchicalNSW;
 

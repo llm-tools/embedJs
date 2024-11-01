@@ -141,12 +141,12 @@
                     ]
                 },
                 {
-                    "group": "⚡ Caches",
+                    "group": "⚡ Stores",
                     "pages": [
-                        "components/caches/overview",
+                        "components/stores/overview",
                         {
                             "group": "Built in",
-                            "pages": ["components/caches/lmdb", "components/caches/mongodb", "components/caches/redis"]
+                            "pages": ["components/stores/lmdb", "components/stores/mongodb", "components/stores/redis"]
                         }
                     ]
                 }

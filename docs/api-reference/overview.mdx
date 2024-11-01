@@ -17,15 +17,15 @@ Create a EmbedJs `RAGApplication` using `RAGApplicationBuilder`. `RAGApplication
      This configures the embedding model for use with the RAG application. Embedding models are used to convert text into vectors.
      For a list of predefined embedding models, refer the section on [embedding models](/components/embedding-models).
 </ParamField>
-<ParamField path="setVectorDb" type="BaseDb" required>
+<ParamField path="setVectorDatabase" type="BaseVectorDatabase" required>
     This configures the vector database to be used with RAG application.
     For a list of available vector databases, refer the section on [vector databases](/components/vector-databases).
 </ParamField>
-<ParamField path="setCache" type="BaseCache">
-    This configures a cache that is used internally by the appliation to keep track of what sources and data have been previously processed.
+<ParamField path="setStore" type="BaseStore">
+    This configures a stores that is used internally by the appliation to keep track of what sources and data have been previously processed.
     Previously processed data is not reprocessed - thus removing the need for this logic to be implemented at your end.
-    If this is not provided, the application will maintain in memory this cache which will be lost on app restart.
-    For a list of available caches, refer the section on [caches](/components/caches).
+    If this is not provided, the application will maintain this data in memorywhich will be lost on app restart.
+    For a list of built-in stores, refer the section on [stores](/components/stores).
 </ParamField>
 <ParamField path="setTemperature" type="number">
     This configures a temperature to be used with the LLM. This controls the randomness of the LLM output.

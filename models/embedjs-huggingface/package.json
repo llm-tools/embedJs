@@ -4,8 +4,8 @@
     "description": "Enable usage of HuggingFace models with embedjs",
     "dependencies": {
         "@huggingface/inference": "^2.8.1",
-        "@langchain/community": "^0.3.10",
-        "@langchain/core": "^0.3.15",
+        "@langchain/community": "^0.3.11",
+        "@langchain/core": "^0.3.16",
         "@llm-tools/embedjs-interfaces": "0.1.13",
         "debug": "^4.3.7"
     },

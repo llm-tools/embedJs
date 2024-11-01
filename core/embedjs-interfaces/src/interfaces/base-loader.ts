@@ -2,72 +2,24 @@ import md5 from 'md5';
 import createDebugMessages from 'debug';
 import { EventEmitter } from 'node:events';
 
-import { BaseCache } from './base-cache.js';
-import { LoaderList, LoaderChunk, UnfilteredLoaderChunk } from '../types.js';
+import { BaseStore } from './base-store.js';
+import { LoaderChunk, UnfilteredLoaderChunk } from '../types.js';
 
 export abstract class BaseLoader<
     MetadataTemplate extends Record<string, string | number | boolean> = Record<string, string | number | boolean>,
     CacheTemplate extends Record<string, unknown> = Record<string, unknown>,
 > extends EventEmitter {
-    private static cache: Pick<
-        BaseCache,
-        'loaderCustomDelete' | 'loaderCustomGet' | 'loaderCustomHas' | 'loaderCustomSet'
-    >;
-    private static readonly LOADERS_LIST_CACHE_KEY = 'LOADERS_LIST_CACHE_KEY';
+    private static store: BaseStore;
 
-    public static setCache(cache: BaseCache) {
-        BaseLoader.cache = cache;
-    }
-
-    private static async recordLoaderInCache(
-        loaderName: string,
-        uniqueId: string,
-        loaderMetadata: Record<string, unknown>,
-    ) {
-        if (!BaseLoader.cache) return;
-
-        if (await BaseLoader.cache.loaderCustomHas(BaseLoader.LOADERS_LIST_CACHE_KEY)) {
-            const current = await BaseLoader.cache.loaderCustomGet<{ list: LoaderList }>(
-                BaseLoader.LOADERS_LIST_CACHE_KEY,
-            );
-
-            current.list.push({
-                type: loaderName,
-                uniqueId,
-                loaderMetadata,
-            });
-
-            current.list = [...new Map(current.list.map((item) => [item.uniqueId, item])).values()];
-            BaseLoader.cache.loaderCustomSet(BaseLoader.LOADERS_LIST_CACHE_KEY, current);
-        } else {
-            BaseLoader.cache.loaderCustomSet<{ list: LoaderList }>(BaseLoader.LOADERS_LIST_CACHE_KEY, {
-                list: [
-                    {
-                        type: loaderName,
-                        uniqueId,
-                        loaderMetadata,
-                    },
-                ],
-            });
-        }
-    }
-
-    public static async getLoadersList() {
-        if (!BaseLoader.cache) return null;
-
-        if (await BaseLoader.cache.loaderCustomHas(BaseLoader.LOADERS_LIST_CACHE_KEY)) {
-            const current = await BaseLoader.cache.loaderCustomGet<{ list: LoaderList }>(
-                BaseLoader.LOADERS_LIST_CACHE_KEY,
-            );
-
-            return current.list;
-        } else return <LoaderList>[];
+    public static setCache(store: BaseStore) {
+        BaseLoader.store = store;
     }
 
     protected readonly uniqueId: string;
-    private readonly _canIncrementallyLoad: boolean;
-    protected readonly chunkOverlap: number;
     protected readonly chunkSize: number;
+    protected readonly chunkOverlap: number;
+    public readonly canIncrementallyLoad: boolean;
+    protected readonly loaderMetadata: Record<string, unknown>;
 
     constructor(
         uniqueId: string,
@@ -79,23 +31,32 @@ export abstract class BaseLoader<
         super();
 
         this.uniqueId = uniqueId;
-        this._canIncrementallyLoad = canIncrementallyLoad;
-        this.chunkOverlap = chunkOverlap;
         this.chunkSize = chunkSize;
+        this.chunkOverlap = chunkOverlap;
+        this.loaderMetadata = loaderMetadata;
+        this.canIncrementallyLoad = canIncrementallyLoad;
 
-        BaseLoader.recordLoaderInCache(this.constructor.name, uniqueId, loaderMetadata);
         createDebugMessages('embedjs:loader:BaseLoader')(`New loader class initalized with key ${uniqueId}`);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     public async init(): Promise<void> {}
 
-    public get canIncrementallyLoad() {
-        return this._canIncrementallyLoad;
-    }
-
     public getUniqueId(): string {
         return this.uniqueId;
+    }
+
+    private async recordLoaderInCache(chunksProcessed: number) {
+        if (!BaseLoader.store) return;
+
+        const loaderData = {
+            uniqueId: this.uniqueId,
+            type: this.constructor.name,
+            loaderMetadata: this.loaderMetadata,
+            chunksProcessed,
+        };
+
+        await BaseLoader.store.addLoaderMetadata(this.uniqueId, loaderData);
     }
 
     private getCustomCacheKey(key: string) {
@@ -103,23 +64,23 @@ export abstract class BaseLoader<
     }
 
     protected async checkInCache(key: string) {
-        if (!BaseLoader.cache) return false;
-        return BaseLoader.cache.loaderCustomHas(this.getCustomCacheKey(key));
+        if (!BaseLoader.store) return false;
+        return BaseLoader.store.loaderCustomHas(this.getCustomCacheKey(key));
     }
 
     protected async getFromCache(key: string): Promise<CacheTemplate> {
-        if (!BaseLoader.cache) return null;
-        return BaseLoader.cache.loaderCustomGet(this.getCustomCacheKey(key));
+        if (!BaseLoader.store) return null;
+        return BaseLoader.store.loaderCustomGet(this.getCustomCacheKey(key));
     }
 
     protected async saveToCache(key: string, value: CacheTemplate) {
-        if (!BaseLoader.cache) return;
-        await BaseLoader.cache.loaderCustomSet(this.getCustomCacheKey(key), value);
+        if (!BaseLoader.store) return;
+        await BaseLoader.store.loaderCustomSet(this.uniqueId, this.getCustomCacheKey(key), value);
     }
 
     protected async deleteFromCache(key: string) {
-        if (!BaseLoader.cache) return false;
-        return BaseLoader.cache.loaderCustomDelete(this.getCustomCacheKey(key));
+        if (!BaseLoader.store) return false;
+        return BaseLoader.store.loaderCustomDelete(this.getCustomCacheKey(key));
     }
 
     protected async loadIncrementalChunk(
@@ -135,6 +96,7 @@ export abstract class BaseLoader<
     public async *getChunks(): AsyncGenerator<LoaderChunk<MetadataTemplate>, void, void> {
         const chunks = await this.getUnfilteredChunks();
 
+        let count = 0;
         for await (const chunk of chunks) {
             chunk.pageContent = chunk.pageContent
                 .replace(/(\r\n|\n|\r)/gm, ' ')
@@ -146,8 +108,11 @@ export abstract class BaseLoader<
                     ...chunk,
                     contentHash: md5(chunk.pageContent),
                 };
+                count++;
             }
         }
+
+        await this.recordLoaderInCache(count);
     }
 
     abstract getUnfilteredChunks(): AsyncGenerator<UnfilteredLoaderChunk<MetadataTemplate>, void, void>;

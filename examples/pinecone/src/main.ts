@@ -5,7 +5,7 @@ import { PineconeDb } from '@llm-tools/embedjs-pinecone';
 
 const llmApplication = await new RAGApplicationBuilder()
     .setEmbeddingModel(new OpenAiEmbeddings())
-    .setVectorDb(
+    .setVectorDatabase(
         new PineconeDb({
             projectName: 'test',
             namespace: 'dev',

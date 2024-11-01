@@ -1,7 +1,7 @@
 import { Collection, DataAPIClient, Db } from '@datastax/astra-db-ts';
-import { BaseDb, InsertChunkData, ExtractChunkData } from '@llm-tools/embedjs-interfaces';
+import { BaseVectorDatabase, InsertChunkData, ExtractChunkData } from '@llm-tools/embedjs-interfaces';
 
-export class AstraDb implements BaseDb {
+export class AstraDb implements BaseVectorDatabase {
     private db: Db;
     private collectionName: string;
     private collection: Collection;
