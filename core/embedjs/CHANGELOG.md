@@ -1,3 +1,13 @@
+## 0.1.15 (2024-11-01)
+
+### 🚀 Features
+
+- refactored caches into stores ([5aec5ed](https://github.com/llm-tools/embedJs/commit/5aec5ed))
+
+### 🩹 Fixes
+
+- renamed remaining instances if vectorDb to vectorDatabase ([ca79586](https://github.com/llm-tools/embedJs/commit/ca79586))
+
 ## 0.1.13 (2024-10-30)
 
 A small update made to how conversations are handled
