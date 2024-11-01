@@ -23,7 +23,7 @@ export class RAGApplication {
     private readonly embeddingRelevanceCutOff: number;
     private readonly searchResultCount: number;
     private readonly systemMessage: string;
-    private readonly vectorDb: BaseVectorDatabase;
+    private readonly vectorDatabase: BaseVectorDatabase;
     private readonly store: BaseStore;
     private loaders: BaseLoader[];
     private model: BaseModel;
@@ -39,8 +39,8 @@ export class RAGApplication {
         this.systemMessage = cleanString(llmBuilder.getSystemMessage());
         this.debug(`Using system query template - "${this.systemMessage}"`);
 
-        this.vectorDb = llmBuilder.getVectorDatabase();
-        if (!this.vectorDb) throw new SyntaxError('VectorDb not set');
+        this.vectorDatabase = llmBuilder.getVectorDatabase();
+        if (!this.vectorDatabase) throw new SyntaxError('vectorDatabase not set');
 
         this.searchResultCount = llmBuilder.getSearchResultCount();
         this.embeddingRelevanceCutOff = llmBuilder.getEmbeddingRelevanceCutOff();
@@ -68,7 +68,7 @@ export class RAGApplication {
             this.debug('Initialized LLM class');
         }
 
-        await this.vectorDb.init({ dimensions: await RAGEmbedding.getEmbedding().getDimensions() });
+        await this.vectorDatabase.init({ dimensions: await RAGEmbedding.getEmbedding().getDimensions() });
         this.debug('Initialized vector database');
 
         if (this.store) {
@@ -290,8 +290,8 @@ export class RAGApplication {
             };
         });
 
-        this.debug(`Inserting chunks for loader ${loaderUniqueId} to vectorDb`);
-        return this.vectorDb.insertChunks(embedChunks);
+        this.debug(`Inserting chunks for loader ${loaderUniqueId} to vectorDatabase`);
+        return this.vectorDatabase.insertChunks(embedChunks);
     }
 
     /**
@@ -302,7 +302,7 @@ export class RAGApplication {
      * embeddings as a number.
      */
     public async getEmbeddingsCount(): Promise<number> {
-        return this.vectorDb.getVectorCount();
+        return this.vectorDatabase.getVectorCount();
     }
 
     /**
@@ -312,7 +312,7 @@ export class RAGApplication {
      * @returns The `deleteLoader` method returns a boolean value indicating the success of the operation.
      */
     public async deleteLoader(uniqueLoaderId: string) {
-        const deleteResult = await this.vectorDb.deleteKeys(uniqueLoaderId);
+        const deleteResult = await this.vectorDatabase.deleteKeys(uniqueLoaderId);
         if (this.store && deleteResult) await this.store.deleteLoaderMetadataAndCustomValues(uniqueLoaderId);
         this.loaders = this.loaders.filter((x) => x.getUniqueId() != uniqueLoaderId);
         return deleteResult;
@@ -324,7 +324,7 @@ export class RAGApplication {
      * @returns The `reset` function returns a boolean value indicating the result.
      */
     public async reset() {
-        await this.vectorDb.reset();
+        await this.vectorDatabase.reset();
         return true;
     }
 
@@ -341,7 +341,10 @@ export class RAGApplication {
      */
     public async getEmbeddings(cleanQuery: string) {
         const queryEmbedded = await RAGEmbedding.getEmbedding().embedQuery(cleanQuery);
-        const unfilteredResultSet = await this.vectorDb.similaritySearch(queryEmbedded, this.searchResultCount + 10);
+        const unfilteredResultSet = await this.vectorDatabase.similaritySearch(
+            queryEmbedded,
+            this.searchResultCount + 10,
+        );
         this.debug(`Query resulted in ${unfilteredResultSet.length} chunks before filteration...`);
 
         return unfilteredResultSet
