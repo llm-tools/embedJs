@@ -16,16 +16,16 @@ The `deleteLoader()` method allows you to delete the data loaded by a loader pre
 import { RAGApplicationBuilder } from '@llm-tools/embedjs';
 import { OpenAiEmbeddings } from '@llm-tools/embedjs-openai';
 import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
-import { RedisCache } from '@llm-tools/embedjs-redis';
+import { RedisStore } from '@llm-tools/embedjs-redis';
 import { WebLoader } from '@llm-tools/embedjs-loader-web';
 import { SitemapLoader } from '@llm-tools/embedjs-loader-sitemap';
 
 const app = await new RAGApplicationBuilder()
 .setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
 .setEmbeddingModel(new OpenAiEmbeddings())
-.setVectorDb(new HNSWDb())
-.setCache(
-    new RedisCache({
+.setVectorDatabase(new HNSWDb())
+.setStore(
+    new RedisStore({
         host: this.configService.get('REDIS_HOST'),
         port: this.configService.get('REDIS_PORT'),
         password: this.configService.get('REDIS_PASSWORD'),

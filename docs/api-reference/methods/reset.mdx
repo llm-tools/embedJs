@@ -15,7 +15,7 @@ import { WebLoader } from '@llm-tools/embedjs-loader-web';
 const app = await new RAGApplicationBuilder()
 .setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
 .setEmbeddingModel(new OpenAiEmbeddings())
-.setVectorDb(new HNSWDb())
+.setVectorDatabase(new HNSWDb())
 .build();
 
 await app.reset();

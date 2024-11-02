@@ -1,13 +1,20 @@
-import { BaseCache, BaseDb, BaseEmbeddings, BaseLoader, BaseModel, SIMPLE_MODELS } from '@llm-tools/embedjs-interfaces';
-import { MemoryCache } from '../cache/memory-cache.js';
+import {
+    BaseStore,
+    BaseVectorDatabase,
+    BaseEmbeddings,
+    BaseLoader,
+    BaseModel,
+    SIMPLE_MODELS,
+} from '@llm-tools/embedjs-interfaces';
+import { MemoryStore } from '../store/memory-store.js';
 import { RAGApplication } from './rag-application.js';
 
 export class RAGApplicationBuilder {
     private temperature: number;
     private model: BaseModel | SIMPLE_MODELS | null;
+    private vectorDatabase: BaseVectorDatabase;
     private loaders: BaseLoader[];
-    private vectorDb: BaseDb;
-    private cache: BaseCache;
+    private store: BaseStore;
     private systemMessage: string;
     private searchResultCount: number;
     private embeddingModel: BaseEmbeddings;
@@ -27,7 +34,7 @@ export class RAGApplicationBuilder {
 
         this.storeConversationsToDefaultThread = true;
         this.embeddingRelevanceCutOff = 0;
-        this.cache = new MemoryCache();
+        this.store = new MemoryStore();
     }
 
     /**
@@ -41,13 +48,13 @@ export class RAGApplicationBuilder {
     }
 
     /**
-     * The function setVectorDb sets a BaseDb object
-     * @param {BaseDb} vectorDb - The `vectorDb` parameter is an instance of the `BaseDb` class, which
+     * The function setVectorDatabase sets a BaseVectorDatabase object
+     * @param {BaseVectorDatabase} vectorDatabase - The `vectorDatabase` parameter is an instance of the `BaseVectorDatabase` class, which
      * is used to store vectors in a database.
      * @returns The `this` object is being returned, which allows for method chaining.
      */
-    setVectorDb(vectorDb: BaseDb) {
-        this.vectorDb = vectorDb;
+    setVectorDatabase(vectorDatabase: BaseVectorDatabase) {
+        this.vectorDatabase = vectorDatabase;
         return this;
     }
 
@@ -66,8 +73,8 @@ export class RAGApplicationBuilder {
         return this;
     }
 
-    setCache(cache: BaseCache) {
-        this.cache = cache;
+    setStore(store: BaseStore) {
+        this.store = store;
         return this;
     }
 
@@ -120,8 +127,8 @@ export class RAGApplicationBuilder {
         return this.searchResultCount;
     }
 
-    getVectorDb() {
-        return this.vectorDb;
+    getVectorDatabase() {
+        return this.vectorDatabase;
     }
 
     getTemperature() {
@@ -136,8 +143,8 @@ export class RAGApplicationBuilder {
         return this.systemMessage;
     }
 
-    getCache() {
-        return this.cache;
+    getStore() {
+        return this.store;
     }
 
     getEmbeddingModel() {

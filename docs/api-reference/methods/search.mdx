@@ -50,7 +50,7 @@ import { SitemapLoader } from '@llm-tools/embedjs-loader-sitemap';
 const ragApplication = await new RAGApplicationBuilder()
 .setModel(new Ollama({ modelName: "llama3.2", baseUrl: 'http://localhost:11434' }))
 .setEmbeddingModel(new OllamaEmbeddings({ model: 'nomic-embed-text', baseUrl: 'http://localhost:11434' }))
-.setVectorDb(new HNSWDb())
+.setVectorDatabase(new HNSWDb())
 .build();
 
 //Add Next.JS Website and docs

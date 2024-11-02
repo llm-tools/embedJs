@@ -2,10 +2,10 @@ import createDebugMessages from 'debug';
 import weaviate, { WeaviateClient, ApiKey, generateUuid5 } from 'weaviate-ts-client';
 import similarity from 'compute-cosine-similarity';
 
-import { BaseDb, ExtractChunkData, InsertChunkData } from '@llm-tools/embedjs-interfaces';
+import { BaseVectorDatabase, ExtractChunkData, InsertChunkData } from '@llm-tools/embedjs-interfaces';
 import { toTitleCase } from '@llm-tools/embedjs-utils';
 
-export class WeaviateDb implements BaseDb {
+export class WeaviateDb implements BaseVectorDatabase {
     private readonly debug = createDebugMessages('embedjs:vector:WeaviateDb');
     private static readonly WEAVIATE_INSERT_CHUNK_SIZE = 500;
 

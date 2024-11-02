@@ -43,11 +43,12 @@ export type SourceDetail = {
     source: string;
 };
 
-export type LoaderList = {
+export type LoaderListEntry = {
     type: string;
     uniqueId: string;
+    chunksProcessed: number;
     loaderMetadata: Record<string, unknown>;
-}[];
+};
 
 export type Message = {
     id: string;

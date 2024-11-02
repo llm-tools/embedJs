@@ -1,3 +1,9 @@
+## 0.1.15 and 0.1.14 (2024-11-01)
+
+### 🚀 Features
+
+-   refactored caches into stores ([5aec5ed](https://github.com/llm-tools/embedJs/commit/5aec5ed))
+
 ## 0.1.13 (2024-10-30)
 
 This was a version bump only for embedjs-loader-confluence to align it with other projects, there were no code changes.
@@ -12,15 +18,13 @@ This was a version bump only for embedjs-loader-confluence to align it with othe
 
 ## 0.1.9 (2024-10-21)
 
-
 ### 🩹 Fixes
 
-- fixed changelog for confluence loader ([2f66b17](https://github.com/llm-tools/embedJs/commit/2f66b17))
+-   fixed changelog for confluence loader ([2f66b17](https://github.com/llm-tools/embedJs/commit/2f66b17))
 
+### ❤️ Thank You
 
-### ❤️  Thank You
-
-- Adhityan K V @adhityan
+-   Adhityan K V @adhityan
 
 ## 0.1.8 (2024-10-21)
 

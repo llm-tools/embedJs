@@ -1,9 +1,9 @@
 import { BaseLoader } from './interfaces/base-loader.js';
-import { BaseDb } from './interfaces/base-db.js';
+import { BaseVectorDatabase } from './interfaces/base-vector-database.js';
 import { BaseEmbeddings } from './interfaces/base-embeddings.js';
-import { BaseCache } from './interfaces/base-cache.js';
+import { BaseStore } from './interfaces/base-store.js';
 import { BaseModel } from './interfaces/base-model.js';
 
 export * from './types.js';
 export * from './constants.js';
-export { BaseDb, BaseCache, BaseLoader, BaseEmbeddings, BaseModel };
+export { BaseStore, BaseVectorDatabase, BaseLoader, BaseEmbeddings, BaseModel };

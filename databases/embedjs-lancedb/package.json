@@ -1,10 +1,10 @@
 {
     "name": "@llm-tools/embedjs-lancedb",
-    "version": "0.1.13",
+    "version": "0.1.15",
     "description": "Add LanceDb support to embedjs",
     "dependencies": {
-        "@lancedb/lancedb": "^0.11.0",
-        "@llm-tools/embedjs-interfaces": "0.1.13",
+        "@lancedb/lancedb": "^0.12.0",
+        "@llm-tools/embedjs-interfaces": "0.1.15",
         "compute-cosine-similarity": "^1.1.0"
     },
     "type": "module",

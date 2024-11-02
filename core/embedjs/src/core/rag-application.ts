@@ -4,16 +4,16 @@ import { RAGEmbedding } from './rag-embedding.js';
 import { RAGApplicationBuilder } from './rag-application-builder.js';
 import {
     AddLoaderReturn,
-    BaseCache,
-    BaseDb,
     BaseLoader,
     BaseModel,
+    BaseStore,
+    BaseVectorDatabase,
     Chunk,
-    DEFAULT_INSERT_BATCH_SIZE,
     InsertChunkData,
     LoaderChunk,
     QueryResponse,
     SIMPLE_MODELS,
+    DEFAULT_INSERT_BATCH_SIZE,
 } from '@llm-tools/embedjs-interfaces';
 import { cleanString, getUnique } from '@llm-tools/embedjs-utils';
 
@@ -23,8 +23,8 @@ export class RAGApplication {
     private readonly embeddingRelevanceCutOff: number;
     private readonly searchResultCount: number;
     private readonly systemMessage: string;
-    private readonly cache: BaseCache;
-    private readonly vectorDb: BaseDb;
+    private readonly vectorDatabase: BaseVectorDatabase;
+    private readonly store: BaseStore;
     private loaders: BaseLoader[];
     private model: BaseModel;
 
@@ -32,15 +32,15 @@ export class RAGApplication {
         if (!llmBuilder.getEmbeddingModel()) throw new Error('Embedding model must be set!');
 
         this.storeConversationsToDefaultThread = llmBuilder.getParamStoreConversationsToDefaultThread();
-        this.cache = llmBuilder.getCache();
-        BaseLoader.setCache(this.cache);
-        BaseModel.setCache(this.cache);
+        this.store = llmBuilder.getStore();
+        BaseLoader.setCache(this.store);
+        BaseModel.setStore(this.store);
 
         this.systemMessage = cleanString(llmBuilder.getSystemMessage());
         this.debug(`Using system query template - "${this.systemMessage}"`);
 
-        this.vectorDb = llmBuilder.getVectorDb();
-        if (!this.vectorDb) throw new SyntaxError('VectorDb not set');
+        this.vectorDatabase = llmBuilder.getVectorDatabase();
+        if (!this.vectorDatabase) throw new SyntaxError('vectorDatabase not set');
 
         this.searchResultCount = llmBuilder.getSearchResultCount();
         this.embeddingRelevanceCutOff = llmBuilder.getEmbeddingRelevanceCutOff();
@@ -68,11 +68,11 @@ export class RAGApplication {
             this.debug('Initialized LLM class');
         }
 
-        await this.vectorDb.init({ dimensions: await RAGEmbedding.getEmbedding().getDimensions() });
+        await this.vectorDatabase.init({ dimensions: await RAGEmbedding.getEmbedding().getDimensions() });
         this.debug('Initialized vector database');
 
-        if (this.cache) {
-            await this.cache.init();
+        if (this.store) {
+            await this.store.init();
             this.debug('Initialized cache');
         }
 
@@ -138,13 +138,15 @@ export class RAGApplication {
      * it to the system.
      * @param {LoaderParam} loaderParam - The `loaderParam` parameter is a string, object or instance of BaseLoader
      * that contains the necessary information to create a loader.
+     * @param {boolean} forceReload - The `forceReload` parameter is a boolean used to indicate if a loader should be reloaded.
+     * By default, loaders which have been previously run are not reloaded.
      * @returns The function `addLoader` returns an object with the following properties:
      * - `entriesAdded`: Number of new entries added during the loader operation
      * - `uniqueId`: Unique identifier of the loader
      * - `loaderType`: Name of the loader's constructor class
      */
-    public async addLoader(loaderParam: BaseLoader): Promise<AddLoaderReturn> {
-        return this._addLoader(loaderParam);
+    public async addLoader(loaderParam: BaseLoader, forceReload = false): Promise<AddLoaderReturn> {
+        return this._addLoader(loaderParam, forceReload);
     }
 
     /**
@@ -157,23 +159,31 @@ export class RAGApplication {
      * - `uniqueId`: Unique identifier of the loader
      * - `loaderType`: Name of the loader's constructor class
      */
-    private async _addLoader(loader: BaseLoader): Promise<AddLoaderReturn> {
+    private async _addLoader(loader: BaseLoader, forceReload: boolean): Promise<AddLoaderReturn> {
         const uniqueId = loader.getUniqueId();
-        this.debug('Adding loader', uniqueId);
-        await loader.init();
+        this.debug('Exploring loader', uniqueId);
 
-        const chunks = await loader.getChunks();
-        if (this.cache && (await this.cache.hasLoader(uniqueId))) {
-            const { chunkCount: previousChunkCount } = await this.cache.getLoader(uniqueId);
+        if (this.store && (await this.store.hasLoaderMetadata(uniqueId))) {
+            if (forceReload) {
+                const { chunksProcessed } = await this.store.getLoaderMetadata(uniqueId);
 
-            this.debug(`Loader previously run. Deleting previous ${previousChunkCount} keys`, uniqueId);
-            if (previousChunkCount > 0) {
-                await this.deleteLoader(uniqueId);
+                this.debug(
+                    `Loader previously run but forceReload set! Deleting previous ${chunksProcessed} keys...`,
+                    uniqueId,
+                );
+
+                this.loaders = this.loaders.filter((x) => x.getUniqueId() != loader.getUniqueId());
+                if (chunksProcessed > 0) await this.deleteLoader(uniqueId);
+            } else {
+                this.debug('Loader previously run. Skipping...', uniqueId);
+                return { entriesAdded: 0, uniqueId, loaderType: loader.constructor.name };
             }
         }
 
-        const { newInserts, formattedChunks } = await this.batchLoadChunks(uniqueId, chunks);
-        if (this.cache) await this.cache.addLoader(uniqueId, formattedChunks.length);
+        await loader.init();
+        const chunks = await loader.getChunks();
+
+        const { newInserts } = await this.batchLoadChunks(uniqueId, chunks);
         this.debug(`Add loader completed with ${newInserts} new entries for`, uniqueId);
 
         if (loader.canIncrementallyLoad) {
@@ -184,10 +194,8 @@ export class RAGApplication {
             });
         }
 
-        this.loaders = this.loaders.filter((x) => x.getUniqueId() != loader.getUniqueId());
         this.loaders.push(loader);
-
-        this.debug(`Add loader ${uniqueId} wrap`);
+        this.debug(`Add loader ${uniqueId} wrap up done`);
         return { entriesAdded: newInserts, uniqueId, loaderType: loader.constructor.name };
     }
 
@@ -210,7 +218,8 @@ export class RAGApplication {
      * @returns The list of loaders with some metadata about them.
      */
     public async getLoaders() {
-        return BaseLoader.getLoadersList();
+        if (!this.store) return [];
+        return this.store.getAllLoaderMetadata();
     }
 
     /**
@@ -281,8 +290,8 @@ export class RAGApplication {
             };
         });
 
-        this.debug(`Inserting chunks for loader ${loaderUniqueId} to vectorDb`);
-        return this.vectorDb.insertChunks(embedChunks);
+        this.debug(`Inserting chunks for loader ${loaderUniqueId} to vectorDatabase`);
+        return this.vectorDatabase.insertChunks(embedChunks);
     }
 
     /**
@@ -293,7 +302,7 @@ export class RAGApplication {
      * embeddings as a number.
      */
     public async getEmbeddingsCount(): Promise<number> {
-        return this.vectorDb.getVectorCount();
+        return this.vectorDatabase.getVectorCount();
     }
 
     /**
@@ -303,8 +312,8 @@ export class RAGApplication {
      * @returns The `deleteLoader` method returns a boolean value indicating the success of the operation.
      */
     public async deleteLoader(uniqueLoaderId: string) {
-        const deleteResult = await this.vectorDb.deleteKeys(uniqueLoaderId);
-        if (this.cache && deleteResult) await this.cache.deleteLoader(uniqueLoaderId);
+        const deleteResult = await this.vectorDatabase.deleteKeys(uniqueLoaderId);
+        if (this.store && deleteResult) await this.store.deleteLoaderMetadataAndCustomValues(uniqueLoaderId);
         this.loaders = this.loaders.filter((x) => x.getUniqueId() != uniqueLoaderId);
         return deleteResult;
     }
@@ -315,7 +324,7 @@ export class RAGApplication {
      * @returns The `reset` function returns a boolean value indicating the result.
      */
     public async reset() {
-        await this.vectorDb.reset();
+        await this.vectorDatabase.reset();
         return true;
     }
 
@@ -332,7 +341,10 @@ export class RAGApplication {
      */
     public async getEmbeddings(cleanQuery: string) {
         const queryEmbedded = await RAGEmbedding.getEmbedding().embedQuery(cleanQuery);
-        const unfilteredResultSet = await this.vectorDb.similaritySearch(queryEmbedded, this.searchResultCount + 10);
+        const unfilteredResultSet = await this.vectorDatabase.similaritySearch(
+            queryEmbedded,
+            this.searchResultCount + 10,
+        );
         this.debug(`Query resulted in ${unfilteredResultSet.length} chunks before filteration...`);
 
         return unfilteredResultSet

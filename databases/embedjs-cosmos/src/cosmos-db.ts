@@ -1,8 +1,8 @@
 import createDebugMessages from 'debug';
 import { CosmosClient, CosmosClientOptions, Container } from '@azure/cosmos';
-import { BaseDb, ExtractChunkData, InsertChunkData } from '@llm-tools/embedjs-interfaces';
+import { BaseVectorDatabase, ExtractChunkData, InsertChunkData } from '@llm-tools/embedjs-interfaces';
 
-export class CosmosDb implements BaseDb {
+export class CosmosDb implements BaseVectorDatabase {
     private readonly debug = createDebugMessages('embedjs:vector:CosmosDb');
 
     private static readonly DEFAULT_DB_NAME = 'embedjs';
@@ -104,7 +104,7 @@ export class CosmosDb implements BaseDb {
                 `SELECT c.id, c.${CosmosDb.LOADER_FIELD_NAME}, c.pageContent, c.metadata,
                 VectorDistance(c.${CosmosDb.VECTOR_FIELD_NAME}, [${encodedQuery}]) AS score
                 FROM c
-                ORDER BY VectorDistance(c.${CosmosDb.VECTOR_FIELD_NAME}, [${encodedQuery}]) 
+                ORDER BY VectorDistance(c.${CosmosDb.VECTOR_FIELD_NAME}, [${encodedQuery}])
                 OFFSET 0 LIMIT ${k}`,
                 { forceQueryPlan: true, maxItemCount: k },
             )
