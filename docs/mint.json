@@ -70,6 +70,7 @@
                             "pages": [
                                 "components/data-sources/pdf",
                                 "components/data-sources/csv",
+                                "components/data-sources/xml",
                                 "components/data-sources/json",
                                 "components/data-sources/text",
                                 "components/data-sources/web-page",

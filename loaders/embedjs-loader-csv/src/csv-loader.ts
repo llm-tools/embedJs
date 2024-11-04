@@ -1,11 +1,10 @@
 import { parse, Options as CsvParseOptions } from 'csv-parse';
 import createDebugMessages from 'debug';
-import axios from 'axios';
 import fs from 'node:fs';
 import md5 from 'md5';
 
 import { BaseLoader } from '@llm-tools/embedjs-interfaces';
-import { cleanString, isValidURL, stream2buffer } from '@llm-tools/embedjs-utils';
+import { cleanString, getSafe, isValidURL, stream2buffer } from '@llm-tools/embedjs-utils';
 
 export class CsvLoader extends BaseLoader<{ type: 'CsvLoader' }> {
     private readonly debug = createDebugMessages('embedjs:loader:CsvLoader');
@@ -32,16 +31,14 @@ export class CsvLoader extends BaseLoader<{ type: 'CsvLoader' }> {
     }
 
     override async *getUnfilteredChunks() {
-        const stream = await stream2buffer(
-            this.isUrl
-                ? (await axios.get(this.filePathOrUrl, { responseType: 'stream' })).data
-                : fs.createReadStream(this.filePathOrUrl),
-        );
+        const buffer = this.isUrl
+            ? (await getSafe(this.filePathOrUrl, { format: 'buffer' })).body
+            : await stream2buffer(fs.createReadStream(this.filePathOrUrl));
+
         this.debug('CsvParser stream created');
-        const parser = parse(stream, this.csvParseOptions);
+        const parser = parse(buffer, this.csvParseOptions);
         this.debug('CSV parsing started...');
 
-        let i = 0;
         for await (const record of parser) {
             yield {
                 pageContent: cleanString(record.join(',')),
@@ -50,9 +47,8 @@ export class CsvLoader extends BaseLoader<{ type: 'CsvLoader' }> {
                     source: this.filePathOrUrl,
                 },
             };
-            i++;
         }
 
-        this.debug(`CsvParser for filePathOrUrl '${this.filePathOrUrl}' resulted in ${i} entries`);
+        this.debug(`CsvParser for filePathOrUrl '${this.filePathOrUrl}' finished`);
     }
 }

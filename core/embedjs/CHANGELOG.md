@@ -1,3 +1,13 @@
+## 0.1.16 (2024-11-04)
+
+### 🚀 Features
+
+- added xml loader ([9172511](https://github.com/llm-tools/embedJs/commit/9172511))
+
+### 🩹 Fixes
+
+- renamed remaining instances if vectorDb to vectorDatabase ([ca79586](https://github.com/llm-tools/embedJs/commit/ca79586))
+
 ## 0.1.15 and 0.1.14 (2024-11-01)
 
 ### 🚀 Features

@@ -1,14 +1,14 @@
 ---
-title: '📊 CSV'
+title: '📊 XML'
 ---
 
-You can load any csv file from your local file system or through a URL.
+You can load any XML file from your local file system or through a URL.
 Headers are included for each line, so if you have an `age` column, `18` will be added as `age: 18`.
 
-## Install CSV addon
+## Install XML addon
 
 ```bash
-npm install @llm-tools/embedjs-loader-csv
+npm install @llm-tools/embedjs-loader-xml
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ npm install @llm-tools/embedjs-loader-csv
 import { RAGApplicationBuilder } from '@llm-tools/embedjs';
 import { OpenAiEmbeddings } from '@llm-tools/embedjs-openai';
 import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
-import { CsvLoader } from '@llm-tools/embedjs-loader-csv';
+import { XmlLoader } from '@llm-tools/embedjs-loader-csv';
 
 const app = await new RAGApplicationBuilder()
 .setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
@@ -27,7 +27,7 @@ const app = await new RAGApplicationBuilder()
 .setVectorDatabase(new HNSWDb())
 .build();
 
-app.addLoader(new CsvLoader({ filePathOrUrl: '/path/to/file.csv' }))
+app.addLoader(new XmlLoader({ filePathOrUrl: '/path/to/file.xml' }))
 ```
 
 ### Load from URL
@@ -36,7 +36,7 @@ app.addLoader(new CsvLoader({ filePathOrUrl: '/path/to/file.csv' }))
 import { RAGApplicationBuilder } from '@llm-tools/embedjs';
 import { OpenAiEmbeddings } from '@llm-tools/embedjs-openai';
 import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
-import { CsvLoader } from '@llm-tools/embedjs-loader-csv';
+import { XmlLoader } from '@llm-tools/embedjs-loader-csv';
 
 const app = await new RAGApplicationBuilder()
 .setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
@@ -44,5 +44,5 @@ const app = await new RAGApplicationBuilder()
 .setVectorDatabase(new HNSWDb())
 .build();
 
-app.addLoader(new CsvLoader({ filePathOrUrl: 'https://people.sc.fsu.edu/~jburkardt/data/csv/airtravel.csv' }))
+app.addLoader(new XmlLoader({ filePathOrUrl: 'https://www.w3schools.com/xml/plant_catalog.xml' }))
 ```

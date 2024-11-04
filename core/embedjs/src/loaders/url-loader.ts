@@ -2,7 +2,7 @@ import { getMimeType } from 'stream-mime-type';
 import createDebugMessages from 'debug';
 import md5 from 'md5';
 
-import { contentTypeToMimeType, truncateCenterString } from '@llm-tools/embedjs-utils';
+import { contentTypeToMimeType, getSafe, truncateCenterString } from '@llm-tools/embedjs-utils';
 import { BaseLoader } from '@llm-tools/embedjs-interfaces';
 import { createLoaderFromMimeType } from '../util/mime.js';
 
@@ -17,7 +17,7 @@ export class UrlLoader extends BaseLoader<{ type: 'UrlLoader' }> {
     }
 
     override async *getUnfilteredChunks() {
-        const response = await fetch(this.url, { headers: { 'Accept-Encoding': '' } });
+        const response = await getSafe(this.url.toString(), { headers: { 'Accept-Encoding': '' } });
         const stream = response.body as unknown as NodeJS.ReadableStream;
         let { mime } = await getMimeType(stream, { strict: true });
         this.debug(`Loader stream detected type '${mime}'`);

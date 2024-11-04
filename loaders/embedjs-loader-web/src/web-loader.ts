@@ -1,11 +1,10 @@
 import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 import createDebugMessages from 'debug';
 import { convert } from 'html-to-text';
-import axios from 'axios';
 import md5 from 'md5';
 
 import { BaseLoader } from '@llm-tools/embedjs-interfaces';
-import { isValidURL, truncateCenterString, cleanString } from '@llm-tools/embedjs-utils';
+import { isValidURL, truncateCenterString, cleanString, getSafe } from '@llm-tools/embedjs-utils';
 
 export class WebLoader extends BaseLoader<{ type: 'WebLoader' }> {
     private readonly debug = createDebugMessages('embedjs:loader:WebLoader');
@@ -34,9 +33,8 @@ export class WebLoader extends BaseLoader<{ type: 'WebLoader' }> {
         });
 
         try {
-            const data = this.isUrl
-                ? (await axios.get<string>(this.urlOrContent, { responseType: 'document' })).data
-                : this.urlOrContent;
+            const data = this.isUrl ? (await getSafe(this.urlOrContent, { format: 'text' })).body : this.urlOrContent;
+            console.log('WTF', data);
 
             const text = convert(data, {
                 wordwrap: false,
