@@ -4,7 +4,7 @@
     "description": "Enable usage of Anthropic models with embedjs",
     "dependencies": {
         "@langchain/anthropic": "^0.3.7",
-        "@langchain/core": "^0.3.16",
+        "@langchain/core": "^0.3.17",
         "@llm-tools/embedjs-interfaces": "0.1.16",
         "debug": "^4.3.7"
     },
