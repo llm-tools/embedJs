@@ -6,7 +6,6 @@
         "@langchain/textsplitters": "^0.1.0",
         "@llm-tools/embedjs-interfaces": "0.1.15",
         "@llm-tools/embedjs-utils": "0.1.15",
-        "axios": "^1.7.7",
         "debug": "^4.3.7",
         "html-to-text": "^9.0.5",
         "md5": "^2.3.0"

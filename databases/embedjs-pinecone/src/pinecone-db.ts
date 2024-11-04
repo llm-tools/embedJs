@@ -100,7 +100,7 @@ export class PineconeDb implements BaseVectorDatabase {
         } catch {
             this.debug(
                 `Failed to delete keys for loader '${uniqueLoaderId}'.
-Pinecone does not allow deleting by metadata filtering in serverless and free (what they call starter) instances`,
+Pinecone does not allow deleting by metadata filtering in serverless and free instances`,
             );
             return false;
         }

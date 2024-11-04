@@ -48,7 +48,6 @@ export class JsonLoader extends BaseLoader<{ type: 'JsonLoader' }> {
                 metadata: {
                     type: 'JsonLoader' as const,
                     source: tuncatedObjectString,
-                    ...entry,
                 },
             };
         }
