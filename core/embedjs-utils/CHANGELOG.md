@@ -1,3 +1,9 @@
+## 0.1.16 (2024-11-04)
+
+### 🚀 Features
+
+- added xml loader ([9172511](https://github.com/llm-tools/embedJs/commit/9172511))
+
 ## 0.1.15 and 0.1.14 (2024-11-01)
 
 ### 🚀 Features
