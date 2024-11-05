@@ -35,9 +35,15 @@ export class LocalPathLoader extends BaseLoader<{ type: 'LocalPathLoader' }> {
 
         if (!isDir) {
             const stream = fs.createReadStream(currentPath);
-            const { mime } = await getMimeType(stream);
-            this.debug(`File '${this.path}' has mime type '${mime}'`);
+            let { mime } = await getMimeType(stream);
             stream.destroy();
+
+            this.debug(`File '${this.path}' has mime type '${mime}'`);
+            if (mime === 'application/octet-stream') {
+                const extension = currentPath.split('.').pop().toLowerCase();
+                if (extension === 'md' || extension === 'mdx') mime = 'text/markdown';
+                this.debug(`File '${this.path}' mime type updated to 'text/markdown'`);
+            }
 
             try {
                 const loader = await createLoaderFromMimeType(currentPath, mime);

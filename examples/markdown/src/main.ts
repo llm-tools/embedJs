@@ -9,5 +9,5 @@ const llmApplication = await new RAGApplicationBuilder()
     .setVectorDatabase(new HNSWDb())
     .build();
 
-await llmApplication.addLoader(new LocalPathLoader({ path: './docs/get-started/quickstart.mdx' }));
+await llmApplication.addLoader(new LocalPathLoader({ path: './docs' }));
 console.log(await llmApplication.query('How do you create an embedJs application?'));

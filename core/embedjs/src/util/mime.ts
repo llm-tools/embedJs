@@ -1,5 +1,6 @@
 import mime from 'mime';
 import createDebugMessages from 'debug';
+
 import { BaseLoader } from '@llm-tools/embedjs-interfaces';
 import { TextLoader } from '../loaders/text-loader.js';
 
@@ -87,6 +88,16 @@ export async function createLoaderFromMimeType(loaderData: string, mimeType: str
             });
             createDebugMessages('embedjs:util:createLoaderFromMimeType')('Dynamically imported XmlLoader');
             return new XmlLoader({ filePathOrUrl: loaderData });
+        }
+        case 'text/x-markdown':
+        case 'text/markdown': {
+            const { MarkdownLoader } = await import('@llm-tools/embedjs-loader-markdown').catch(() => {
+                throw new Error(
+                    'Package `@llm-tools/embedjs-loader-markdown` needs to be installed to load markdown files',
+                );
+            });
+            createDebugMessages('embedjs:util:createLoaderFromMimeType')('Dynamically imported MarkdownLoader');
+            return new MarkdownLoader({ filePathOrUrl: loaderData });
         }
         case undefined:
             throw new Error(`MIME type could not be detected. Please file an issue if you think this is a bug.`);
