@@ -1,7 +1,6 @@
 import 'dotenv/config';
-import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { LocalPathLoader, RAGApplicationBuilder } from '@llm-tools/embedjs';
 import { OpenAi, OpenAiEmbeddings } from '@llm-tools/embedjs-openai';
-import { MarkdownLoader } from '@llm-tools/embedjs-loader-markdown';
 import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
 
 const llmApplication = await new RAGApplicationBuilder()
@@ -10,5 +9,5 @@ const llmApplication = await new RAGApplicationBuilder()
     .setVectorDatabase(new HNSWDb())
     .build();
 
-await llmApplication.addLoader(new MarkdownLoader({ filePathOrUrl: './docs/get-started/quickstart.mdx' }));
+await llmApplication.addLoader(new LocalPathLoader({ path: './docs/get-started/quickstart.mdx' }));
 console.log(await llmApplication.query('How do you create an embedJs application?'));
