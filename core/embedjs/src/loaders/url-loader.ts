@@ -17,7 +17,7 @@ export class UrlLoader extends BaseLoader<{ type: 'UrlLoader' }> {
     }
 
     override async *getUnfilteredChunks() {
-        const response = await getSafe(this.url.toString(), { headers: { 'Accept-Encoding': '' } });
+        const response = await getSafe(this.url.href, { headers: { 'Accept-Encoding': '' } });
         const stream = response.body as unknown as NodeJS.ReadableStream;
         let { mime } = await getMimeType(stream, { strict: true });
         this.debug(`Loader stream detected type '${mime}'`);

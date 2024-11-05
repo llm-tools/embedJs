@@ -82,6 +82,7 @@
                                 "components/data-sources/ppt",
                                 "components/data-sources/excel",
                                 "components/data-sources/sitemap",
+                                "components/data-sources/markdown",
                                 "components/data-sources/directory",
                                 "components/data-sources/custom"
                             ]

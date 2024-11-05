@@ -1,0 +1,28 @@
+---
+title: '📝 Markdown / MDX file'
+---
+
+You can load any Markdown(MD) or MDX file from your local file system or through a URL.
+
+## Install Markdown addon
+
+```bash
+npm install @llm-tools/embedjs-loader-markdown
+```
+
+## Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAiEmbeddings } from '@llm-tools/embedjs-openai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+import { MarkdownLoader } from '@llm-tools/embedjs-loader-markdown';
+
+const app = await new RAGApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setEmbeddingModel(new OpenAiEmbeddings())
+.setVectorDatabase(new HNSWDb())
+.build();
+
+app.addLoader(new MarkdownLoader({ filePathOrUrl: '...' }))
+```

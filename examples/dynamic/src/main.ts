@@ -7,7 +7,6 @@ const llmApplication = await new RAGApplicationBuilder()
     .setModel(new OpenAi({ modelName: 'gpt-4o' }))
     .setEmbeddingModel(new OpenAiEmbeddings())
     .setVectorDatabase(new HNSWDb())
-    .setSearchResultCount(30)
     .build();
 
 await llmApplication.addLoader(new UrlLoader({ url: 'https://en.wikipedia.org/wiki/Tesla,_Inc.' }));

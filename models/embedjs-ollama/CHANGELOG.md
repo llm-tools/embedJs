@@ -1,8 +1,14 @@
+## 0.1.17 (2024-11-05)
+
+### 🚀 Features
+
+-   added markdown/mdx loader ([847947d](https://github.com/llm-tools/embedJs/commit/847947d)
+
 ## 0.1.16 (2024-11-04)
 
 ### 🚀 Features
 
-- added xml loader ([9172511](https://github.com/llm-tools/embedJs/commit/9172511))
+-   added xml loader ([9172511](https://github.com/llm-tools/embedJs/commit/9172511))
 
 ## 0.1.15 and 0.1.14 (2024-11-01)
 

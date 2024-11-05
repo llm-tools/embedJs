@@ -3,7 +3,7 @@ import createDebugMessages from 'debug';
 import { BaseLoader } from '@llm-tools/embedjs-interfaces';
 import { TextLoader } from '../loaders/text-loader.js';
 
-export async function createLoaderFromMimeType(loader: string, mimeType: string): Promise<BaseLoader> {
+export async function createLoaderFromMimeType(loaderData: string, mimeType: string): Promise<BaseLoader> {
     createDebugMessages('embedjs:util:createLoaderFromMimeType')(`Incoming mime type '${mimeType}'`);
 
     switch (mimeType) {
@@ -15,7 +15,7 @@ export async function createLoaderFromMimeType(loader: string, mimeType: string)
                 );
             });
             createDebugMessages('embedjs:util:createLoaderFromMimeType')('Dynamically imported DocxLoader');
-            return new DocxLoader({ filePathOrUrl: loader });
+            return new DocxLoader({ filePathOrUrl: loaderData });
         }
         case 'application/vnd.ms-excel':
         case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': {
@@ -25,14 +25,14 @@ export async function createLoaderFromMimeType(loader: string, mimeType: string)
                 );
             });
             createDebugMessages('embedjs:util:createLoaderFromMimeType')('Dynamically imported ExcelLoader');
-            return new ExcelLoader({ filePathOrUrl: loader });
+            return new ExcelLoader({ filePathOrUrl: loaderData });
         }
         case 'application/pdf': {
             const { PdfLoader } = await import('@llm-tools/embedjs-loader-pdf').catch(() => {
                 throw new Error('Package `@llm-tools/embedjs-loader-pdf` needs to be installed to load PDF files');
             });
             createDebugMessages('embedjs:util:createLoaderFromMimeType')('Dynamically imported PdfLoader');
-            return new PdfLoader({ filePathOrUrl: loader });
+            return new PdfLoader({ filePathOrUrl: loaderData });
         }
         case 'application/vnd.openxmlformats-officedocument.presentationml.presentation': {
             const { PptLoader } = await import('@llm-tools/embedjs-loader-msoffice').catch(() => {
@@ -41,33 +41,35 @@ export async function createLoaderFromMimeType(loader: string, mimeType: string)
                 );
             });
             createDebugMessages('embedjs:util:createLoaderFromMimeType')('Dynamically imported PptLoader');
-            return new PptLoader({ filePathOrUrl: loader });
+            return new PptLoader({ filePathOrUrl: loaderData });
         }
         case 'text/plain': {
-            const fineType = mime.getType(loader);
-            createDebugMessages('embedjs:util:createLoaderFromMimeType')(`Fine type for '${loader}' is '${fineType}'`);
+            const fineType = mime.getType(loaderData);
+            createDebugMessages('embedjs:util:createLoaderFromMimeType')(
+                `Fine type for '${loaderData}' is '${fineType}'`,
+            );
             if (fineType === 'text/csv') {
                 const { CsvLoader } = await import('@llm-tools/embedjs-loader-csv').catch(() => {
-                    throw new Error('Package `@llm-tools/embedjs-loader-csv` needs to be installed to load csv files');
+                    throw new Error('Package `@llm-tools/embedjs-loader-csv` needs to be installed to load CSV files');
                 });
 
                 createDebugMessages('embedjs:util:createLoaderFromMimeType')('Dynamically imported CsvLoader');
-                return new CsvLoader({ filePathOrUrl: loader });
-            } else return new TextLoader({ text: loader });
+                return new CsvLoader({ filePathOrUrl: loaderData });
+            } else return new TextLoader({ text: loaderData });
         }
         case 'application/csv': {
             const { CsvLoader } = await import('@llm-tools/embedjs-loader-csv').catch(() => {
-                throw new Error('Package `@llm-tools/embedjs-loader-csv` needs to be installed to load csv files');
+                throw new Error('Package `@llm-tools/embedjs-loader-csv` needs to be installed to load CSV files');
             });
             createDebugMessages('embedjs:util:createLoaderFromMimeType')('Dynamically imported CsvLoader');
-            return new CsvLoader({ filePathOrUrl: loader });
+            return new CsvLoader({ filePathOrUrl: loaderData });
         }
         case 'text/html': {
             const { WebLoader } = await import('@llm-tools/embedjs-loader-web').catch(() => {
                 throw new Error('Package `@llm-tools/embedjs-loader-web` needs to be installed to load web documents');
             });
             createDebugMessages('embedjs:util:createLoaderFromMimeType')('Dynamically imported WebLoader');
-            return new WebLoader({ urlOrContent: loader });
+            return new WebLoader({ urlOrContent: loaderData });
         }
         case 'text/xml': {
             const { SitemapLoader } = await import('@llm-tools/embedjs-loader-sitemap').catch(() => {
@@ -75,10 +77,16 @@ export async function createLoaderFromMimeType(loader: string, mimeType: string)
             });
             createDebugMessages('embedjs:util:createLoaderFromMimeType')('Dynamically imported SitemapLoader');
 
-            if (await SitemapLoader.test(loader)) {
-                return new SitemapLoader({ url: loader });
+            if (await SitemapLoader.test(loaderData)) {
+                return new SitemapLoader({ url: loaderData });
             }
-            throw new Error(`No loader supported for generic xml`);
+
+            //This is not a Sitemap but is still XML
+            const { XmlLoader } = await import('@llm-tools/embedjs-loader-xml').catch(() => {
+                throw new Error('Package `@llm-tools/embedjs-loader-xml` needs to be installed to load XML documents');
+            });
+            createDebugMessages('embedjs:util:createLoaderFromMimeType')('Dynamically imported XmlLoader');
+            return new XmlLoader({ filePathOrUrl: loaderData });
         }
         case undefined:
             throw new Error(`MIME type could not be detected. Please file an issue if you think this is a bug.`);

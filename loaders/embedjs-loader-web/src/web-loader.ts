@@ -34,7 +34,6 @@ export class WebLoader extends BaseLoader<{ type: 'WebLoader' }> {
 
         try {
             const data = this.isUrl ? (await getSafe(this.urlOrContent, { format: 'text' })).body : this.urlOrContent;
-            console.log('WTF', data);
 
             const text = convert(data, {
                 wordwrap: false,
