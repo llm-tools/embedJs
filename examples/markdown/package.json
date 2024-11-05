@@ -1,0 +1,11 @@
+{
+    "name": "@llm-tools/embedjs-examples-markdown",
+    "version": "0.1.1",
+    "type": "module",
+    "dependencies": {
+        "dotenv": "^16.4.5"
+    },
+    "scripts": {
+        "start": "nx run examples-markdown:serve"
+    }
+}
