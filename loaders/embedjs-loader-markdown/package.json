@@ -1,15 +1,15 @@
 {
     "name": "@llm-tools/embedjs-loader-markdown",
-    "version": "0.1.16",
+    "version": "0.1.17",
     "description": "XML loader for embedjs",
     "dependencies": {
-        "@llm-tools/embedjs-interfaces": "0.1.16",
-        "@llm-tools/embedjs-loader-web": "0.1.16",
+        "@llm-tools/embedjs-interfaces": "0.1.17",
+        "@llm-tools/embedjs-loader-web": "0.1.17",
         "debug": "^4.3.7",
+        "md5": "^2.3.0",
         "micromark": "^4.0.0",
         "micromark-extension-gfm": "^3.0.0",
-        "micromark-extension-mdx-jsx": "^3.0.1",
-        "md5": "^2.3.0"
+        "micromark-extension-mdx-jsx": "^3.0.1"
     },
     "type": "module",
     "main": "./src/index.js",
