@@ -1,0 +1,29 @@
+{
+    "name": "embedjs-loader-markdown",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "loaders/embedjs-loader-markdown/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/esm/embedjs-loader-markdown",
+                "main": "loaders/embedjs-loader-markdown/src/index.ts",
+                "tsConfig": "loaders/embedjs-loader-markdown/tsconfig.lib.json",
+                "assets": ["loaders/embedjs-loader-markdown/*.md"]
+            }
+        },
+        "build-cjs": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "dependsOn": ["^build-cjs"],
+            "options": {
+                "outputPath": "dist/cjs/embedjs-loader-markdown",
+                "main": "loaders/embedjs-loader-markdown/src/index.ts",
+                "tsConfig": "loaders/embedjs-loader-markdown/tsconfig.cjs.json"
+            }
+        }
+    }
+}
