@@ -1,0 +1,29 @@
+{
+    "name": "embedjs-llama-cpp",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "models/embedjs-llama-cpp/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/esm/embedjs-llama-cpp",
+                "main": "models/embedjs-llama-cpp/src/index.ts",
+                "tsConfig": "models/embedjs-llama-cpp/tsconfig.lib.json",
+                "assets": ["models/embedjs-llama-cpp/*.md"]
+            }
+        },
+        "build-cjs": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "dependsOn": ["^build-cjs"],
+            "options": {
+                "outputPath": "dist/cjs/embedjs-llama-cpp",
+                "main": "models/embedjs-llama-cpp/src/index.ts",
+                "tsConfig": "models/embedjs-llama-cpp/tsconfig.cjs.json"
+            }
+        }
+    }
+}
