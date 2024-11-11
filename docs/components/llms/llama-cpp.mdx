@@ -1,0 +1,23 @@
+---
+title: 'LlamaCpp'
+---
+
+You can also use locally running models by `node-llama-cpp`.
+
+## Install LlamaCpp addon
+
+```bash
+npm install @llm-tools/embedjs-llama-cpp
+```
+
+## Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { LlamaCpp } from '@llm-tools/embedjs-llama-cpp';
+
+const app = await new RAGApplicationBuilder()
+.setModel(new LlamaCpp({
+    modelPath: "../models/llama-3.1-8b-instruct-hf-q4_k_m.gguf",
+}))
+```

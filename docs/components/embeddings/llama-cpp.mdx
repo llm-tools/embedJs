@@ -1,0 +1,23 @@
+---
+title: 'LlamaCpp'
+---
+
+EmbedJs supports local embeddings via `LlamaCpp`.
+
+## Install LlamaCpp addon
+
+```bash
+npm install @llm-tools/embedjs-llama-cpp
+```
+
+## Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { LlamaCppEmbeddings } from '@llm-tools/embedjs-llama-cpp';
+
+const app = await new RAGApplicationBuilder()
+.setEmbeddingModel(new LlamaCppEmbeddings({
+    modelPath: "./models/nomic-embed-text-v1.5.f16.gguf",
+}))
+```
