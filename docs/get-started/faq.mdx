@@ -60,8 +60,8 @@ const ragApplication = await new RAGApplicationBuilder()
     .setEmbeddingModel(new OllamaEmbeddings({ model: 'nomic-embed-text', baseUrl: 'http://localhost:11434' }))
     .build();
 
-ragApplication.addLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-musk' })
-ragApplication.addLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Elon_Musk' })
+await ragApplication.addLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-musk' })
+await ragApplication.addLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Elon_Musk' })
 
 await ragApplication.query('What is the net worth of Elon Musk today?')
 ```
