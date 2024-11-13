@@ -183,6 +183,7 @@ export class RAGApplication {
         await loader.init();
         const chunks = await loader.getChunks();
 
+        this.debug('Chunks generator received', uniqueId);
         const { newInserts } = await this.batchLoadChunks(uniqueId, chunks);
         this.debug(`Add loader completed with ${newInserts} new entries for`, uniqueId);
 
@@ -226,20 +227,20 @@ export class RAGApplication {
      * The function `batchLoadChunks` processes chunks of data in batches and formats them for insertion.
      * @param {string} uniqueId - The `uniqueId` parameter is a string that represents a unique
      * identifier for loader being processed.
-     * @param incrementalGenerator - The `incrementalGenerator` parameter in the `batchLoadChunks`
+     * @param generator - The `incrementalGenerator` parameter in the `batchLoadChunks`
      * function is an asynchronous generator that yields `LoaderChunk` objects.
      * @returns The `batchLoadChunks` function returns an object with two properties:
      * 1. `newInserts`: The total number of new inserts made during the batch loading process.
      * 2. `formattedChunks`: An array containing the formatted chunks that were processed during the
      * batch loading process.
      */
-    private async batchLoadChunks(uniqueId: string, incrementalGenerator: AsyncGenerator<LoaderChunk, void, void>) {
+    private async batchLoadChunks(uniqueId: string, generator: AsyncGenerator<LoaderChunk, void, void>) {
         let i = 0,
             batchSize = 0,
             newInserts = 0,
             formattedChunks: Chunk[] = [];
 
-        for await (const chunk of incrementalGenerator) {
+        for await (const chunk of generator) {
             batchSize++;
 
             const formattedChunk = {

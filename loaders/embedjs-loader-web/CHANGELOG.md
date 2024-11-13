@@ -1,3 +1,7 @@
+## 0.1.18 (2024-11-13)
+
+This was a version bump only for embedjs-loader-web to align it with other projects, there were no code changes.
+
 ## 0.1.17 (2024-11-05)
 
 ### 🚀 Features
