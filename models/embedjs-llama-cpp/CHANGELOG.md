@@ -1,3 +1,3 @@
-## 0.1.0 (2024-10-31)
+## 0.1.18 (2024-11-13)
 
-Complate LlamaCppModel & LlamaCppEmbeddings.
+Complete LlamaCppModel & LlamaCppEmbeddings support for embedJs
