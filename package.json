@@ -7,7 +7,7 @@
         "url": "https://github.com/llm-tools/embedjs/issues"
     },
     "homepage": "https://github.com/llm-tools/embedjs#readme",
-    "version": "0.1.0",
+    "version": "0.1.18",
     "scripts": {
         "build:esm": "nx run-many --t=build",
         "build:cjs": "nx run-many --t=build-cjs && node scripts/move-cjs-to-dist.js",
