@@ -45,8 +45,8 @@ const ragApplication = await new RAGApplicationBuilder()
 .setVectorDatabase(new HNSWDb())
 .build();
 
-ragApplication.addLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-musk' })
-ragApplication.addLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Elon_Musk' })
+await ragApplication.addLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-musk' })
+await ragApplication.addLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Elon_Musk' })
 
 await ragApplication.query('What is the net worth of Elon Musk today?')
 //Answer: The net worth of Elon Musk today is $258.7 billion.
@@ -63,7 +63,7 @@ In this section, we will use both an LLM and embedding model from OpenAI.
 
 <CodeGroup>
 ```ts openai_demo.ts
-import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { RAGApplicationBuilder, SIMPLE_MODELS } from '@llm-tools/embedjs';
 import { OpenAiEmbeddings } from '@llm-tools/embedjs-openai';
 import { WebLoader } from '@llm-tools/embedjs-loader-web';
 import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
@@ -77,8 +77,8 @@ const ragApplication = await new RAGApplicationBuilder()
 .setVectorDatabase(new HNSWDb())
 .build();
 
-ragApplication.addLoader(new WebLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-musk' }));
-ragApplication.addLoader(new WebLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Elon_Musk' }));
+await ragApplication.addLoader(new WebLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-musk' }));
+await ragApplication.addLoader(new WebLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Elon_Musk' }));
 
 await ragApplication.query('What is the net worth of Elon Musk today?')
 //Answer: The net worth of Elon Musk today is $258.7 billion.
