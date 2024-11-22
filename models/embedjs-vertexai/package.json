@@ -3,8 +3,8 @@
     "version": "0.1.18",
     "description": "Enable usage of VertexAI models with embedjs",
     "dependencies": {
-        "@langchain/core": "^0.3.17",
-        "@langchain/google-vertexai": "^0.1.0",
+        "@langchain/core": "^0.3.18",
+        "@langchain/google-vertexai": "^0.1.2",
         "@llm-tools/embedjs-interfaces": "0.1.18",
         "debug": "^4.3.7"
     },

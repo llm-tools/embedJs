@@ -3,7 +3,7 @@
     "version": "0.1.18",
     "description": "Add LanceDb support to embedjs",
     "dependencies": {
-        "@lancedb/lancedb": "^0.12.0",
+        "@lancedb/lancedb": "^0.13.0",
         "@llm-tools/embedjs-interfaces": "0.1.18",
         "compute-cosine-similarity": "^1.1.0"
     },

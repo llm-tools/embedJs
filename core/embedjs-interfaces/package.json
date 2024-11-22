@@ -3,10 +3,10 @@
     "version": "0.1.18",
     "description": "Interfaces for extending the embedjs ecosystem",
     "dependencies": {
-        "@langchain/core": "^0.3.17",
+        "@langchain/core": "^0.3.18",
         "debug": "^4.3.7",
         "md5": "^2.3.0",
-        "uuid": "^11.0.2"
+        "uuid": "^11.0.3"
     },
     "type": "module",
     "main": "./src/index.js",
