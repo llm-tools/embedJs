@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { RAGApplicationBuilder } from '@llm-tools/embedjs';
 import { OpenAiEmbeddings } from '@llm-tools/embedjs-openai';
 import { WebLoader } from '@llm-tools/embedjs-loader-web';
