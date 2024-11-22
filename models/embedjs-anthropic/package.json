@@ -3,8 +3,8 @@
     "version": "0.1.18",
     "description": "Enable usage of Anthropic models with embedjs",
     "dependencies": {
-        "@langchain/anthropic": "^0.3.7",
-        "@langchain/core": "^0.3.17",
+        "@langchain/anthropic": "^0.3.8",
+        "@langchain/core": "^0.3.18",
         "@llm-tools/embedjs-interfaces": "0.1.18",
         "debug": "^4.3.7"
     },
