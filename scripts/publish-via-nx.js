@@ -59,7 +59,7 @@ async function updatePackageVersion(pkgName, version, versionMap, dryRun) {
     if (!found) console.error(`Could not find '${pkgName}' in any of the folders`);
 }
 
-async function createRelease(dryRun, version, isCi) {
+async function createRelease(dryRun, version, makeGitCommit) {
     console.log('Running nx release');
     const { workspaceVersion, projectsVersionData } = await releaseVersion({
         gitTag: false,
@@ -89,10 +89,10 @@ async function createRelease(dryRun, version, isCi) {
         versionData: projectsVersionData,
         version: workspaceVersion,
         verbose: true,
-        dryRun: !isCi,
+        dryRun,
     });
 
-    if (isCi) {
+    if (makeGitCommit) {
         console.log('Committing changes');
         const git = simpleGit().clean(CleanOptions.FORCE);
 
@@ -115,6 +115,7 @@ async function startReleasePipeline() {
 
     const isCi = args['--ci'] ? true : false;
     const dryRun = isCi ? false : await confirm({ message: 'Is this a dry run?', default: true, required: true });
+    const makeGitCommit = isCi ? false : !dryRun;
 
     let version = 'patch';
     if (!args['--version']) {
@@ -133,7 +134,7 @@ async function startReleasePipeline() {
         }
     } else version = args['--version'];
 
-    await createRelease(dryRun, version, isCi);
+    await createRelease(dryRun, version, makeGitCommit);
 }
 
 await startReleasePipeline();
