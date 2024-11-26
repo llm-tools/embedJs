@@ -3,7 +3,7 @@ import { Collection, MongoClient } from 'mongodb';
 import { BaseStore, Conversation, LoaderListEntry, Message } from '@llm-tools/embedjs-interfaces';
 
 export class MongoStore implements BaseStore {
-    private readonly debug = createDebugMessages('embedjs:cache:MongoCache');
+    private readonly debug = createDebugMessages('embedjs:store:MongoCache');
     private readonly uri: string;
     private readonly dbName: string;
     private readonly cacheCollectionName: string;

@@ -1,11 +1,13 @@
 import * as fsOld from 'node:fs';
 import * as fs from 'node:fs/promises';
+import createDebugMessages from 'debug';
 import similarity from 'compute-cosine-similarity';
 import { Table, connect } from '@lancedb/lancedb';
 
 import { BaseVectorDatabase, ExtractChunkData, InsertChunkData } from '@llm-tools/embedjs-interfaces';
 
 export class LanceDb implements BaseVectorDatabase {
+    private readonly debug = createDebugMessages('embedjs:vector:LanceDb');
     private static readonly STATIC_DB_NAME = 'vectors';
     private readonly isTemp: boolean = true;
     private readonly path: string;
@@ -18,13 +20,16 @@ export class LanceDb implements BaseVectorDatabase {
 
     async init({ dimensions }: { dimensions: number }) {
         if (!this.isTemp && !fsOld.existsSync(this.path)) {
+            this.debug(`Creating dir at path - ${this.path}`);
             await fs.mkdir(this.path);
         }
 
         const dir = await (this.isTemp ? fs.mkdtemp(this.path) : this.path);
+        this.debug(`Connecting to path - ${dir}`);
         const client = await connect(dir);
 
         const list = await client.tableNames();
+        this.debug.log(`Table names found - [${list.join(',')}]`);
         if (list.indexOf(LanceDb.STATIC_DB_NAME) > -1) this.table = await client.openTable(LanceDb.STATIC_DB_NAME);
         else {
             //TODO: You can add a proper schema instead of a sample record now but it requires another package apache-arrow; another install on downstream as well
@@ -56,12 +61,14 @@ export class LanceDb implements BaseVectorDatabase {
             };
         });
 
+        this.debug.log(`Executing insert of ${mapped.length} entries`);
         await this.table.add(mapped);
         return mapped.length; //TODO: check if vectorDb has addressed the issue where add returns undefined
     }
 
     async similaritySearch(query: number[], k: number): Promise<ExtractChunkData[]> {
         const results = await this.table.search(query).limit(k).toArray();
+        this.debug.log(`Query found ${results.length} entries`);
 
         return (
             results

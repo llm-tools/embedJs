@@ -25,6 +25,7 @@
             "@llm-tools/embedjs-huggingface": ["models/embedjs-huggingface/src/index.ts"],
             "@llm-tools/embedjs-interfaces": ["core/embedjs-interfaces/src/index.ts"],
             "@llm-tools/embedjs-lancedb": ["databases/embedjs-lancedb/src/index.ts"],
+            "@llm-tools/embedjs-libsql": ["databases/embedjs-libsql/src/index.ts"],
             "@llm-tools/embedjs-lmdb": ["databases/embedjs-lmdb/src/index.ts"],
             "@llm-tools/embedjs-loader-confluence": ["loaders/embedjs-loader-confluence/src/index.ts"],
             "@llm-tools/embedjs-loader-csv": ["loaders/embedjs-loader-csv/src/index.ts"],

@@ -1,3 +1,9 @@
+## 0.1.19 (2024-11-26)
+
+### 🚀 Features
+
+This was a version bump only for embedjs-loader-confluence to align it with other projects, there were no code changes.
+
 ## 0.1.18 (2024-11-13)
 
 This was a version bump only for embedjs-loader-csv to align it with other projects, there were no code changes.
