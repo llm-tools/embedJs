@@ -25,6 +25,7 @@
             "@llm-tools/embedjs-huggingface": ["models/embedjs-huggingface/src/index.ts"],
             "@llm-tools/embedjs-interfaces": ["core/embedjs-interfaces/src/index.ts"],
             "@llm-tools/embedjs-lancedb": ["databases/embedjs-lancedb/src/index.ts"],
+            "@llm-tools/embedjs-libsql": ["databases/embedjs-libsql/src/index.ts"],
             "@llm-tools/embedjs-lmdb": ["databases/embedjs-lmdb/src/index.ts"],
             "@llm-tools/embedjs-loader-confluence": ["loaders/embedjs-loader-confluence/src/index.ts"],
             "@llm-tools/embedjs-loader-csv": ["loaders/embedjs-loader-csv/src/index.ts"],
@@ -42,7 +43,6 @@
             "@llm-tools/embedjs-pinecone": ["databases/embedjs-pinecone/src/index.ts"],
             "@llm-tools/embedjs-qdrant": ["databases/embedjs-qdrant/src/index.ts"],
             "@llm-tools/embedjs-redis": ["databases/embedjs-redis/src/index.ts"],
-            "@llm-tools/embedjs-libsql": ["databases/embedjs-libsql/src/index.ts"],
             "@llm-tools/embedjs-utils": ["core/embedjs-utils/src/index.ts"],
             "@llm-tools/embedjs-vertexai": ["models/embedjs-vertexai/src/index.ts"],
             "@llm-tools/embedjs-weaviate": ["databases/embedjs-weaviate/src/index.ts"]

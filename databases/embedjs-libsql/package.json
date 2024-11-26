@@ -1,10 +1,10 @@
 {
     "name": "@llm-tools/embedjs-libsql",
-    "version": "0.1.18",
+    "version": "0.1.19",
     "description": "Add LibSQL support to embedjs",
     "dependencies": {
-        "@llm-tools/embedjs-interfaces": "0.1.18",
         "@libsql/client": "^0.14.0",
+        "@llm-tools/embedjs-interfaces": "0.1.19",
         "debug": "^4.3.7"
     },
     "type": "module",
