@@ -3,7 +3,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { existsSync } from 'node:fs';
 
-import { releaseVersion, releaseChangelog } from 'nx/release/index.js';
+import { releaseVersion } from 'nx/release/index.js';
 import { confirm, input } from '@inquirer/prompts';
 import PackageJson from '@npmcli/package-json';
 import arg from 'arg';
@@ -61,7 +61,7 @@ async function updatePackageVersion(pkgName, version, versionMap, dryRun) {
 
 async function createRelease(dryRun, version, makeGitCommit) {
     console.log('Running nx release');
-    const { workspaceVersion, projectsVersionData } = await releaseVersion({
+    const { /*workspaceVersion,*/ projectsVersionData } = await releaseVersion({
         gitTag: false,
         gitCommit: false,
         specifier: version,
@@ -81,16 +81,16 @@ async function createRelease(dryRun, version, makeGitCommit) {
         else console.log(`Skipping '${pkgName}' version update as it's already up to date`);
     }
 
-    console.log('Running nx changelog');
-    await releaseChangelog({
-        gitTag: false,
-        gitCommit: false,
-        createRelease: false,
-        versionData: projectsVersionData,
-        version: workspaceVersion,
-        verbose: true,
-        dryRun,
-    });
+    // console.log('Running nx changelog');
+    // await releaseChangelog({
+    //     gitTag: false,
+    //     gitCommit: false,
+    //     createRelease: false,
+    //     versionData: projectsVersionData,
+    //     version: workspaceVersion,
+    //     verbose: true,
+    //     dryRun,
+    // });
 
     if (makeGitCommit) {
         console.log('Committing changes');

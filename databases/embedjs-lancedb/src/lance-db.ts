@@ -25,15 +25,14 @@ export class LanceDb implements BaseVectorDatabase {
         }
 
         const dir = await (this.isTemp ? fs.mkdtemp(this.path) : this.path);
-        this.debug(`Connecting to path - ${dir}`);
+        this.debug(`Connecting to database at path - ${dir}`);
         const client = await connect(dir);
 
-        const list = await client.tableNames();
-        this.debug(`Table names found - [${list.join(',')}]`);
-        if (list.indexOf(LanceDb.STATIC_DB_NAME) > -1) this.table = await client.openTable(LanceDb.STATIC_DB_NAME);
-        else {
-            //TODO: You can add a proper schema instead of a sample record now but it requires another package apache-arrow; another install on downstream as well
-            this.table = await client.createTable(LanceDb.STATIC_DB_NAME, [
+        this.debug('Trying to connect to table');
+        this.table = await client.createTable(
+            LanceDb.STATIC_DB_NAME,
+            [
+                //TODO: You can add a proper schema instead of a sample record now but it requires another package apache-arrow; another install on downstream as well
                 {
                     id: 'md5',
                     pageContent: 'sample',
@@ -42,8 +41,10 @@ export class LanceDb implements BaseVectorDatabase {
                     vectorString: 'sample',
                     metadata: 'sample',
                 },
-            ]);
-        }
+            ],
+            { existOk: true },
+        );
+        this.debug('Connected to table');
     }
 
     async insertChunks(chunks: InsertChunkData[]): Promise<number> {

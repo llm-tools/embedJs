@@ -1,9 +1,9 @@
 {
     "name": "@llm-tools/embedjs-loader-xml",
-    "version": "0.1.20",
+    "version": "0.1.21",
     "description": "XML loader for embedjs",
     "dependencies": {
-        "@llm-tools/embedjs-interfaces": "0.1.20",
+        "@llm-tools/embedjs-interfaces": "0.1.21",
         "debug": "^4.3.7",
         "fast-xml-parser": "^4.5.0",
         "md5": "^2.3.0"
