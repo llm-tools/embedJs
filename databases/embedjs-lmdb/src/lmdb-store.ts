@@ -1,7 +1,9 @@
+import createDebugMessages from 'debug';
 import { BaseStore, Conversation, LoaderListEntry, Message } from '@llm-tools/embedjs-interfaces';
 import * as lmdb from 'lmdb';
 
 export class LmdbStore implements BaseStore {
+    private readonly debug = createDebugMessages('embedjs:store:LmdbStore');
     private static readonly LOADER_METADATA_PREFIX = 'LOADER_METADATA_';
     private static readonly CUSTOM_KEYS_PREFIX = 'CUSTOM_KEYS_';
 
@@ -13,6 +15,7 @@ export class LmdbStore implements BaseStore {
     }
 
     async init(): Promise<void> {
+        this.debug.log(`Opening LMDB connection with path - ${this.dataPath}`);
         this.database = lmdb.open({
             path: this.dataPath,
             compression: true,

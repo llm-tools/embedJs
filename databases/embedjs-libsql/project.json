@@ -1,0 +1,29 @@
+{
+    "name": "embedjs-libsql",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "databases/embedjs-libsql/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/esm/embedjs-libsql",
+                "main": "databases/embedjs-libsql/src/index.ts",
+                "tsConfig": "databases/embedjs-libsql/tsconfig.lib.json",
+                "assets": ["databases/embedjs-libsql/*.md"]
+            }
+        },
+        "build-cjs": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "dependsOn": ["^build-cjs"],
+            "options": {
+                "outputPath": "dist/cjs/embedjs-libsql",
+                "main": "databases/embedjs-libsql/src/index.ts",
+                "tsConfig": "databases/embedjs-libsql/tsconfig.cjs.json"
+            }
+        }
+    }
+}
