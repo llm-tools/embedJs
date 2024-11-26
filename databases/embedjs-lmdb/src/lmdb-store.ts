@@ -15,7 +15,7 @@ export class LmdbStore implements BaseStore {
     }
 
     async init(): Promise<void> {
-        this.debug.log(`Opening LMDB connection with path - ${this.dataPath}`);
+        this.debug(`Opening LMDB connection with path - ${this.dataPath}`);
         this.database = lmdb.open({
             path: this.dataPath,
             compression: true,

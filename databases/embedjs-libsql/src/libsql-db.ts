@@ -38,7 +38,7 @@ export class LibSqlDb implements BaseVectorDatabase {
             ${values.join(',')}
         );`;
 
-        this.debug.log(`Executing statement - ${statement}`);
+        this.debug(`Executing statement - ${statement}`);
         const result = await this.client.execute(statement);
         return result.rowsAffected;
     }
@@ -51,7 +51,7 @@ export class LibSqlDb implements BaseVectorDatabase {
             TOP ${k}
             ASC;`;
 
-        this.debug.log(`Executing statement - ${statement}`);
+        this.debug(`Executing statement - ${statement}`);
         const results = await this.client.execute(statement);
 
         return results.rows.map((result) => {

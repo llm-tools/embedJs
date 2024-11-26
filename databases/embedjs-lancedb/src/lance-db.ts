@@ -29,7 +29,7 @@ export class LanceDb implements BaseVectorDatabase {
         const client = await connect(dir);
 
         const list = await client.tableNames();
-        this.debug.log(`Table names found - [${list.join(',')}]`);
+        this.debug(`Table names found - [${list.join(',')}]`);
         if (list.indexOf(LanceDb.STATIC_DB_NAME) > -1) this.table = await client.openTable(LanceDb.STATIC_DB_NAME);
         else {
             //TODO: You can add a proper schema instead of a sample record now but it requires another package apache-arrow; another install on downstream as well
@@ -61,14 +61,14 @@ export class LanceDb implements BaseVectorDatabase {
             };
         });
 
-        this.debug.log(`Executing insert of ${mapped.length} entries`);
+        this.debug(`Executing insert of ${mapped.length} entries`);
         await this.table.add(mapped);
         return mapped.length; //TODO: check if vectorDb has addressed the issue where add returns undefined
     }
 
     async similaritySearch(query: number[], k: number): Promise<ExtractChunkData[]> {
         const results = await this.table.search(query).limit(k).toArray();
-        this.debug.log(`Query found ${results.length} entries`);
+        this.debug(`Query found ${results.length} entries`);
 
         return (
             results
