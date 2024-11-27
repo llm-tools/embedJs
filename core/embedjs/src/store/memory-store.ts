@@ -50,16 +50,22 @@ export class MemoryStore implements BaseStore {
         const loaderId = <string>this.loaderCustomValues[key].loaderId;
 
         delete this.loaderList[key];
-        this.loaderCustomValuesMap.set(
-            loaderId,
-            this.loaderCustomValuesMap.get(loaderId).filter((k) => k !== key),
-        );
+
+        if (this.loaderCustomValuesMap.has(loaderId)) {
+            this.loaderCustomValuesMap.set(
+                loaderId,
+                this.loaderCustomValuesMap.get(loaderId).filter((k) => k !== key),
+            );
+        }
     }
 
     async deleteLoaderMetadataAndCustomValues(loaderId: string): Promise<void> {
-        this.loaderCustomValuesMap.get(loaderId).forEach((key) => {
-            delete this.loaderCustomValues[key];
-        });
+        if (this.loaderCustomValuesMap.has(loaderId)) {
+            this.loaderCustomValuesMap.get(loaderId).forEach((key) => {
+                delete this.loaderCustomValues[key];
+            });
+        }
+
         this.loaderCustomValuesMap.delete(loaderId);
         delete this.loaderList[loaderId];
     }

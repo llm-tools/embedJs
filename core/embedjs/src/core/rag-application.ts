@@ -307,6 +307,17 @@ export class RAGApplication {
     }
 
     /**
+     * The function `deleteConversation` deletes all entries related to a particular conversation from the database
+     * @param {string} conversationId - The `conversationId` that you want to delete. Pass 'default' to delete
+     * the default conversation thread that is created and maintained automatically
+     */
+    public async deleteConversation(conversationId: string) {
+        if (this.store) {
+            await this.store.deleteConversation(conversationId);
+        }
+    }
+
+    /**
      * The function `deleteLoader` deletes embeddings from a loader after confirming the action.
      * @param {string} uniqueLoaderId - The `uniqueLoaderId` parameter is a string that represents the
      * identifier of the loader that you want to delete.

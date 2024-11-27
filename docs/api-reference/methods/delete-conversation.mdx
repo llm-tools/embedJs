@@ -1,0 +1,37 @@
+---
+title: 🗑 deleteConversation
+---
+
+The `deleteConversation()` method allows you to delete a particular conversation thread from the database
+
+### Parameters
+
+<ParamField path="conversationId" type="string" required>
+    The conversationId that you want to delete. 
+    If you want to delete the conversations stored when there were no conversation ids passed, pass in 'default'
+</ParamField>
+
+### Usage
+
+```ts
+import 'dotenv/config';
+import path from 'node:path';
+import { RAGApplicationBuilder, SIMPLE_MODELS } from '@llm-tools/embedjs';
+import { LibSqlDb, LibSqlStore } from '@llm-tools/embedjs-libsql';
+import { OpenAiEmbeddings } from '@llm-tools/embedjs-openai';
+import { WebLoader } from '@llm-tools/embedjs-loader-web';
+
+const databasePath = path.resolve('./examples/libsql/data.db');
+const ragApplication = await new RAGApplicationBuilder()
+    .setStore(new LibSqlStore({ path: databasePath }))
+    .setVectorDatabase(new LibSqlDb({ path: databasePath }))
+    .setEmbeddingModel(new OpenAiEmbeddings())
+    .setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+    .build();
+
+await ragApplication.addLoader(new WebLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Elon_Musk' }));
+console.log(await ragApplication.query('Was Elon Musk the founder of Tesla originally?'));
+console.log(await ragApplication.query('What is the net worth of Elon Musk today?'));
+
+await app.deleteConversation('default');
+```

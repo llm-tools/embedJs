@@ -96,6 +96,7 @@
                         {
                             "group": "Built in",
                             "pages": [
+                                "components/vector-databases/libsql",
                                 "components/vector-databases/lancedb",
                                 "components/vector-databases/mongodb",
                                 "components/vector-databases/pinecone",
@@ -148,7 +149,12 @@
                         "components/stores/overview",
                         {
                             "group": "Built in",
-                            "pages": ["components/stores/lmdb", "components/stores/mongodb", "components/stores/redis"]
+                            "pages": [
+                                "components/stores/lmdb",
+                                "components/stores/libsql",
+                                "components/stores/mongodb",
+                                "components/stores/redis"
+                            ]
                         }
                     ]
                 }
@@ -174,6 +180,7 @@
                         "api-reference/methods/add-loader",
                         "api-reference/methods/get-loaders",
                         "api-reference/methods/delete-loader",
+                        "api-reference/methods/delete-conversation",
                         "api-reference/methods/reset"
                     ]
                 }

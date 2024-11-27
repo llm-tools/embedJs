@@ -1,12 +1,12 @@
 {
     "name": "@llm-tools/embedjs-huggingface",
-    "version": "0.1.21",
+    "version": "0.1.22",
     "description": "Enable usage of HuggingFace models with embedjs",
     "dependencies": {
         "@huggingface/inference": "^2.8.1",
         "@langchain/community": "^0.3.16",
         "@langchain/core": "^0.3.19",
-        "@llm-tools/embedjs-interfaces": "0.1.21",
+        "@llm-tools/embedjs-interfaces": "0.1.22",
         "debug": "^4.3.7"
     },
     "type": "module",

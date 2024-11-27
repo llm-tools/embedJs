@@ -61,7 +61,7 @@ async function updatePackageVersion(pkgName, version, versionMap, dryRun) {
 
 async function createRelease(dryRun, version, makeGitCommit) {
     console.log('Running nx release');
-    const { /*workspaceVersion,*/ projectsVersionData } = await releaseVersion({
+    const { workspaceVersion, projectsVersionData } = await releaseVersion({
         gitTag: false,
         gitCommit: false,
         specifier: version,
