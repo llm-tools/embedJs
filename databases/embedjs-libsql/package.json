@@ -4,6 +4,7 @@
     "description": "Add LibSQL support to embedjs",
     "dependencies": {
         "@libsql/client": "^0.14.0",
+        "@llm-tools/embedjs-utils": "0.1.21",
         "@llm-tools/embedjs-interfaces": "0.1.21",
         "debug": "^4.3.7"
     },

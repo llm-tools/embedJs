@@ -1,0 +1,24 @@
+---
+title: LibSQL
+---
+
+You can use [LibSQL](https://docs.turso.tech/introduction) a fork of SQLite to store values locally on disk.
+
+## Install LibSQL addon
+
+```bash
+npm install @llm-tools/embedjs-libsql
+```
+
+## Usage
+<CodeGroup>
+```ts Partial example
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { LibSqlStore } from '@llm-tools/embedjs-libsql';
+
+const app = await new RAGApplicationBuilder()
+.setStore(new LibSqlStore({ path: './data.db' }))
+```
+</CodeGroup>
+
+<Snippet file="missing-store-tip.mdx" />

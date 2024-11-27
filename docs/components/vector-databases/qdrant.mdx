@@ -28,7 +28,7 @@ const app = await new RAGApplicationBuilder()
 .build();
 
 
-//add data source and start query in
+//add data source and start query it
 await app.addLoader(new WebLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-musk' }));
 await app.query('Tell me about Elon Musk');
 ```
