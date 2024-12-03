@@ -1,10 +1,12 @@
 import { CohereEmbeddings as LangChainCohereEmbeddings } from '@langchain/cohere';
 import { BaseEmbeddings } from '@llm-tools/embedjs-interfaces';
 
-export class CohereEmbeddings implements BaseEmbeddings {
+export class CohereEmbeddings extends BaseEmbeddings {
     private model: LangChainCohereEmbeddings;
 
     constructor() {
+        super();
+
         this.model = new LangChainCohereEmbeddings({
             model: 'embed-english-v2.0',
             maxConcurrency: 3,
@@ -12,15 +14,15 @@ export class CohereEmbeddings implements BaseEmbeddings {
         });
     }
 
-    async getDimensions(): Promise<number> {
+    override async getDimensions(): Promise<number> {
         return 4096;
     }
 
-    async embedDocuments(texts: string[]): Promise<number[][]> {
+    override async embedDocuments(texts: string[]): Promise<number[][]> {
         return this.model.embedDocuments(texts);
     }
 
-    async embedQuery(text: string): Promise<number[]> {
+    override async embedQuery(text: string): Promise<number[]> {
         return this.model.embedQuery(text);
     }
 }

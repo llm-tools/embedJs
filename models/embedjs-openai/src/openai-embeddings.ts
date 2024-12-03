@@ -1,10 +1,11 @@
 import { OpenAIEmbeddings } from '@langchain/openai';
 import { BaseEmbeddings } from '@llm-tools/embedjs-interfaces';
 
-export class OpenAiEmbeddings implements BaseEmbeddings {
+export class OpenAiEmbeddings extends BaseEmbeddings {
     private model: OpenAIEmbeddings;
 
     constructor(private readonly configuration?: ConstructorParameters<typeof OpenAIEmbeddings>[0]) {
+        super();
         if (!this.configuration) this.configuration = {};
         if (!this.configuration.model) this.configuration.model = 'text-embedding-3-small';
 
@@ -23,15 +24,15 @@ export class OpenAiEmbeddings implements BaseEmbeddings {
         this.model = new OpenAIEmbeddings(this.configuration);
     }
 
-    async getDimensions(): Promise<number> {
+    override async getDimensions(): Promise<number> {
         return this.configuration.dimensions;
     }
 
-    async embedDocuments(texts: string[]): Promise<number[][]> {
+    override async embedDocuments(texts: string[]): Promise<number[][]> {
         return this.model.embedDocuments(texts);
     }
 
-    async embedQuery(text: string): Promise<number[]> {
+    override async embedQuery(text: string): Promise<number[]> {
         return this.model.embedQuery(text);
     }
 }

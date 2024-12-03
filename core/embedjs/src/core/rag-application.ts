@@ -44,8 +44,6 @@ export class RAGApplication {
 
         this.searchResultCount = llmBuilder.getSearchResultCount();
         this.embeddingRelevanceCutOff = llmBuilder.getEmbeddingRelevanceCutOff();
-
-        RAGEmbedding.init(llmBuilder.getEmbeddingModel());
     }
 
     /**
@@ -57,6 +55,8 @@ export class RAGApplication {
      * LLM based on the configuration provided
      */
     public async init(llmBuilder: RAGApplicationBuilder) {
+        await RAGEmbedding.init(llmBuilder.getEmbeddingModel());
+
         this.model = await this.getModel(llmBuilder.getModel());
         if (!this.model) this.debug('No base model set; query function unavailable!');
         else BaseModel.setDefaultTemperature(llmBuilder.getTemperature());

@@ -116,13 +116,17 @@ export class LibSqlStore implements BaseStore {
     }
 
     async loaderCustomSet<T extends Record<string, unknown>>(loaderId: string, key: string, value: T): Promise<void> {
+        this.debug(`LibSQL custom set '${key}' with values`, value);
         await this.loaderCustomDelete(key);
 
-        await this.client.execute({
+        this.debug(`LibSQL custom set '${key}' insert started`);
+        const results = await this.client.execute({
             sql: `INSERT INTO ${this.loadersCustomDataTableName} (key, loaderId, value)
                 VALUES (?, ?, ?)`,
             args: [key, loaderId, JSON.stringify(value)],
         });
+
+        this.debug(`LibSQL custom set for key '${key}' resulted in`, results.rows);
     }
 
     async loaderCustomGet<T extends Record<string, unknown>>(key: string): Promise<T> {
@@ -144,10 +148,15 @@ export class LibSqlStore implements BaseStore {
     }
 
     async loaderCustomDelete(key: string): Promise<void> {
-        await this.client.execute(`DELETE FROM ${this.loadersCustomDataTableName} WHERE key = '${key}';`);
+        this.debug(`LibSQL custom delete '${key}'`);
+        const results = await this.client.execute(
+            `DELETE FROM ${this.loadersCustomDataTableName} WHERE key = '${key}';`,
+        );
+        this.debug(`LibSQL custom delete for key '${key}' resulted in`, results.rowsAffected);
     }
 
     async deleteLoaderMetadataAndCustomValues(loaderId: string): Promise<void> {
+        this.debug(`LibSQL deleteLoaderMetadataAndCustomValues for loader '${loaderId}'`);
         await this.client.execute(`DELETE FROM ${this.loadersTableName} WHERE id = '${loaderId}';`);
         await this.client.execute(`DELETE FROM ${this.loadersCustomDataTableName} WHERE loaderId = '${loaderId}';`);
     }

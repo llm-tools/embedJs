@@ -1,7 +1,7 @@
 import { OllamaEmbeddings as OllamaEmbedding, OllamaInput } from '@langchain/ollama';
 import { BaseEmbeddings } from '@llm-tools/embedjs-interfaces';
 
-export class OllamaEmbeddings implements BaseEmbeddings {
+export class OllamaEmbeddings extends BaseEmbeddings {
     private model: OllamaEmbedding;
 
     constructor(options: {
@@ -11,6 +11,8 @@ export class OllamaEmbeddings implements BaseEmbeddings {
         keepAlive?: string;
         requestOptions?: Omit<OllamaInput, 'baseUrl' | 'model' | 'format' | 'headers'>;
     }) {
+        super();
+
         this.model = new OllamaEmbedding({
             model: options.model,
             baseUrl: options.baseUrl,
@@ -19,16 +21,16 @@ export class OllamaEmbeddings implements BaseEmbeddings {
         });
     }
 
-    async getDimensions(): Promise<number> {
+    override async getDimensions(): Promise<number> {
         const sample = await this.model.embedDocuments(['sample']);
         return sample[0].length;
     }
 
-    async embedDocuments(texts: string[]): Promise<number[][]> {
+    override async embedDocuments(texts: string[]): Promise<number[][]> {
         return this.model.embedDocuments(texts);
     }
 
-    async embedQuery(text: string): Promise<number[]> {
+    override async embedQuery(text: string): Promise<number[]> {
         return this.model.embedQuery(text);
     }
 }
