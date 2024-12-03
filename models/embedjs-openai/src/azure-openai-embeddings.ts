@@ -1,10 +1,11 @@
 import { AzureOpenAIEmbeddings as LangchainAzureOpenAiEmbeddings } from '@langchain/openai';
 import { BaseEmbeddings } from '@llm-tools/embedjs-interfaces';
 
-export class AzureOpenAiEmbeddings implements BaseEmbeddings {
+export class AzureOpenAiEmbeddings extends BaseEmbeddings {
     private model: LangchainAzureOpenAiEmbeddings;
 
     constructor(private readonly configuration?: ConstructorParameters<typeof LangchainAzureOpenAiEmbeddings>[0]) {
+        super();
         if (!this.configuration) this.configuration = {};
         if (!this.configuration.model) this.configuration.model = 'text-embedding-3-small';
 
@@ -23,15 +24,15 @@ export class AzureOpenAiEmbeddings implements BaseEmbeddings {
         this.model = new LangchainAzureOpenAiEmbeddings(this.configuration);
     }
 
-    async getDimensions(): Promise<number> {
+    override async getDimensions(): Promise<number> {
         return this.configuration.dimensions;
     }
 
-    async embedDocuments(texts: string[]): Promise<number[][]> {
+    override async embedDocuments(texts: string[]): Promise<number[][]> {
         return this.model.embedDocuments(texts);
     }
 
-    async embedQuery(text: string): Promise<number[]> {
+    override async embedQuery(text: string): Promise<number[]> {
         return this.model.embedQuery(text);
     }
 }

@@ -63,12 +63,13 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
 
     private async *processSpace(spaceKey: string) {
         this.debug('Processing space', spaceKey);
+
         try {
             const spaceContent = await this.confluence.space.getContentForSpace({ spaceKey });
             this.debug(`Confluence space '${spaceKey}' has '${spaceContent['page'].results.length}' root pages`);
 
-            for (const { id } of spaceContent['page'].results) {
-                for await (const result of this.processPage(id)) {
+            for (const { id, title } of spaceContent['page'].results) {
+                for await (const result of this.processPage(id, title)) {
                     yield result;
                 }
             }
@@ -78,8 +79,10 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
         }
     }
 
-    private async *processPage(pageId: string) {
+    private async *processPage(pageId: string, title: string) {
+        this.debug('Processing page', title);
         let confluenceVersion = 0;
+
         try {
             const spaceProperties = await this.confluence.content.getContentById({
                 id: pageId,
@@ -89,29 +92,29 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
             if (!spaceProperties.version.number) throw new Error('Version number not found in space properties...');
             confluenceVersion = spaceProperties.version.number;
         } catch (e) {
-            this.debug('Could not get page properties. Page will be SKIPPED!', pageId, e.response);
+            this.debug('Could not get page properties. Page will be SKIPPED!', title, e.response);
             return;
         }
 
         let doProcess = false;
         if (!(await this.checkInCache(pageId))) {
-            this.debug(`Processing '${pageId}' for the FIRST time...`);
+            this.debug(`Processing '${title}' for the FIRST time...`);
             doProcess = true;
         } else {
             const cacheVersion = (await this.getFromCache(pageId)).version;
             if (cacheVersion !== confluenceVersion) {
                 this.debug(
-                    `For page '${pageId}' - version in cache is ${cacheVersion} and confluence version is ${confluenceVersion}. This page will be PROCESSED.`,
+                    `For page '${title}' - version in cache is ${cacheVersion} and confluence version is ${confluenceVersion}. This page will be PROCESSED.`,
                 );
                 doProcess = true;
             } else
                 this.debug(
-                    `For page '${pageId}' - version in cache and confluence are the same ${confluenceVersion}. This page will be SKIPPED.`,
+                    `For page '${title}' - version in cache and confluence are the same ${confluenceVersion}. This page will be SKIPPED.`,
                 );
         }
 
         if (!doProcess) {
-            this.debug(`Skipping page '${pageId}'`);
+            this.debug(`Skipping page '${title}'`);
             return;
         }
 
@@ -126,6 +129,7 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
                 return;
             }
 
+            this.debug(`Processing content for page '${title}'...`);
             for await (const result of this.getContentChunks(content.body.view.value, content._links.webui)) {
                 yield result;
             }
@@ -133,14 +137,19 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
             await this.saveToCache(pageId, { version: confluenceVersion });
 
             if (content.children) {
-                for (const { id } of content.children.page.results) {
-                    for await (const result of this.processPage(id)) {
-                        yield result;
+                for (const { id, title } of content.children.page.results) {
+                    try {
+                        for await (const result of this.processPage(id, title)) {
+                            yield result;
+                        }
+                    } catch (e) {
+                        this.debug(`Error! Could not process page child '${title}'`, pageId, e);
+                        return;
                     }
                 }
             }
         } catch (e) {
-            this.debug('Error! Could not process page content or children', pageId, e);
+            this.debug('Error! Could not process page content', pageId, e);
             return;
         }
     }

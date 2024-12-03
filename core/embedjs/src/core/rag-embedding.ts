@@ -4,8 +4,9 @@ import { Document } from 'langchain/document';
 export class RAGEmbedding {
     private static singleton: RAGEmbedding;
 
-    public static init(embeddingModel: BaseEmbeddings) {
+    public static async init(embeddingModel: BaseEmbeddings) {
         if (!this.singleton) {
+            await embeddingModel.init();
             this.singleton = new RAGEmbedding(embeddingModel);
         }
     }
