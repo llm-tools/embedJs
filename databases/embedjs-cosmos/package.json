@@ -1,10 +1,10 @@
 {
     "name": "@llm-tools/embedjs-cosmos",
-    "version": "0.1.23",
+    "version": "0.1.24",
     "description": "Add CosmosDB support to embedjs",
     "dependencies": {
         "@azure/cosmos": "^4.2.0",
-        "@llm-tools/embedjs-interfaces": "0.1.23",
+        "@llm-tools/embedjs-interfaces": "0.1.24",
         "debug": "^4.4.0"
     },
     "type": "module",
