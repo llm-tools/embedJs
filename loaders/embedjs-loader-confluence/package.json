@@ -6,7 +6,7 @@
         "@llm-tools/embedjs-interfaces": "0.1.23",
         "@llm-tools/embedjs-loader-web": "0.1.23",
         "confluence.js": "^1.7.4",
-        "debug": "^4.3.7",
+        "debug": "^4.4.0",
         "md5": "^2.3.0"
     },
     "type": "module",

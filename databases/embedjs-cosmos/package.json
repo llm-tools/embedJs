@@ -5,7 +5,7 @@
     "dependencies": {
         "@azure/cosmos": "^4.2.0",
         "@llm-tools/embedjs-interfaces": "0.1.23",
-        "debug": "^4.3.7"
+        "debug": "^4.4.0"
     },
     "type": "module",
     "main": "./src/index.js",

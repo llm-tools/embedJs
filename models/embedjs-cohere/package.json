@@ -5,7 +5,7 @@
     "dependencies": {
         "@langchain/cohere": "^0.3.1",
         "@llm-tools/embedjs-interfaces": "0.1.23",
-        "cohere-ai": "^7.14.0"
+        "cohere-ai": "^7.15.0"
     },
     "type": "module",
     "main": "./src/index.js",

@@ -3,10 +3,10 @@
     "version": "0.1.23",
     "description": "Enable usage of OpenAI models with embedjs",
     "dependencies": {
-        "@langchain/core": "^0.3.19",
+        "@langchain/core": "^0.3.23",
         "@langchain/openai": "^0.3.14",
         "@llm-tools/embedjs-interfaces": "0.1.23",
-        "debug": "^4.3.7"
+        "debug": "^4.4.0"
     },
     "type": "module",
     "main": "./src/index.js",
