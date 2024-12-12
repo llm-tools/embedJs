@@ -1,10 +1,10 @@
 {
     "name": "@llm-tools/embedjs-hnswlib",
-    "version": "0.1.23",
+    "version": "0.1.24",
     "description": "Add HNSWLib support to embedjs",
     "dependencies": {
-        "@llm-tools/embedjs-interfaces": "0.1.23",
-        "debug": "^4.3.7",
+        "@llm-tools/embedjs-interfaces": "0.1.24",
+        "debug": "^4.4.0",
         "hnswlib-node": "^3.0.0"
     },
     "type": "module",

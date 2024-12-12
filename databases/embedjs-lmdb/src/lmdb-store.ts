@@ -103,7 +103,7 @@ export class LmdbStore implements BaseStore {
     }
 
     async addEntryToConversation(conversationId: string, entry: Message): Promise<void> {
-        const conversation = await this.getConversation(`conversation_${conversationId}`);
+        const conversation = await this.getConversation(conversationId);
         conversation.entries.push(entry);
 
         await this.database.put(`conversation_${conversationId}`, conversation);
