@@ -1,16 +1,16 @@
 {
     "type": "module",
     "name": "@llm-tools/embedjs",
-    "version": "0.1.24",
+    "version": "0.1.25",
     "description": "A NodeJS RAG framework to easily work with LLMs and custom datasets",
     "dependencies": {
         "@langchain/textsplitters": "^0.1.0",
-        "@llm-tools/embedjs-interfaces": "0.1.24",
-        "@llm-tools/embedjs-utils": "0.1.24",
+        "@llm-tools/embedjs-interfaces": "0.1.25",
+        "@llm-tools/embedjs-utils": "0.1.25",
         "debug": "^4.4.0",
         "langchain": "^0.3.7",
         "md5": "^2.3.0",
-        "mime": "^4.0.4",
+        "mime": "^4.0.6",
         "stream-mime-type": "^2.0.0"
     },
     "devDependencies": {

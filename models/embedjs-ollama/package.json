@@ -1,11 +1,11 @@
 {
     "name": "@llm-tools/embedjs-ollama",
-    "version": "0.1.24",
+    "version": "0.1.25",
     "description": "Enable usage of Ollama with embedjs",
     "dependencies": {
-        "@langchain/core": "^0.3.23",
-        "@langchain/ollama": "^0.1.3",
-        "@llm-tools/embedjs-interfaces": "0.1.24",
+        "@langchain/core": "^0.3.25",
+        "@langchain/ollama": "^0.1.4",
+        "@llm-tools/embedjs-interfaces": "0.1.25",
         "debug": "^4.4.0"
     },
     "type": "module",

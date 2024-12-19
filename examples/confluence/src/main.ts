@@ -13,5 +13,5 @@ const llmApplication = await new RAGApplicationBuilder()
     .setEmbeddingModel(new OpenAiEmbeddings())
     .build();
 
-await llmApplication.addLoader(new ConfluenceLoader({ spaceNames: ['DEMO'] }));
+await llmApplication.addLoader(new ConfluenceLoader({ spaceName: 'DEMO' }));
 console.log(await llmApplication.query('Who founded Tesla?'));
