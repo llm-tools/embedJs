@@ -5,7 +5,7 @@
     "dependencies": {
         "@llm-tools/embedjs-interfaces": "0.1.24",
         "debug": "^4.4.0",
-        "fast-xml-parser": "^4.5.0",
+        "fast-xml-parser": "^4.5.1",
         "md5": "^2.3.0"
     },
     "type": "module",

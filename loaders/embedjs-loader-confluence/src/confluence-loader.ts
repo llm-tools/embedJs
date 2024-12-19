@@ -10,32 +10,34 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
 
     private readonly confluence: ConfluenceClient;
     private readonly confluenceBaseUrl: string;
-    private readonly spaceNames: string[];
+    private readonly spaceName: string;
+
+    private readonly lastUpdatedFilter?: Date;
 
     constructor({
-        spaceNames,
+        spaceName,
         confluenceBaseUrl,
         confluenceUsername,
         confluenceToken,
         chunkSize,
         chunkOverlap,
+        options,
     }: {
-        spaceNames: [string, ...string[]];
+        spaceName: string;
         confluenceBaseUrl?: string;
         confluenceUsername?: string;
         confluenceToken?: string;
         chunkSize?: number;
         chunkOverlap?: number;
+        options?: {
+            lastUpdatedFilter: Date;
+        };
     }) {
-        super(
-            `ConfluenceLoader_${md5(spaceNames.sort().join(','))}`,
-            { spaceNames },
-            chunkSize ?? 2000,
-            chunkOverlap ?? 200,
-        );
+        super(`ConfluenceLoader_${md5(spaceName)}`, { spaceName }, chunkSize ?? 2000, chunkOverlap ?? 200);
 
-        this.spaceNames = spaceNames;
+        this.spaceName = spaceName;
         this.confluenceBaseUrl = confluenceBaseUrl ?? process.env.CONFLUENCE_BASE_URL;
+        this.lastUpdatedFilter = options?.lastUpdatedFilter ?? null;
 
         this.confluence = new ConfluenceClient({
             host: this.confluenceBaseUrl,
@@ -49,16 +51,13 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
     }
 
     override async *getUnfilteredChunks() {
-        for (const spaceKey of this.spaceNames) {
-            let count = 0;
-
-            for await (const result of this.processSpace(spaceKey)) {
-                yield result;
-                count++;
-            }
-
-            this.debug(`Space '${spaceKey}' had ${count} new pages`);
+        let count = 0;
+        for await (const result of this.processSpace(this.spaceName)) {
+            yield result;
+            count++;
         }
+
+        this.debug(`Space '${this.spaceName}' had ${count} new pages`);
     }
 
     private async *processSpace(spaceKey: string) {
@@ -84,13 +83,26 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
         let confluenceVersion = 0;
 
         try {
-            const spaceProperties = await this.confluence.content.getContentById({
+            const pageProperties = await this.confluence.content.getContentById({
                 id: pageId,
-                expand: ['version'],
+                expand: ['version', 'history'],
             });
 
-            if (!spaceProperties.version.number) throw new Error('Version number not found in space properties...');
-            confluenceVersion = spaceProperties.version.number;
+            if (this.lastUpdatedFilter) {
+                const pageLastEditDate = new Date(pageProperties.history.lastUpdated.when);
+
+                if (pageLastEditDate > this.lastUpdatedFilter) {
+                    this.debug(`Page '${title}' has last edit date ${pageLastEditDate}. Continuing...`);
+                } else {
+                    this.debug(
+                        `Page '${title}' has last edit date ${pageLastEditDate}, which is less than filter date. Skipping...`,
+                    );
+                    return;
+                }
+            }
+
+            if (!pageProperties.version.number) throw new Error('Version number not found in page properties...');
+            confluenceVersion = pageProperties.version.number;
         } catch (e) {
             this.debug('Could not get page properties. Page will be SKIPPED!', title, e.response);
             return;

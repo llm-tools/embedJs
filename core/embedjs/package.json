@@ -10,7 +10,7 @@
         "debug": "^4.4.0",
         "langchain": "^0.3.7",
         "md5": "^2.3.0",
-        "mime": "^4.0.4",
+        "mime": "^4.0.6",
         "stream-mime-type": "^2.0.0"
     },
     "devDependencies": {
