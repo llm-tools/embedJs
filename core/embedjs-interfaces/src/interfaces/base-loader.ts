@@ -40,12 +40,12 @@ export abstract class BaseLoader<
         createDebugMessages('embedjs:loader:BaseLoader')(`New loader class initalized with key ${uniqueId}`);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    public async init(): Promise<void> {}
-
     public getUniqueId(): string {
         return this.uniqueId;
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    public async init(): Promise<void> {}
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
     public injectModel(_model: BaseModel) {}

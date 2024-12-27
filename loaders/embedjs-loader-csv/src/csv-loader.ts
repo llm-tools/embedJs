@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import md5 from 'md5';
 
 import { BaseLoader } from '@llm-tools/embedjs-interfaces';
-import { cleanString, getSafe, isValidURL, stream2buffer } from '@llm-tools/embedjs-utils';
+import { cleanString, getSafe, isValidURL, streamToBuffer } from '@llm-tools/embedjs-utils';
 
 export class CsvLoader extends BaseLoader<{ type: 'CsvLoader' }> {
     private readonly debug = createDebugMessages('embedjs:loader:CsvLoader');
@@ -33,7 +33,7 @@ export class CsvLoader extends BaseLoader<{ type: 'CsvLoader' }> {
     override async *getUnfilteredChunks() {
         const buffer = this.isUrl
             ? (await getSafe(this.filePathOrUrl, { format: 'buffer' })).body
-            : await stream2buffer(fs.createReadStream(this.filePathOrUrl));
+            : await streamToBuffer(fs.createReadStream(this.filePathOrUrl));
 
         this.debug('CsvParser stream created');
         const parser = parse(buffer, this.csvParseOptions);
