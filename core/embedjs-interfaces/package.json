@@ -3,7 +3,7 @@
     "version": "0.1.25",
     "description": "Interfaces for extending the embedjs ecosystem",
     "dependencies": {
-        "@langchain/core": "^0.3.25",
+        "@langchain/core": "^0.3.26",
         "debug": "^4.4.0",
         "md5": "^2.3.0",
         "uuid": "^11.0.3"

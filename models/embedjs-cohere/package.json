@@ -3,7 +3,7 @@
     "version": "0.1.25",
     "description": "Enable usage of Cohere models with embedjs",
     "dependencies": {
-        "@langchain/cohere": "^0.3.1",
+        "@langchain/cohere": "^0.3.2",
         "@llm-tools/embedjs-interfaces": "0.1.25",
         "cohere-ai": "^7.15.0"
     },
