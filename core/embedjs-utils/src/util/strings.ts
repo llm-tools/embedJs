@@ -41,10 +41,10 @@ export function toTitleCase(str: string) {
     });
 }
 
-export function isValidURL(url: string) {
+export function isValidURL(candidateUrl: string) {
     try {
-        new URL(url);
-        return true;
+        const url = new URL(candidateUrl);
+        return url.protocol === 'http:' || url.protocol === 'https:';
     } catch {
         return false;
     }
