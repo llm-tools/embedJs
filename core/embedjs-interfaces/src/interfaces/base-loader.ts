@@ -4,6 +4,7 @@ import { EventEmitter } from 'node:events';
 
 import { BaseStore } from './base-store.js';
 import { LoaderChunk, UnfilteredLoaderChunk } from '../types.js';
+import { BaseModel } from './base-model.js';
 
 export abstract class BaseLoader<
     MetadataTemplate extends Record<string, string | number | boolean> = Record<string, string | number | boolean>,
@@ -45,6 +46,9 @@ export abstract class BaseLoader<
     public getUniqueId(): string {
         return this.uniqueId;
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
+    public injectModel(_model: BaseModel) {}
 
     private async recordLoaderInCache(chunksProcessed: number) {
         if (!BaseLoader.store) return;

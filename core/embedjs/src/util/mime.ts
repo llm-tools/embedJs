@@ -99,6 +99,15 @@ export async function createLoaderFromMimeType(loaderData: string, mimeType: str
             createDebugMessages('embedjs:util:createLoaderFromMimeType')('Dynamically imported MarkdownLoader');
             return new MarkdownLoader({ filePathOrUrl: loaderData });
         }
+        case 'image/png':
+        case 'image/jpeg': {
+            const { ImageLoader } = await import('@llm-tools/embedjs-loader-image').catch(() => {
+                throw new Error('Package `@llm-tools/embedjs-loader-image` needs to be installed to load images');
+            });
+            createDebugMessages('embedjs:util:createLoaderFromMimeType')('Dynamically imported ImageLoader');
+            return new ImageLoader({ filePathOrUrl: loaderData, mime: mimeType });
+        }
+
         case undefined:
             throw new Error(`MIME type could not be detected. Please file an issue if you think this is a bug.`);
         default:
