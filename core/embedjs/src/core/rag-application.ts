@@ -164,6 +164,7 @@ export class RAGApplication {
     private async _addLoader(loader: BaseLoader, forceReload: boolean): Promise<AddLoaderReturn> {
         const uniqueId = loader.getUniqueId();
         this.debug('Exploring loader', uniqueId);
+        if (this.model) loader.injectModel(this.model);
 
         if (this.store && (await this.store.hasLoaderMetadata(uniqueId))) {
             if (forceReload) {

@@ -135,5 +135,17 @@ export abstract class BaseModel {
         };
     }
 
+    public async simpleQuery(messages: (AIMessage | SystemMessage | HumanMessage)[]) {
+        const response = await this.runQuery(messages);
+
+        return {
+            result: response.result,
+            tokenUse: {
+                inputTokens: response.tokenUse?.inputTokens ?? 'UNKNOWN',
+                outputTokens: response.tokenUse?.outputTokens ?? 'UNKNOWN',
+            },
+        };
+    }
+
     protected abstract runQuery(messages: (AIMessage | SystemMessage | HumanMessage)[]): Promise<ModelResponse>;
 }

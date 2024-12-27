@@ -29,6 +29,7 @@
             "@llm-tools/embedjs-lmdb": ["databases/embedjs-lmdb/src/index.ts"],
             "@llm-tools/embedjs-loader-confluence": ["loaders/embedjs-loader-confluence/src/index.ts"],
             "@llm-tools/embedjs-loader-csv": ["loaders/embedjs-loader-csv/src/index.ts"],
+            "@llm-tools/embedjs-loader-image": ["loaders/embedjs-loader-image/src/index.ts"],
             "@llm-tools/embedjs-loader-markdown": ["loaders/embedjs-loader-markdown/src/index.ts"],
             "@llm-tools/embedjs-loader-msoffice": ["loaders/embedjs-loader-msoffice/src/index.ts"],
             "@llm-tools/embedjs-loader-pdf": ["loaders/embedjs-loader-pdf/src/index.ts"],

@@ -1,9 +1,9 @@
 {
     "name": "@llm-tools/embedjs-mongodb",
-    "version": "0.1.26",
+    "version": "0.1.27",
     "description": "Add MongoDB support to embedjs",
     "dependencies": {
-        "@llm-tools/embedjs-interfaces": "0.1.26",
+        "@llm-tools/embedjs-interfaces": "0.1.27",
         "debug": "^4.4.0",
         "mongodb": "^6.12.0"
     },

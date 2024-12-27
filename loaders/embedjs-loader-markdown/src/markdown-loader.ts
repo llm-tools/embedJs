@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import md5 from 'md5';
 
 import { BaseLoader } from '@llm-tools/embedjs-interfaces';
-import { getSafe, isValidURL, stream2buffer } from '@llm-tools/embedjs-utils';
+import { getSafe, isValidURL, streamToBuffer } from '@llm-tools/embedjs-utils';
 import { WebLoader } from '@llm-tools/embedjs-loader-web';
 
 export class MarkdownLoader extends BaseLoader<{ type: 'MarkdownLoader' }> {
@@ -32,7 +32,7 @@ export class MarkdownLoader extends BaseLoader<{ type: 'MarkdownLoader' }> {
     override async *getUnfilteredChunks() {
         const buffer = this.isUrl
             ? (await getSafe(this.filePathOrUrl, { format: 'buffer' })).body
-            : await stream2buffer(fs.createReadStream(this.filePathOrUrl));
+            : await streamToBuffer(fs.createReadStream(this.filePathOrUrl));
 
         this.debug('MarkdownLoader stream created');
         const result = micromark(buffer, { extensions: [gfm(), mdxJsx()], htmlExtensions: [gfmHtml()] });

@@ -49,7 +49,7 @@ export class LibSqlDb implements BaseVectorDatabase {
 
     async similaritySearch(query: number[], k: number): Promise<ExtractChunkData[]> {
         const statement = `SELECT id, pageContent, uniqueLoaderId, source, metadata,
-                vector_distance_cos(vector, vector32('[${query.join(',')}]'))
+                vector_distance_cos(vector, vector32('[${query.join(',')}]')) as distance
             FROM ${this.tableName}
             ORDER BY vector_distance_cos(vector, vector32('[${query.join(',')}]')) ASC
             LIMIT ${k};`;
@@ -63,7 +63,7 @@ export class LibSqlDb implements BaseVectorDatabase {
             return {
                 metadata,
                 pageContent: result.pageContent.toString(),
-                score: 1,
+                score: 1 - <number>result.distance,
             };
         });
     }

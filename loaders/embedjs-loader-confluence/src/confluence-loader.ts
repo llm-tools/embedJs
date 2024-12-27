@@ -21,7 +21,7 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
         confluenceToken,
         chunkSize,
         chunkOverlap,
-        options,
+        filterOptions,
     }: {
         spaceName: string;
         confluenceBaseUrl?: string;
@@ -29,7 +29,7 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
         confluenceToken?: string;
         chunkSize?: number;
         chunkOverlap?: number;
-        options?: {
+        filterOptions?: {
             lastUpdatedFilter: Date;
         };
     }) {
@@ -37,7 +37,7 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
 
         this.spaceName = spaceName;
         this.confluenceBaseUrl = confluenceBaseUrl ?? process.env.CONFLUENCE_BASE_URL;
-        this.lastUpdatedFilter = options?.lastUpdatedFilter ?? null;
+        this.lastUpdatedFilter = filterOptions?.lastUpdatedFilter ?? null;
 
         this.confluence = new ConfluenceClient({
             host: this.confluenceBaseUrl,
