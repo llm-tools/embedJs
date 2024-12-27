@@ -8,10 +8,6 @@
     "$schema": "./node_modules/nx/schemas/nx-schema.json",
     "defaultBase": "main",
     "nxCloudId": "66f6d7217cbafe1e30563d6e",
-    "namedInputs": {
-        "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"],
-        "default": ["sharedGlobals"]
-    },
     "plugins": [
         {
             "plugin": "@nx/eslint/plugin",
