@@ -1,6 +1,5 @@
 import createDebugMessages from 'debug';
 
-import { RAGEmbedding } from './rag-embedding.js';
 import { RAGApplicationBuilder } from './rag-application-builder.js';
 import {
     AddLoaderReturn,
@@ -14,6 +13,7 @@ import {
     QueryResponse,
     SIMPLE_MODELS,
     DEFAULT_INSERT_BATCH_SIZE,
+    BaseEmbeddings,
 } from '@llm-tools/embedjs-interfaces';
 import { cleanString, getUnique } from '@llm-tools/embedjs-utils';
 
@@ -24,12 +24,14 @@ export class RAGApplication {
     private readonly searchResultCount: number;
     private readonly systemMessage: string;
     private readonly vectorDatabase: BaseVectorDatabase;
+    private readonly embeddingModel: BaseEmbeddings;
     private readonly store: BaseStore;
     private loaders: BaseLoader[];
     private model: BaseModel;
 
     constructor(llmBuilder: RAGApplicationBuilder) {
         if (!llmBuilder.getEmbeddingModel()) throw new Error('Embedding model must be set!');
+        this.embeddingModel = llmBuilder.getEmbeddingModel();
 
         this.storeConversationsToDefaultThread = llmBuilder.getParamStoreConversationsToDefaultThread();
         this.store = llmBuilder.getStore();
@@ -55,7 +57,7 @@ export class RAGApplication {
      * LLM based on the configuration provided
      */
     public async init(llmBuilder: RAGApplicationBuilder) {
-        await RAGEmbedding.init(llmBuilder.getEmbeddingModel());
+        await this.embeddingModel.init();
 
         this.model = await this.getModel(llmBuilder.getModel());
         if (!this.model) this.debug('No base model set; query function unavailable!');
@@ -68,7 +70,7 @@ export class RAGApplication {
             this.debug('Initialized LLM class');
         }
 
-        await this.vectorDatabase.init({ dimensions: await RAGEmbedding.getEmbedding().getDimensions() });
+        await this.vectorDatabase.init({ dimensions: await this.embeddingModel.getDimensions() });
         this.debug('Initialized vector database');
 
         if (this.store) {
@@ -117,7 +119,7 @@ export class RAGApplication {
      */
     private async embedChunks(chunks: Pick<Chunk, 'pageContent'>[]) {
         const texts = chunks.map(({ pageContent }) => pageContent);
-        return RAGEmbedding.getEmbedding().embedDocuments(texts);
+        return this.embeddingModel.embedDocuments(texts);
     }
 
     /**
@@ -352,7 +354,7 @@ export class RAGApplication {
      * only the number of results specified by the `searchResultCount` property.
      */
     public async getEmbeddings(cleanQuery: string) {
-        const queryEmbedded = await RAGEmbedding.getEmbedding().embedQuery(cleanQuery);
+        const queryEmbedded = await this.embeddingModel.embedQuery(cleanQuery);
         const unfilteredResultSet = await this.vectorDatabase.similaritySearch(
             queryEmbedded,
             this.searchResultCount + 10,
