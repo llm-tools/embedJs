@@ -84,6 +84,7 @@
                                 "components/data-sources/markdown",
                                 "components/data-sources/xml",
                                 "components/data-sources/directory",
+                                "components/data-sources/image",
                                 "components/data-sources/custom"
                             ]
                         }

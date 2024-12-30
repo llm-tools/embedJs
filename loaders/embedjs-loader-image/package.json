@@ -9,7 +9,8 @@
         "debug": "^4.4.0",
         "md5": "^2.3.0",
         "mime": "^4.0.6",
-        "stream-mime-type": "^2.0.0"
+        "stream-mime-type": "^2.0.0",
+        "exifremove": "^1.0.1"
     },
     "type": "module",
     "main": "./src/index.js",

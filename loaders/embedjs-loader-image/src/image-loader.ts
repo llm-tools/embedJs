@@ -1,11 +1,12 @@
 import { HumanMessage } from '@langchain/core/messages';
 import { getMimeType } from 'stream-mime-type';
 import createDebugMessages from 'debug';
+import exifremove from 'exifremove';
 import fs from 'node:fs';
 import md5 from 'md5';
 
 import { BaseLoader, BaseModel } from '@llm-tools/embedjs-interfaces';
-import { cleanString, contentTypeToMimeType, getSafe, isValidURL, streamToString } from '@llm-tools/embedjs-utils';
+import { cleanString, contentTypeToMimeType, getSafe, isValidURL, streamToBuffer } from '@llm-tools/embedjs-utils';
 
 export class ImageLoader extends BaseLoader<{ type: 'ImageLoader' }> {
     private readonly debug = createDebugMessages('embedjs:loader:ImageLoader');
@@ -60,9 +61,11 @@ export class ImageLoader extends BaseLoader<{ type: 'ImageLoader' }> {
         }
 
         this.debug(`Image stream detected type '${this.mime}'`);
-        const text = this.isUrl
-            ? (await getSafe(this.filePathOrUrl, { format: 'text' })).body
-            : await streamToString(fs.createReadStream(this.filePathOrUrl));
+        const buffer = this.isUrl
+            ? (await getSafe(this.filePathOrUrl, { format: 'buffer' })).body
+            : await streamToBuffer(fs.createReadStream(this.filePathOrUrl));
+
+        const plainImageBuffer = exifremove.remove(buffer);
 
         const message = new HumanMessage({
             content: [
@@ -73,7 +76,7 @@ export class ImageLoader extends BaseLoader<{ type: 'ImageLoader' }> {
                 {
                     type: 'image_url',
                     image_url: {
-                        url: `data:${this.mime};base64,${btoa(text)}`,
+                        url: `data:${this.mime};base64,${plainImageBuffer.toString('base64')}`,
                     },
                 },
             ],
@@ -81,7 +84,7 @@ export class ImageLoader extends BaseLoader<{ type: 'ImageLoader' }> {
 
         this.debug('Asking LLM to describe image');
         const response = await this.captionModel.simpleQuery([message]);
-        this.debug('LLM describes image as', response.result);
+        this.debug('LLM describes image as: ', response.result);
 
         yield {
             pageContent: cleanString(response.result),
