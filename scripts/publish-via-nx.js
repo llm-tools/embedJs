@@ -2,10 +2,10 @@ import { simpleGit, CleanOptions } from 'simple-git';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { existsSync } from 'node:fs';
-
 import { releaseVersion } from 'nx/release/index.js';
 import { confirm, input } from '@inquirer/prompts';
 import PackageJson from '@npmcli/package-json';
+import { execa } from 'execa';
 import arg from 'arg';
 
 function abs(relativePath) {
@@ -18,7 +18,7 @@ function abs(relativePath) {
  */
 async function updateRootPackageVersion(version, dryRun) {
     const absPath = abs('..');
-    console.log(`Updating root package at path '${absPath}' to version '${version}' ${dryRun ? '[dry run]' : ''}`);
+    console.log(`Updating root package '${absPath}' to version '${version}' ${dryRun ? '[dry run]' : ''}`);
     const pkgJson = await PackageJson.load(absPath);
     pkgJson.update({ version });
 
@@ -89,11 +89,12 @@ async function createRelease(dryRun, version, makeGitCommit) {
     }
 
     console.log('Updating projects actual version to match NX computed values');
-    await updateRootPackageVersion(newVersion, dryRun);
     for await (const [pkgName, { newVersion }] of Object.entries(projectsVersionData)) {
         if (newVersion !== null) await updatePackageVersion(pkgName, newVersion, versionMap, dryRun);
         else console.log(`Skipping '${pkgName}' version update as it's already up to date`);
+        version = newVersion;
     }
+    await updateRootPackageVersion(version, dryRun);
 
     // console.log('Running nx changelog');
     // await releaseChangelog({
@@ -105,6 +106,10 @@ async function createRelease(dryRun, version, makeGitCommit) {
     //     verbose: true,
     //     dryRun,
     // });
+
+    console.log('Regenrating NPM lock file');
+    const { stderr } = await execa`npm install`;
+    if (stderr) console.log('NPM Install failed', stderr);
 
     if (makeGitCommit) {
         console.log('Committing changes');

@@ -1,16 +1,16 @@
 {
     "name": "@llm-tools/embedjs-loader-image",
-    "version": "0.1.27",
+    "version": "0.1.28",
     "description": "Load images into embedjs",
     "dependencies": {
         "@langchain/core": "^0.3.26",
-        "@llm-tools/embedjs-interfaces": "0.1.27",
-        "@llm-tools/embedjs-utils": "0.1.27",
+        "@llm-tools/embedjs-interfaces": "0.1.28",
+        "@llm-tools/embedjs-utils": "0.1.28",
         "debug": "^4.4.0",
+        "exifremove": "^1.0.1",
         "md5": "^2.3.0",
         "mime": "^4.0.6",
-        "stream-mime-type": "^2.0.0",
-        "exifremove": "^1.0.1"
+        "stream-mime-type": "^2.0.0"
     },
     "type": "module",
     "main": "./src/index.js",
