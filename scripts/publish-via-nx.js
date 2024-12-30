@@ -18,7 +18,7 @@ function abs(relativePath) {
  */
 async function updateRootPackageVersion(version, dryRun) {
     const absPath = abs('..');
-    console.log(`Updating root package at path '${absPath}' to version '${version}' ${dryRun ? '[dry run]' : ''}`);
+    console.log(`Updating root package '${absPath}' to version '${version}' ${dryRun ? '[dry run]' : ''}`);
     const pkgJson = await PackageJson.load(absPath);
     pkgJson.update({ version });
 
