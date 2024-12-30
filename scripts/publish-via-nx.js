@@ -13,6 +13,19 @@ function abs(relativePath) {
 }
 
 /**
+ * @param {string} version - The version to update the root package to
+ * @param {boolean} dryRun - Whether to perform a dry run or not
+ */
+async function updateRootPackageVersion(version, dryRun) {
+    const absPath = abs('..');
+    console.log(`Updating root package at path '${absPath}' to version '${version}' ${dryRun ? '[dry run]' : ''}`);
+    const pkgJson = await PackageJson.load(absPath);
+    pkgJson.update({ version });
+
+    if (!dryRun) await pkgJson.save();
+}
+
+/**
  * @param {pkgName} pkgName - The name of the package to update
  * @param {string} version - The version to update the package to
  * @param {Map<string, string>} versionMap - A map of package names to versions
@@ -76,6 +89,7 @@ async function createRelease(dryRun, version, makeGitCommit) {
     }
 
     console.log('Updating projects actual version to match NX computed values');
+    await updateRootPackageVersion(newVersion, dryRun);
     for await (const [pkgName, { newVersion }] of Object.entries(projectsVersionData)) {
         if (newVersion !== null) await updatePackageVersion(pkgName, newVersion, versionMap, dryRun);
         else console.log(`Skipping '${pkgName}' version update as it's already up to date`);

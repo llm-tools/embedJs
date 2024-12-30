@@ -1,0 +1,31 @@
+---
+title: '🖼️ Image'
+---
+
+You can load most images using an LLM to describe the contents of the image. This LLM by default is the one used with the application, 
+but a special LLM can also be specified for the content description. To load images, follow the steps below.
+
+## Install Image addon
+
+```bash
+npm install @llm-tools/embedjs-loader-image
+```
+
+## Usage
+
+### Load from a local file
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { ImageLoader } from '@llm-tools/embedjs-loader-image';
+import { OpenAiEmbeddings } from '@llm-tools/embedjs-openai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+
+const app = await new RAGApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setEmbeddingModel(new OpenAiEmbeddings())
+.setVectorDatabase(new HNSWDb())
+.build();
+
+app.addLoader(new ImageLoader({ filePathOrUrl: '/path/to/file.jpeg' }))
+```
