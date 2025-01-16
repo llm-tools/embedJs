@@ -10,7 +10,7 @@ Function signature is given below:
 <ParamField path="userQuery" type="string" required>
     Question to ask
 </ParamField>
-<ParamField path="conversationId" type="bool" optional>
+<ParamField path="conversationId" type="string" optional>
     The conversation ID to which the query belongs in case this is a chatbot scenario
 </ParamField>
 <ParamField path="customContext" type="Chunk[]" optional>
@@ -90,6 +90,7 @@ ragApplication.addLoader({ urlOrContent: 'https://www.forbes.com/profile/elon-mu
 ragApplication.addLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Elon_Musk' })
 
 await ragApplication.query('What is the net worth of Elon Musk today?')
+await ragApplication.query('Who is Elon Musk?' { conversationId: '1' })
 /*
 
 */
