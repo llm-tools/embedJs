@@ -19,10 +19,10 @@ It segments data into manageable chunks, generates relevant embeddings, and stor
 
 Comprehensive guides and API documentation are available to help you get the most out of EmbedJs:
 
--   [Introduction](https://llm-tools.mintlify.app/get-started/introduction#what-is-embedjs)
--   [Getting Started](https://llm-tools.mintlify.app/get-started/quickstart)
--   [Supported data types](https://llm-tools.mintlify.app/components/data-sources/overview)
--   [Examples](https://llm-tools.mintlify.app/examples)
+- [Introduction](https://llm-tools.mintlify.app/get-started/introduction#what-is-embedjs)
+- [Getting Started](https://llm-tools.mintlify.app/get-started/quickstart)
+- [Supported data types](https://llm-tools.mintlify.app/components/data-sources/overview)
+- [Examples](https://llm-tools.mintlify.app/examples)
 
 ## 🌐 Contributing
 

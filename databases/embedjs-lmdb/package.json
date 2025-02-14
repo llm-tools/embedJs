@@ -5,7 +5,7 @@
     "dependencies": {
         "@llm-tools/embedjs-interfaces": "0.1.28",
         "debug": "^4.4.0",
-        "lmdb": "^3.2.0"
+        "lmdb": "^3.2.6"
     },
     "type": "module",
     "main": "./src/index.js",

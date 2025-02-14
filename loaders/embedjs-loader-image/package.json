@@ -3,7 +3,7 @@
     "version": "0.1.28",
     "description": "Load images into embedjs",
     "dependencies": {
-        "@langchain/core": "^0.3.26",
+        "@langchain/core": "^0.3.40",
         "@llm-tools/embedjs-interfaces": "0.1.28",
         "@llm-tools/embedjs-utils": "0.1.28",
         "debug": "^4.4.0",
