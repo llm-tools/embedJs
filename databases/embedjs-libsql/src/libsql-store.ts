@@ -126,7 +126,7 @@ export class LibSqlStore implements BaseStore {
             args: [key, loaderId, JSON.stringify(value)],
         });
 
-        this.debug(`LibSQL custom set for key '${key}' resulted in`, results.rows);
+        this.debug(`LibSQL custom set for key '${key}' resulted in`, results.rowsAffected);
     }
 
     async loaderCustomGet<T extends Record<string, unknown>>(key: string): Promise<T> {

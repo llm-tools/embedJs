@@ -3,29 +3,6 @@ title: ❓ FAQs
 description: 'Collections of all the frequently asked questions'
 ---
 <AccordionGroup>
-<Accordion title="How to use MistralAI language model?">
-Use the model `gpt-4o` provided my openai.
-
-<CodeGroup>
-```ts index.ts
-import 'dotenv/config';
-import { RAGApplicationBuilder } from '@llm-tools/embedjs';
-import { Mistral } from '@llm-tools/embedjs-mistral';
-import { WebLoader } from '@llm-tools/embedjs-loader-web';
-import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
-
-const llmApplication = await new RAGApplicationBuilder()
-    .setModel(new Mistral({ modelName: 'mistral-medium' }))
-    .setVectorDatabase(new HNSWDb())
-    .build();
-
-await llmApplication.addLoader(new WebLoader({ urlOrContent: 'https://en.wikipedia.org/wiki/Tesla,_Inc.' }));
-
-console.log(await llmApplication.query('Who founded Tesla?'));
-```
-</CodeGroup>
-</Accordion>
-
 <Accordion title="How to use GPT-4o as the Language model?">
 <CodeGroup>
 ```ts index.ts
