@@ -70,7 +70,7 @@ export abstract class BaseModel {
                 else return new HumanMessage({ content: c.content });
             }),
         );
-        messages.push(new HumanMessage(`${userQuery}?`));
+        messages.push(new HumanMessage(userQuery));
         return messages;
     }
 
