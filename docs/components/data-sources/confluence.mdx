@@ -24,5 +24,5 @@ const app = await new RAGApplicationBuilder()
 .setVectorDatabase(new HNSWDb())
 .build();
 
-app.addLoader(new ConfluenceLoader({ spaceNames: ['...', '...'], confluenceToken: '...' }))
+app.addLoader(new ConfluenceLoader({ spaceNames: ['...', '...'], confluenceEmail: '...', confluenceToken: '...' }))
 ```

@@ -1,10 +1,10 @@
 {
     "name": "@llm-tools/embedjs-pinecone",
-    "version": "0.1.28",
+    "version": "0.1.29",
     "description": "Add Pinecone support to embedjs",
     "dependencies": {
-        "@llm-tools/embedjs-interfaces": "0.1.28",
-        "@pinecone-database/pinecone": "^4.0.0",
+        "@llm-tools/embedjs-interfaces": "0.1.29",
+        "@pinecone-database/pinecone": "^6.1.0",
         "debug": "^4.4.0"
     },
     "type": "module",

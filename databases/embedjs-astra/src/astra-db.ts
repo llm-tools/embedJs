@@ -11,15 +11,15 @@ export class AstraDb implements BaseVectorDatabase {
         endpoint,
         apiKey,
         collectionName,
-        namespace = 'default_keyspace',
+        keyspace = 'default_keyspace',
     }: {
         endpoint: string;
         apiKey: string;
-        namespace?: string;
+        keyspace?: string;
         collectionName: string;
     }) {
         const client = new DataAPIClient(apiKey);
-        this.db = client.db(endpoint, { namespace });
+        this.db = client.db(endpoint, { keyspace });
         this.collectionName = collectionName;
     }
 
@@ -27,7 +27,6 @@ export class AstraDb implements BaseVectorDatabase {
         this.dimensions = dimensions;
         this.collection = await this.db.createCollection(this.collectionName, {
             vector: { dimension: dimensions, metric: 'cosine' },
-            checkExists: false,
         });
     }
 

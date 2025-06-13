@@ -1,12 +1,12 @@
 {
     "type": "module",
     "name": "@llm-tools/embedjs",
-    "version": "0.1.28",
+    "version": "0.1.29",
     "description": "A NodeJS RAG framework to easily work with LLMs and custom datasets",
     "dependencies": {
         "@langchain/textsplitters": "^0.1.0",
-        "@llm-tools/embedjs-interfaces": "0.1.28",
-        "@llm-tools/embedjs-utils": "0.1.28",
+        "@llm-tools/embedjs-interfaces": "0.1.29",
+        "@llm-tools/embedjs-utils": "0.1.29",
         "debug": "^4.4.0",
         "langchain": "^0.3.8",
         "md5": "^2.3.0",
@@ -16,7 +16,7 @@
     "devDependencies": {
         "@types/debug": "^4.1.12",
         "@types/md5": "^2.3.5",
-        "@types/node": "^22.10.2"
+        "@types/node": "^24.0.1"
     },
     "main": "./src/index.js",
     "license": "Apache-2.0",

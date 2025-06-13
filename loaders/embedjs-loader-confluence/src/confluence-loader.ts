@@ -17,7 +17,7 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
     constructor({
         spaceName,
         confluenceBaseUrl,
-        confluenceUsername,
+        confluenceEmail,
         confluenceToken,
         chunkSize,
         chunkOverlap,
@@ -25,7 +25,7 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
     }: {
         spaceName: string;
         confluenceBaseUrl?: string;
-        confluenceUsername?: string;
+        confluenceEmail?: string;
         confluenceToken?: string;
         chunkSize?: number;
         chunkOverlap?: number;
@@ -43,8 +43,8 @@ export class ConfluenceLoader extends BaseLoader<{ type: 'ConfluenceLoader' }, {
             host: this.confluenceBaseUrl,
             authentication: {
                 basic: {
-                    username: confluenceUsername ?? process.env.CONFLUENCE_USER_NAME,
-                    password: confluenceToken ?? process.env.CONFLUENCE_API_TOKEN,
+                    email: confluenceEmail ?? process.env.CONFLUENCE_EMAIL,
+                    apiToken: confluenceToken ?? process.env.CONFLUENCE_API_TOKEN,
                 },
             },
         });
