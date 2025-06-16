@@ -6,7 +6,7 @@
         "@lancedb/lancedb": "^0.20.0",
         "@llm-tools/embedjs-interfaces": "0.1.29",
         "compute-cosine-similarity": "^1.1.0",
-        "debug": "^4.4.0"
+        "debug": "^4.4.1"
     },
     "type": "module",
     "main": "./src/index.js",

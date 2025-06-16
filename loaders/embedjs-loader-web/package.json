@@ -6,7 +6,7 @@
         "@langchain/textsplitters": "^0.1.0",
         "@llm-tools/embedjs-interfaces": "0.1.29",
         "@llm-tools/embedjs-utils": "0.1.29",
-        "debug": "^4.4.0",
+        "debug": "^4.4.1",
         "html-to-text": "^9.0.5",
         "md5": "^2.3.0"
     },

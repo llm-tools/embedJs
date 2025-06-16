@@ -6,7 +6,7 @@
         "@libsql/client": "^0.15.9",
         "@llm-tools/embedjs-interfaces": "0.1.29",
         "@llm-tools/embedjs-utils": "0.1.29",
-        "debug": "^4.4.0"
+        "debug": "^4.4.1"
     },
     "type": "module",
     "main": "./src/index.js",

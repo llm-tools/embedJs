@@ -4,8 +4,8 @@
     "description": "Add MongoDB support to embedjs",
     "dependencies": {
         "@llm-tools/embedjs-interfaces": "0.1.29",
-        "debug": "^4.4.0",
-        "mongodb": "^6.12.0"
+        "debug": "^4.4.1",
+        "mongodb": "^6.17.0"
     },
     "type": "module",
     "main": "./src/index.js",

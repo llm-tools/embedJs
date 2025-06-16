@@ -4,7 +4,7 @@
     "description": "XML loader for embedjs",
     "dependencies": {
         "@llm-tools/embedjs-interfaces": "0.1.29",
-        "debug": "^4.4.0",
+        "debug": "^4.4.1",
         "fast-xml-parser": "^5.2.5",
         "md5": "^2.3.0"
     },

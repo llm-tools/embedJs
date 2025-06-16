@@ -3,9 +3,9 @@
     "version": "0.1.29",
     "description": "Add CosmosDB support to embedjs",
     "dependencies": {
-        "@azure/cosmos": "^4.2.0",
+        "@azure/cosmos": "^4.4.1",
         "@llm-tools/embedjs-interfaces": "0.1.29",
-        "debug": "^4.4.0"
+        "debug": "^4.4.1"
     },
     "type": "module",
     "main": "./src/index.js",
