@@ -1,9 +1,9 @@
 {
     "name": "@llm-tools/embedjs-redis",
-    "version": "0.1.28",
+    "version": "0.1.29",
     "description": "Add Redis support to embedjs",
     "dependencies": {
-        "@llm-tools/embedjs-interfaces": "0.1.28",
+        "@llm-tools/embedjs-interfaces": "0.1.29",
         "ioredis": "^5.4.2"
     },
     "type": "module",
