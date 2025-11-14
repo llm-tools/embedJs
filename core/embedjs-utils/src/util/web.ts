@@ -23,7 +23,7 @@ export async function getSafe(
 export async function getSafe(
     url: string,
     options?: { headers?: Record<string, string>; format?: 'text' | 'stream' | 'buffer' },
-) {
+): Promise<{ body: string | Buffer | NodeJS.ReadableStream } & getSafeResponsePartial> {
     const headers = options?.headers ?? {};
     headers['User-Agent'] = headers['User-Agent'] ?? DEFAULT_USER_AGENT;
 
