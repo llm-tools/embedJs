@@ -4,6 +4,7 @@
     "description": "PDF loader for embedjs",
     "dependencies": {
         "@langchain/textsplitters": "^1.0.0",
+        "@langchain/core": "^1.0.5",
         "@llm-tools/embedjs-interfaces": "0.1.30",
         "@llm-tools/embedjs-utils": "0.1.30",
         "md5": "^2.3.0",

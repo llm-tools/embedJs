@@ -45,7 +45,7 @@ export class MarkdownLoader extends BaseLoader<{ type: 'MarkdownLoader' }> {
         });
 
         for await (const result of await webLoader.getUnfilteredChunks()) {
-            result.pageContent = result.pageContent.replace(/[\[\]\(\)\{\}]/g, '');
+            result.pageContent = result.pageContent.replace(/[\][(){}]/g, '');
 
             yield {
                 pageContent: result.pageContent,

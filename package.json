@@ -10,7 +10,8 @@
     "version": "0.1.30",
     "scripts": {
         "build": "nx run-many --t=build",
-        "deploy": "node scripts/publish-via-nx.js"
+        "deploy": "node scripts/publish-via-nx.js",
+        "example": "node scripts/run-example.js"
     },
     "license": "Apache-2.0",
     "devDependencies": {
