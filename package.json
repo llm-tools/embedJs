@@ -7,7 +7,7 @@
         "url": "https://github.com/llm-tools/embedjs/issues"
     },
     "homepage": "https://github.com/llm-tools/embedjs#readme",
-    "version": "0.1.30",
+    "version": "0.1.31",
     "scripts": {
         "build": "nx run-many --t=build",
         "deploy": "node scripts/publish-via-nx.js",

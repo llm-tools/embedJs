@@ -1,6 +1,6 @@
 {
     "name": "@llm-tools/embedjs-interfaces",
-    "version": "0.1.30",
+    "version": "0.1.31",
     "description": "Interfaces for extending the embedjs ecosystem",
     "dependencies": {
         "@langchain/core": "^1.0.5",

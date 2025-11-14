@@ -1,11 +1,11 @@
 {
     "name": "@llm-tools/embedjs-mistral",
-    "version": "0.1.30",
+    "version": "0.1.31",
     "description": "Enable usage of Mistral models with embedjs",
     "dependencies": {
         "@langchain/core": "^1.0.5",
         "@langchain/mistralai": "^1.0.0",
-        "@llm-tools/embedjs-interfaces": "0.1.30",
+        "@llm-tools/embedjs-interfaces": "0.1.31",
         "debug": "^4.4.3"
     },
     "type": "module",
