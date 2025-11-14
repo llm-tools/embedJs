@@ -8,7 +8,7 @@ export class MemoryStore implements BaseStore {
 
     async init(): Promise<void> {
         this.loaderList = {};
-        this.loaderCustomValues = {};
+        this.loaderCustomValues = Object.create(null);
         this.conversations = new Map();
         this.loaderCustomValuesMap = new Map();
     }
@@ -37,6 +37,9 @@ export class MemoryStore implements BaseStore {
     }
 
     async loaderCustomGet<T extends Record<string, unknown>>(key: string): Promise<T> {
+        if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+            throw new Error("Invalid key");
+        }
         const data = <T & { loaderId: string }>this.loaderCustomValues[key];
         delete data.loaderId;
         return data;
