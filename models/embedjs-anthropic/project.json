@@ -9,20 +9,10 @@
             "executor": "@nx/js:tsc",
             "outputs": ["{options.outputPath}"],
             "options": {
-                "outputPath": "dist/esm/embedjs-anthropic",
+                "outputPath": "dist/embedjs-anthropic",
                 "main": "models/embedjs-anthropic/src/index.ts",
-                "tsConfig": "models/embedjs-anthropic/tsconfig.lib.json",
+                "tsConfig": "models/embedjs-anthropic/tsconfig.json",
                 "assets": ["models/embedjs-anthropic/*.md"]
-            }
-        },
-        "build-cjs": {
-            "executor": "@nx/js:tsc",
-            "outputs": ["{options.outputPath}"],
-            "dependsOn": ["^build-cjs"],
-            "options": {
-                "outputPath": "dist/cjs/embedjs-anthropic",
-                "main": "models/embedjs-anthropic/src/index.ts",
-                "tsConfig": "models/embedjs-anthropic/tsconfig.cjs.json"
             }
         }
     }

@@ -9,20 +9,10 @@
             "executor": "@nx/js:tsc",
             "outputs": ["{options.outputPath}"],
             "options": {
-                "outputPath": "dist/esm/embedjs-lmdb",
+                "outputPath": "dist/embedjs-lmdb",
                 "main": "databases/embedjs-lmdb/src/index.ts",
-                "tsConfig": "databases/embedjs-lmdb/tsconfig.lib.json",
+                "tsConfig": "databases/embedjs-lmdb/tsconfig.json",
                 "assets": ["databases/embedjs-lmdb/*.md"]
-            }
-        },
-        "build-cjs": {
-            "executor": "@nx/js:tsc",
-            "outputs": ["{options.outputPath}"],
-            "dependsOn": ["^build-cjs"],
-            "options": {
-                "outputPath": "dist/cjs/embedjs-lmdb",
-                "main": "databases/embedjs-lmdb/src/index.ts",
-                "tsConfig": "databases/embedjs-lmdb/tsconfig.cjs.json"
             }
         }
     }

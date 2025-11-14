@@ -9,20 +9,10 @@
             "executor": "@nx/js:tsc",
             "outputs": ["{options.outputPath}"],
             "options": {
-                "outputPath": "dist/esm/embedjs-redis",
+                "outputPath": "dist/embedjs-redis",
                 "main": "databases/embedjs-redis/src/index.ts",
-                "tsConfig": "databases/embedjs-redis/tsconfig.lib.json",
+                "tsConfig": "databases/embedjs-redis/tsconfig.json",
                 "assets": ["databases/embedjs-redis/*.md"]
-            }
-        },
-        "build-cjs": {
-            "executor": "@nx/js:tsc",
-            "outputs": ["{options.outputPath}"],
-            "dependsOn": ["^build-cjs"],
-            "options": {
-                "outputPath": "dist/cjs/embedjs-redis",
-                "main": "databases/embedjs-redis/src/index.ts",
-                "tsConfig": "databases/embedjs-redis/tsconfig.cjs.json"
             }
         }
     }

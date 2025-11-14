@@ -23,8 +23,8 @@ export class AzureOpenAi extends BaseModel {
         return {
             result: result.content.toString(),
             tokenUse: {
-                inputTokens: result.response_metadata.tokenUsage.promptTokens,
-                outputTokens: result.response_metadata.tokenUsage.completionTokens,
+                inputTokens: (result.usage_metadata as Record<string, number>)?.input_tokens ?? 0,
+                outputTokens: (result.usage_metadata as Record<string, number>)?.output_tokens ?? 0,
             },
         };
     }

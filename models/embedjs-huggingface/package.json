@@ -1,13 +1,13 @@
 {
     "name": "@llm-tools/embedjs-huggingface",
-    "version": "0.1.28",
+    "version": "0.1.30",
     "description": "Enable usage of HuggingFace models with embedjs",
     "dependencies": {
-        "@huggingface/inference": "^2.8.1",
-        "@langchain/community": "^0.3.20",
-        "@langchain/core": "^0.3.26",
-        "@llm-tools/embedjs-interfaces": "0.1.28",
-        "debug": "^4.4.0"
+        "@huggingface/inference": "^4.13.3",
+        "@langchain/community": "^1.0.3",
+        "@langchain/core": "^1.0.5",
+        "@llm-tools/embedjs-interfaces": "0.1.30",
+        "debug": "^4.4.3"
     },
     "type": "module",
     "main": "./src/index.js",

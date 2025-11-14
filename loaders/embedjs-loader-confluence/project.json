@@ -9,20 +9,10 @@
             "executor": "@nx/js:tsc",
             "outputs": ["{options.outputPath}"],
             "options": {
-                "outputPath": "dist/esm/embedjs-loader-confluence",
+                "outputPath": "dist/embedjs-loader-confluence",
                 "main": "loaders/embedjs-loader-confluence/src/index.ts",
-                "tsConfig": "loaders/embedjs-loader-confluence/tsconfig.lib.json",
+                "tsConfig": "loaders/embedjs-loader-confluence/tsconfig.json",
                 "assets": ["loaders/embedjs-loader-confluence/*.md"]
-            }
-        },
-        "build-cjs": {
-            "executor": "@nx/js:tsc",
-            "outputs": ["{options.outputPath}"],
-            "dependsOn": ["^build-cjs"],
-            "options": {
-                "outputPath": "dist/cjs/embedjs-loader-confluence",
-                "main": "loaders/embedjs-loader-confluence/src/index.ts",
-                "tsConfig": "loaders/embedjs-loader-confluence/tsconfig.cjs.json"
             }
         }
     }

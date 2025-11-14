@@ -9,20 +9,10 @@
             "executor": "@nx/js:tsc",
             "outputs": ["{options.outputPath}"],
             "options": {
-                "outputPath": "dist/esm/embedjs-mongodb",
+                "outputPath": "dist/embedjs-mongodb",
                 "main": "databases/embedjs-mongodb/src/index.ts",
-                "tsConfig": "databases/embedjs-mongodb/tsconfig.lib.json",
+                "tsConfig": "databases/embedjs-mongodb/tsconfig.json",
                 "assets": ["databases/embedjs-mongodb/*.md"]
-            }
-        },
-        "build-cjs": {
-            "executor": "@nx/js:tsc",
-            "outputs": ["{options.outputPath}"],
-            "dependsOn": ["^build-cjs"],
-            "options": {
-                "outputPath": "dist/cjs/embedjs-mongodb",
-                "main": "databases/embedjs-mongodb/src/index.ts",
-                "tsConfig": "databases/embedjs-mongodb/tsconfig.cjs.json"
             }
         }
     }

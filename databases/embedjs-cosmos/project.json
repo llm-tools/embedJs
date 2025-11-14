@@ -9,20 +9,10 @@
             "executor": "@nx/js:tsc",
             "outputs": ["{options.outputPath}"],
             "options": {
-                "outputPath": "dist/esm/embedjs-cosmos",
+                "outputPath": "dist/embedjs-cosmos",
                 "main": "databases/embedjs-cosmos/src/index.ts",
-                "tsConfig": "databases/embedjs-cosmos/tsconfig.lib.json",
+                "tsConfig": "databases/embedjs-cosmos/tsconfig.json",
                 "assets": ["databases/embedjs-cosmos/*.md"]
-            }
-        },
-        "build-cjs": {
-            "executor": "@nx/js:tsc",
-            "outputs": ["{options.outputPath}"],
-            "dependsOn": ["^build-cjs"],
-            "options": {
-                "outputPath": "dist/cjs/embedjs-cosmos",
-                "main": "databases/embedjs-cosmos/src/index.ts",
-                "tsConfig": "databases/embedjs-cosmos/tsconfig.cjs.json"
             }
         }
     }

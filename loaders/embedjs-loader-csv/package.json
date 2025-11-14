@@ -1,12 +1,12 @@
 {
     "name": "@llm-tools/embedjs-loader-csv",
-    "version": "0.1.28",
+    "version": "0.1.30",
     "description": "CSV loader for embedjs",
     "dependencies": {
-        "@llm-tools/embedjs-interfaces": "0.1.28",
-        "@llm-tools/embedjs-utils": "0.1.28",
-        "csv-parse": "^5.6.0",
-        "debug": "^4.4.0",
+        "@llm-tools/embedjs-interfaces": "0.1.30",
+        "@llm-tools/embedjs-utils": "0.1.30",
+        "csv-parse": "^6.1.0",
+        "debug": "^4.4.3",
         "md5": "^2.3.0"
     },
     "type": "module",

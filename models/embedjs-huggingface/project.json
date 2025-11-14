@@ -9,20 +9,10 @@
             "executor": "@nx/js:tsc",
             "outputs": ["{options.outputPath}"],
             "options": {
-                "outputPath": "dist/esm/embedjs-huggingface",
+                "outputPath": "dist/embedjs-huggingface",
                 "main": "models/embedjs-huggingface/src/index.ts",
-                "tsConfig": "models/embedjs-huggingface/tsconfig.lib.json",
+                "tsConfig": "models/embedjs-huggingface/tsconfig.json",
                 "assets": ["models/embedjs-huggingface/*.md"]
-            }
-        },
-        "build-cjs": {
-            "executor": "@nx/js:tsc",
-            "outputs": ["{options.outputPath}"],
-            "dependsOn": ["^build-cjs"],
-            "options": {
-                "outputPath": "dist/cjs/embedjs-huggingface",
-                "main": "models/embedjs-huggingface/src/index.ts",
-                "tsConfig": "models/embedjs-huggingface/tsconfig.cjs.json"
             }
         }
     }

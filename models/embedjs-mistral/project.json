@@ -9,20 +9,10 @@
             "executor": "@nx/js:tsc",
             "outputs": ["{options.outputPath}"],
             "options": {
-                "outputPath": "dist/esm/embedjs-mistral",
+                "outputPath": "dist/embedjs-mistral",
                 "main": "models/embedjs-mistral/src/index.ts",
-                "tsConfig": "models/embedjs-mistral/tsconfig.lib.json",
+                "tsConfig": "models/embedjs-mistral/tsconfig.json",
                 "assets": ["models/embedjs-mistral/*.md"]
-            }
-        },
-        "build-cjs": {
-            "executor": "@nx/js:tsc",
-            "outputs": ["{options.outputPath}"],
-            "dependsOn": ["^build-cjs"],
-            "options": {
-                "outputPath": "dist/cjs/embedjs-mistral",
-                "main": "models/embedjs-mistral/src/index.ts",
-                "tsConfig": "models/embedjs-mistral/tsconfig.cjs.json"
             }
         }
     }
