@@ -65,6 +65,7 @@ temp/
 storage/
 lmdb/
 data.db
+knip-report-full.json
 
 #env
 .env

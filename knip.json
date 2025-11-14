@@ -1,0 +1,33 @@
+{
+    "$schema": "https://unpkg.com/knip@latest/schema.json",
+    "workspaces": {
+        ".": {
+            "entry": ["scripts/*.js"],
+            "project": ["scripts/**/*.js"]
+        },
+        "core/*": {
+            "entry": ["src/index.ts"],
+            "project": ["src/**/*.ts"]
+        },
+        "databases/*": {
+            "entry": ["src/index.ts"],
+            "project": ["src/**/*.ts"]
+        },
+        "loaders/*": {
+            "entry": ["src/index.ts", "src/**/*-loader.ts"],
+            "project": ["src/**/*.ts"]
+        },
+        "models/*": {
+            "entry": ["src/index.ts"],
+            "project": ["src/**/*.ts"]
+        },
+        "examples/*": {
+            "entry": ["src/main.ts"],
+            "project": ["src/**/*.ts"]
+        }
+    },
+    "ignore": ["dist/**", "tmp/**", "node_modules/**", "**/CHANGELOG.md", "**/*.md", "docs/**"],
+    "ignoreDependencies": [],
+    "ignoreExportsUsedInFile": true,
+    "includeEntryExports": true
+}

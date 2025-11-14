@@ -9,7 +9,6 @@
         "@llm-tools/embedjs-interfaces": "0.1.31",
         "@llm-tools/embedjs-utils": "0.1.31",
         "debug": "^4.4.3",
-        "langchain": "^1.0.4",
         "md5": "^2.3.0",
         "mime": "^4.1.0",
         "stream-mime-type": "^2.0.0"

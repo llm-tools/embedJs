@@ -9,7 +9,6 @@
         "debug": "^4.4.3",
         "exifremove": "^1.0.1",
         "md5": "^2.3.0",
-        "mime": "^4.1.0",
         "stream-mime-type": "^2.0.0"
     },
     "type": "module",

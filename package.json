@@ -11,7 +11,8 @@
     "scripts": {
         "build": "nx run-many --t=build",
         "deploy": "node scripts/publish-via-nx.js",
-        "example": "node scripts/run-example.js"
+        "example": "node scripts/run-example.js",
+        "knip:json": "knip --reporter json"
     },
     "license": "Apache-2.0",
     "devDependencies": {
@@ -36,6 +37,7 @@
         "eslint-config-prettier": "^10.1.8",
         "execa": "^9.6.0",
         "husky": "^9.1.7",
+        "knip": "^5.69.1",
         "nx": "22.0.3",
         "prettier": "^3.6.2",
         "simple-git": "^3.30.0",
