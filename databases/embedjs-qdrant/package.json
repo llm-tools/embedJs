@@ -1,9 +1,9 @@
 {
     "name": "@llm-tools/embedjs-qdrant",
-    "version": "0.1.29",
+    "version": "0.1.30",
     "description": "Add Qdrant support to embedjs",
     "dependencies": {
-        "@llm-tools/embedjs-interfaces": "0.1.29",
+        "@llm-tools/embedjs-interfaces": "0.1.30",
         "@qdrant/js-client-rest": "^1.15.1",
         "debug": "^4.4.3",
         "uuid": "^13.0.0"
