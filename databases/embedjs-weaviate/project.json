@@ -9,20 +9,10 @@
             "executor": "@nx/js:tsc",
             "outputs": ["{options.outputPath}"],
             "options": {
-                "outputPath": "dist/esm/embedjs-weaviate",
+                "outputPath": "dist/embedjs-weaviate",
                 "main": "databases/embedjs-weaviate/src/index.ts",
-                "tsConfig": "databases/embedjs-weaviate/tsconfig.lib.json",
+                "tsConfig": "databases/embedjs-weaviate/tsconfig.json",
                 "assets": ["databases/embedjs-weaviate/*.md"]
-            }
-        },
-        "build-cjs": {
-            "executor": "@nx/js:tsc",
-            "outputs": ["{options.outputPath}"],
-            "dependsOn": ["^build-cjs"],
-            "options": {
-                "outputPath": "dist/cjs/embedjs-weaviate",
-                "main": "databases/embedjs-weaviate/src/index.ts",
-                "tsConfig": "databases/embedjs-weaviate/tsconfig.cjs.json"
             }
         }
     }

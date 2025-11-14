@@ -5,8 +5,8 @@
     "dependencies": {
         "@llm-tools/embedjs-interfaces": "0.1.29",
         "@llm-tools/embedjs-loader-web": "0.1.29",
-        "confluence.js": "^2.0.0",
-        "debug": "^4.4.1",
+        "confluence.js": "^2.1.0",
+        "debug": "^4.4.3",
         "md5": "^2.3.0"
     },
     "type": "module",

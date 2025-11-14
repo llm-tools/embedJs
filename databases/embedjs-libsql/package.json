@@ -3,10 +3,10 @@
     "version": "0.1.29",
     "description": "Add LibSQL support to embedjs",
     "dependencies": {
-        "@libsql/client": "^0.15.9",
+        "@libsql/client": "^0.15.15",
         "@llm-tools/embedjs-interfaces": "0.1.29",
         "@llm-tools/embedjs-utils": "0.1.29",
-        "debug": "^4.4.1"
+        "debug": "^4.4.3"
     },
     "type": "module",
     "main": "./src/index.js",

@@ -9,10 +9,7 @@
     "homepage": "https://github.com/llm-tools/embedjs#readme",
     "version": "0.1.30",
     "scripts": {
-        "build:esm": "nx run-many --t=build",
-        "build:cjs": "nx run-many --t=build-cjs && node scripts/move-cjs-to-dist.js",
-        "build:ci": "nx run-many --t=build",
-        "build:pipeline": "npm run build:esm && npm run build:cjs",
+        "build": "nx run-many --t=build",
         "deploy": "node scripts/publish-via-nx.js"
     },
     "license": "Apache-2.0",

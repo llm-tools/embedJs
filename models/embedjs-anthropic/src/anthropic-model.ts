@@ -25,8 +25,8 @@ export class Anthropic extends BaseModel {
         return {
             result: result.content.toString(),
             tokenUse: {
-                inputTokens: result.response_metadata.usage.input_tokens,
-                outputTokens: result.response_metadata.usage.output_tokens,
+                inputTokens: (result.usage_metadata as Record<string, number>)?.input_tokens ?? 0,
+                outputTokens: (result.usage_metadata as Record<string, number>)?.output_tokens ?? 0,
             },
         };
     }

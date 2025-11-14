@@ -9,20 +9,10 @@
             "executor": "@nx/js:tsc",
             "outputs": ["{options.outputPath}"],
             "options": {
-                "outputPath": "dist/esm/embedjs-lancedb",
+                "outputPath": "dist/embedjs-lancedb",
                 "main": "databases/embedjs-lancedb/src/index.ts",
-                "tsConfig": "databases/embedjs-lancedb/tsconfig.lib.json",
+                "tsConfig": "databases/embedjs-lancedb/tsconfig.json",
                 "assets": ["databases/embedjs-lancedb/*.md"]
-            }
-        },
-        "build-cjs": {
-            "executor": "@nx/js:tsc",
-            "outputs": ["{options.outputPath}"],
-            "dependsOn": ["^build-cjs"],
-            "options": {
-                "outputPath": "dist/cjs/embedjs-lancedb",
-                "main": "databases/embedjs-lancedb/src/index.ts",
-                "tsConfig": "databases/embedjs-lancedb/tsconfig.cjs.json"
             }
         }
     }

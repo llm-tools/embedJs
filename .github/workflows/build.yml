@@ -29,4 +29,4 @@ jobs:
             - name: Install dependencies
               run: npm ci
             - name: Test build
-              run: npm run build:ci
+              run: npm run build

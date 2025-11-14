@@ -9,20 +9,10 @@
             "executor": "@nx/js:tsc",
             "outputs": ["{options.outputPath}"],
             "options": {
-                "outputPath": "dist/esm/embedjs-interfaces",
+                "outputPath": "dist/embedjs-interfaces",
                 "main": "core/embedjs-interfaces/src/index.ts",
-                "tsConfig": "core/embedjs-interfaces/tsconfig.lib.json",
+                "tsConfig": "core/embedjs-interfaces/tsconfig.json",
                 "assets": ["core/embedjs-interfaces/*.md"]
-            }
-        },
-        "build-cjs": {
-            "executor": "@nx/js:tsc",
-            "outputs": ["{options.outputPath}"],
-            "dependsOn": ["^build-cjs"],
-            "options": {
-                "outputPath": "dist/cjs/embedjs-interfaces",
-                "main": "core/embedjs-interfaces/src/index.ts",
-                "tsConfig": "core/embedjs-interfaces/tsconfig.cjs.json"
             }
         }
     }

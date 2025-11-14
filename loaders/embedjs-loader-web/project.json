@@ -9,20 +9,10 @@
             "executor": "@nx/js:tsc",
             "outputs": ["{options.outputPath}"],
             "options": {
-                "outputPath": "dist/esm/embedjs-loader-web",
+                "outputPath": "dist/embedjs-loader-web",
                 "main": "loaders/embedjs-loader-web/src/index.ts",
-                "tsConfig": "loaders/embedjs-loader-web/tsconfig.lib.json",
+                "tsConfig": "loaders/embedjs-loader-web/tsconfig.json",
                 "assets": ["loaders/embedjs-loader-web/*.md"]
-            }
-        },
-        "build-cjs": {
-            "executor": "@nx/js:tsc",
-            "outputs": ["{options.outputPath}"],
-            "dependsOn": ["^build-cjs"],
-            "options": {
-                "outputPath": "dist/cjs/embedjs-loader-web",
-                "main": "loaders/embedjs-loader-web/src/index.ts",
-                "tsConfig": "loaders/embedjs-loader-web/tsconfig.cjs.json"
             }
         }
     }

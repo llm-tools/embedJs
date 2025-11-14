@@ -9,20 +9,10 @@
             "executor": "@nx/js:tsc",
             "outputs": ["{options.outputPath}"],
             "options": {
-                "outputPath": "dist/esm/embedjs-cohere",
+                "outputPath": "dist/embedjs-cohere",
                 "main": "models/embedjs-cohere/src/index.ts",
-                "tsConfig": "models/embedjs-cohere/tsconfig.lib.json",
+                "tsConfig": "models/embedjs-cohere/tsconfig.json",
                 "assets": ["models/embedjs-cohere/*.md"]
-            }
-        },
-        "build-cjs": {
-            "executor": "@nx/js:tsc",
-            "outputs": ["{options.outputPath}"],
-            "dependsOn": ["^build-cjs"],
-            "options": {
-                "outputPath": "dist/cjs/embedjs-cohere",
-                "main": "models/embedjs-cohere/src/index.ts",
-                "tsConfig": "models/embedjs-cohere/tsconfig.cjs.json"
             }
         }
     }

@@ -24,7 +24,7 @@
         },
         "nx-release-publish": {
             "options": {
-                "packageRoot": "dist/esm/{projectName}"
+                "packageRoot": "dist/{projectName}"
             }
         },
         "@nx/esbuild:esbuild": {
@@ -52,11 +52,11 @@
             }
         },
         "version": {
-            "preVersionCommand": "npm run build:pipeline",
+            "preVersionCommand": "npm run build",
             "generatorOptions": {
                 "currentVersionResolver": "registry",
                 "fallbackCurrentVersionResolver": "github",
-                "packageRoot": "dist/esm/{projectName}"
+                "packageRoot": "dist/{projectName}"
             }
         }
     }

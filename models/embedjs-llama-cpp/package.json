@@ -3,11 +3,11 @@
     "version": "0.1.29",
     "description": "Enable usage of Node-Llama-Cpp with embedjs",
     "dependencies": {
-        "@langchain/community": "^0.3.46",
-        "@langchain/core": "^0.3.58",
+        "@langchain/community": "^1.0.3",
+        "@langchain/core": "^1.0.5",
         "@llm-tools/embedjs-interfaces": "0.1.29",
-        "debug": "^4.4.1",
-        "node-llama-cpp": "^3.10.0"
+        "debug": "^4.4.3",
+        "node-llama-cpp": "^3.14.2"
     },
     "type": "module",
     "main": "./src/index.js",

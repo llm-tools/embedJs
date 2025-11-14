@@ -5,7 +5,7 @@
     "dependencies": {
         "@llm-tools/embedjs-interfaces": "0.1.29",
         "@llm-tools/embedjs-loader-web": "0.1.29",
-        "debug": "^4.4.1",
+        "debug": "^4.4.3",
         "md5": "^2.3.0",
         "micromark": "^4.0.2",
         "micromark-extension-gfm": "^3.0.0",

@@ -14,13 +14,10 @@
         "useDefineForClassFields": true,
         "strictPropertyInitialization": false,
         "allowJs": false,
-        "strict": false
+        "strict": false,
+        "outDir": "../../dist/out-tsc",
+        "types": ["node"]
     },
-    "files": [],
-    "include": [],
-    "references": [
-        {
-            "path": "./tsconfig.lib.json"
-        }
-    ]
+    "include": ["src/**/*.ts"],
+    "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
 }

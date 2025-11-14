@@ -9,20 +9,10 @@
             "executor": "@nx/js:tsc",
             "outputs": ["{options.outputPath}"],
             "options": {
-                "outputPath": "dist/esm/embedjs-pinecone",
+                "outputPath": "dist/embedjs-pinecone",
                 "main": "databases/embedjs-pinecone/src/index.ts",
-                "tsConfig": "databases/embedjs-pinecone/tsconfig.lib.json",
+                "tsConfig": "databases/embedjs-pinecone/tsconfig.json",
                 "assets": ["databases/embedjs-pinecone/*.md"]
-            }
-        },
-        "build-cjs": {
-            "executor": "@nx/js:tsc",
-            "outputs": ["{options.outputPath}"],
-            "dependsOn": ["^build-cjs"],
-            "options": {
-                "outputPath": "dist/cjs/embedjs-pinecone",
-                "main": "databases/embedjs-pinecone/src/index.ts",
-                "tsConfig": "databases/embedjs-pinecone/tsconfig.cjs.json"
             }
         }
     }
