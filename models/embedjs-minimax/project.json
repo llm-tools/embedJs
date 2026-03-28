@@ -1,0 +1,19 @@
+{
+    "name": "embedjs-minimax",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "models/embedjs-minimax/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/embedjs-minimax",
+                "main": "models/embedjs-minimax/src/index.ts",
+                "tsConfig": "models/embedjs-minimax/tsconfig.json",
+                "assets": ["models/embedjs-minimax/*.md"]
+            }
+        }
+    }
+}

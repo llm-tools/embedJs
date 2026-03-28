@@ -1,0 +1,39 @@
+{
+    "name": "@llm-tools/embedjs-minimax",
+    "version": "0.1.31",
+    "description": "Enable usage of MiniMax models with embedjs",
+    "dependencies": {
+        "@langchain/core": "^1.0.5",
+        "@langchain/openai": "^1.1.1",
+        "@llm-tools/embedjs-interfaces": "0.1.31",
+        "debug": "^4.4.3"
+    },
+    "type": "module",
+    "main": "./src/index.js",
+    "license": "Apache-2.0",
+    "publishConfig": {
+        "access": "public"
+    },
+    "keywords": [
+        "llm",
+        "ai",
+        "minimax",
+        "chain",
+        "prompt",
+        "prompt engineering",
+        "chatgpt",
+        "machine learning",
+        "ml",
+        "embeddings",
+        "vectorstores"
+    ],
+    "author": "K V Adhityan",
+    "bugs": {
+        "url": "https://github.com/llm-tools/embedjs/issues"
+    },
+    "homepage": "https://github.com/llm-tools/embedjs#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/llm-tools/embedjs.git"
+    }
+}
