@@ -37,6 +37,7 @@
             "@llm-tools/embedjs-loader-web": ["loaders/embedjs-loader-web/src/index.ts"],
             "@llm-tools/embedjs-loader-xml": ["loaders/embedjs-loader-xml/src/index.ts"],
             "@llm-tools/embedjs-loader-youtube": ["loaders/embedjs-loader-youtube/src/index.ts"],
+            "@llm-tools/embedjs-minimax": ["models/embedjs-minimax/src/index.ts"],
             "@llm-tools/embedjs-mistral": ["models/embedjs-mistral/src/index.ts"],
             "@llm-tools/embedjs-mongodb": ["databases/embedjs-mongodb/src/index.ts"],
             "@llm-tools/embedjs-ollama": ["models/embedjs-ollama/src/index.ts"],
