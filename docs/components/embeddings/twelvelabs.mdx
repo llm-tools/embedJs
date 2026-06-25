@@ -1,0 +1,38 @@
+---
+title: 'TwelveLabs (Marengo)'
+---
+
+The library supports usage of the [TwelveLabs](https://twelvelabs.io) `marengo3.0` multimodal embedding model out of the box. Marengo embeds text, image, audio and video into a single shared latent space, which makes it a great fit for retrieval over video libraries. This model returns vectors with dimension 512.
+
+Here's what you have to do to use it -
+
+-   Sign up for an account with TwelveLabs and grab an API key. There's a generous free tier at [twelvelabs.io](https://twelvelabs.io).
+
+-   Set the key in the environment variable `TWELVELABS_API_KEY` (or pass it directly to the constructor).
+
+```bash
+TWELVELABS_API_KEY="<YOUR_KEY>"
+```
+
+## Install TwelveLabs addon
+
+```bash
+npm install @llm-tools/embedjs-twelvelabs
+```
+
+## Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { MarengoEmbeddings } from '@llm-tools/embedjs-twelvelabs';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+
+const app = await new RAGApplicationBuilder()
+.setEmbeddingModel(new MarengoEmbeddings())
+```
+
+You can also pass the API key explicitly:
+
+```ts
+new MarengoEmbeddings({ apiKey: 'YOUR_KEY' })
+```

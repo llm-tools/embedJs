@@ -1,0 +1,40 @@
+{
+    "name": "@llm-tools/embedjs-twelvelabs",
+    "version": "0.1.31",
+    "description": "Enable usage of TwelveLabs Marengo embeddings and Pegasus video understanding with embedjs",
+    "dependencies": {
+        "@langchain/textsplitters": "^1.0.0",
+        "@llm-tools/embedjs-interfaces": "0.1.31",
+        "@llm-tools/embedjs-utils": "0.1.31",
+        "debug": "^4.4.3",
+        "md5": "^2.3.0",
+        "twelvelabs-js": "^1.2.8"
+    },
+    "type": "module",
+    "main": "./src/index.js",
+    "license": "Apache-2.0",
+    "publishConfig": {
+        "access": "public"
+    },
+    "keywords": [
+        "llm",
+        "ai",
+        "twelvelabs",
+        "marengo",
+        "pegasus",
+        "video",
+        "multimodal",
+        "embeddings",
+        "vectorstores",
+        "rag"
+    ],
+    "author": "K V Adhityan",
+    "bugs": {
+        "url": "https://github.com/llm-tools/embedjs/issues"
+    },
+    "homepage": "https://github.com/llm-tools/embedjs#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/llm-tools/embedjs.git"
+    }
+}
