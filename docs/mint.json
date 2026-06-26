@@ -85,6 +85,7 @@
                                 "components/data-sources/xml",
                                 "components/data-sources/directory",
                                 "components/data-sources/image",
+                                "components/data-sources/twelvelabs-video",
                                 "components/data-sources/custom"
                             ]
                         }
@@ -139,7 +140,8 @@
                                 "components/embeddings/cohere",
                                 "components/embeddings/ollama",
                                 "components/embeddings/huggingface",
-                                "components/embeddings/vertexai"
+                                "components/embeddings/vertexai",
+                                "components/embeddings/twelvelabs"
                             ]
                         }
                     ]

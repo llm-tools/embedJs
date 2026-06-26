@@ -1,0 +1,47 @@
+---
+title: '🎬 TwelveLabs Video'
+---
+
+To add any video to your app, use the `TwelveLabsVideoLoader`. It analyses the video with the [TwelveLabs](https://twelvelabs.io) Pegasus video understanding model — which watches the visuals, motion and audio — and loads the resulting description into your RAG application. This lets you run RAG over video content directly from a public URL, without a separate transcription step.
+
+-   Sign up for an account with TwelveLabs and grab an API key. There's a generous free tier at [twelvelabs.io](https://twelvelabs.io).
+
+-   Set the key in the environment variable `TWELVELABS_API_KEY` (or pass it directly to the loader).
+
+```bash
+TWELVELABS_API_KEY="<YOUR_KEY>"
+```
+
+## Install TwelveLabs addon
+
+```bash
+npm install @llm-tools/embedjs-twelvelabs
+```
+
+## Usage
+
+```ts
+import { RAGApplicationBuilder } from '@llm-tools/embedjs';
+import { OpenAiEmbeddings } from '@llm-tools/embedjs-openai';
+import { HNSWDb } from '@llm-tools/embedjs-hnswlib';
+import { TwelveLabsVideoLoader } from '@llm-tools/embedjs-twelvelabs';
+
+const app = await new RAGApplicationBuilder()
+.setModel(SIMPLE_MODELS.OPENAI_GPT4_O)
+.setEmbeddingModel(new OpenAiEmbeddings())
+.setVectorDatabase(new HNSWDb())
+.build();
+
+app.addLoader(new TwelveLabsVideoLoader({ url: 'https://example.com/video.mp4' }))
+```
+
+You can customise the analysis with an optional `prompt`, `model` (`pegasus1.2` or `pegasus1.5`) and `maxTokens`:
+
+```ts
+app.addLoader(new TwelveLabsVideoLoader({
+    url: 'https://example.com/video.mp4',
+    prompt: 'Summarize the key moments in this video.',
+    model: 'pegasus1.2',
+    maxTokens: 2048,
+}))
+```
